@@ -4,15 +4,22 @@ import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 
 function MyTable({url,columns, title, rowKey, createText, onCreateData}) {
-  
+
+  const [dataRoot, setDataRoot] = useState([]);
   const [data, setData] = useState([]);
   
   useEffect(() => {
     api.get(url).then((res) => {
-      setData(res.data?.data)
+      setData([...res?.data?.data])
+      setDataRoot([...res?.data?.data])
     });
   }, []);
   
+  const handleTableChange = (pagination, filters, sorter) => {
+    let dataSort = [...data];
+    setData([...dataSort.sort((a,b) => (a[sorter.field] > b[sorter.field]) ? 1 : ((b[sorter.field] > a[sorter.field]) ? -1 : 0))]);
+  };
+
   return (
     <div>
       <ProTable
@@ -32,12 +39,14 @@ function MyTable({url,columns, title, rowKey, createText, onCreateData}) {
                       </Button>
                   ]
               }
+              onChange={handleTableChange}
               columns={columns}
-              scroll={{ y: 600 }}
               pagination={{
                 total: data.length,
-                pageSize: 10,
-                pageSizeOptions: [10, 20, 50]
+                pageSize: 2,
+                pageSizeOptions: [10, 20, 50],
+                showSizeChanger:true,
+                responsive: true,
               }}
             />
     </div>
