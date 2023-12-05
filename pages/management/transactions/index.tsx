@@ -69,6 +69,7 @@ function ApplicationsTransactions() {
             <MyTable
               title={'Danh sách danh mục'}
               rowKey="id"
+              url={'category'}
               columns={columns}
               createText={'Thêm mới'}
               onCreateData={()=>console.log('create popup')}

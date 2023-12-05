@@ -3,12 +3,12 @@ import ProTable from '@ant-design/pro-table';
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 
-function MyTable({columns, title, rowKey, createText, onCreateData}) {
+function MyTable({url,columns, title, rowKey, createText, onCreateData}) {
   
   const [data, setData] = useState([]);
   
   useEffect(() => {
-    api.get('category').then((res) => {
+    api.get(url).then((res) => {
       setData(res.data?.data)
     });
   }, []);
