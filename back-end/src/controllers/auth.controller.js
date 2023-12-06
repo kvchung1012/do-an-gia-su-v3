@@ -10,11 +10,17 @@ var jwt = require("jsonwebtoken");
 const login = async (req, res) => {
   try {
     const { email, password } = { ...req.body };
+    console.log(email);
+    console.log(password);
+
     let user = await models.users.findOne({
       where: {
         email: email,
       },
     });
+
+    console.log(user);
+
 
     if (!user?.dataValues) {
       return failCode(res, "Tài khoản không tồn tại");
@@ -24,9 +30,9 @@ const login = async (req, res) => {
       return failCode(res, "Mật khẩu không chính xác");
     }
 
-    let refreshToken = jwt.sign(user.dataValues, "refresh_token_doangiasu", {
-      expiresIn: "40 days",
-    });
+    // let refreshToken = jwt.sign(user.dataValues, "refresh_token_doangiasu", {
+    //   expiresIn: "40 days",
+    // });
 
     // await models.token.create({
     //   token_id: uuidv4(),
@@ -38,6 +44,7 @@ const login = async (req, res) => {
     return succesCode(res, {
       type: "Bearer",
       access_token: getToken(user.dataValues),
+      role_id: user.dataValues.role_id
     });
   } catch (err) {
     errorCode(res, err);

@@ -1,0 +1,12 @@
+// path router
+export const ROOT_PATH = '/';
+export const LOGIN_PATH = '/auth/login';
+export const LOGOUT_PATH = '/auth/logout';
+export const REGISTER_PATH = '/auth/register';
+export const STUDENT_REGISTER_PATH = '/auth/register/student';
+export const TEACHER_REGISTER_PATH = '/auth/register/teacher';
+
+// App const
+export const ROLE_STUDENT_ID = '3fd935a1-4ef6-403c-976a-df558dd911e1';
+export const ROLE_TEACHER_ID = '90ce2234-d181-46bb-b0b6-da055cc960bd';
+export const ROLE_ADMIN_ID = '34179fbd-7abe-446f-b361-8d863006b178';

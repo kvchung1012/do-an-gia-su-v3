@@ -1,9 +1,11 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { Box, alpha, lighten, useTheme } from '@mui/material';
 import PropTypes from 'prop-types';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { useRouter } from 'next/router';
+import { LOGIN_PATH } from '@/const';
 
 interface SidebarLayoutProps {
   children?: ReactNode;
@@ -11,6 +13,14 @@ interface SidebarLayoutProps {
 
 const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const theme = useTheme();
+  const router = useRouter();
+
+  useEffect(() => {
+    const access_token = localStorage.getItem('access_token');
+    if (!access_token) {
+      router.push(LOGIN_PATH);
+    }
+  }, []);
 
   return (
     <>

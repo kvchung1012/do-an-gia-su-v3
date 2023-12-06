@@ -1,5 +1,6 @@
 import BaseLayout from '@/layouts/BaseLayout';
 import { Button, Card, CardActions, Stack, Typography } from '@mui/material';
+import { STUDENT_REGISTER_PATH, TEACHER_REGISTER_PATH } from '@/const';
 import Image from 'next/image';
 import { ReactElement } from 'react';
 import Link from 'src/components/Link';
@@ -27,7 +28,7 @@ const Register = () => {
               variant="contained"
               size="medium"
               component={Link}
-              href="/authen/register/student"
+              href={STUDENT_REGISTER_PATH}
             >
               Nguời học
             </Button>
@@ -45,7 +46,7 @@ const Register = () => {
               variant="contained"
               size="medium"
               component={Link}
-              href="/authen/register/teacher"
+              href={TEACHER_REGISTER_PATH}
             >
               Giáo viên
             </Button>

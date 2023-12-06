@@ -8,8 +8,17 @@ import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z, ZodType } from 'zod';
+import {
+  LOGIN_PATH,
+  ROLE_ADMIN_ID,
+  ROLE_STUDENT_ID,
+  ROLE_TEACHER_ID,
+  ROOT_PATH
+} from '@/const';
+import { useRouter } from 'next/router';
 
 function Copyright(props) {
   return (
@@ -29,22 +38,46 @@ function Copyright(props) {
   );
 }
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
 export default function SignIn() {
-  const { register, handleSubmit } = useForm();
-  const [wrongUserName, setWrongUserName] = useState(false);
-  const [wrongPassword, setWrongPassword] = useState(false);
+  const router = useRouter();
+
+  const schema: ZodType = z.object({
+    email: z
+      .string()
+      .min(1, { message: 'Không được để trống email' })
+      .email({ message: 'Không đúng dạng địa chỉ email' }),
+    password: z
+      .string()
+      .min(1, { message: 'Không được để trống mật khẩu' })
+      .min(4, { message: 'Mật khẩu ít nhất 4 ký tự' })
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const handleLogin = async (data) => {
     try {
-      const response = await api.post('/auth/login', data);
+      const response = await api.post(LOGIN_PATH, data);
       if (response.status === 200) {
-        console.log('Thành công');
+        localStorage.setItem('access_token', response.data.data.access_token);
+        if (
+          response.data.data.role_id === ROLE_ADMIN_ID ||
+          response.data.data.role_id === ROLE_TEACHER_ID ||
+          response.data.data.role_id === ROLE_STUDENT_ID
+        ) {
+          router.push(ROOT_PATH);
+        }
       }
     } catch (error) {
-      if (error.response.status === 500) {
-        setWrongUserName(true);
-        setWrongPassword(true);
-      }
+      console.log(error);
     }
   };
 
@@ -84,8 +117,8 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             {...register('email')}
-            error={wrongUserName ? true : false}
-            helperText={wrongUserName && ('Sai email đăng nhập' || '')}
+            error={!!errors['email']}
+            helperText={errors['email'] ? errors['email'].message : ''}
           />
           <TextField
             margin="normal"
@@ -97,8 +130,8 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
             {...register('password')}
-            error={wrongPassword ? true : false}
-            helperText={wrongPassword && ('Sai mật khẩu đăng nhập' || '')}
+            error={!!errors['password']}
+            helperText={errors['password'] ? errors['password'].message : ''}
           />
           <Button
             type="submit"
