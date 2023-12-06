@@ -36,7 +36,7 @@ import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTo
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
-    padding: ${theme.spacing(1)};
+    padding: ${theme.spacing(0.5,1)};
 
     & > .MuiList-root {
       padding: 0 ${theme.spacing(0)} ${theme.spacing(1)};
@@ -80,7 +80,7 @@ const SubMenuWrapper = styled(Box)(
           background-color: transparent;
           width: 100%;
           justify-content: flex-start;
-          padding: ${theme.spacing(1.2, 3)};
+          padding: ${theme.spacing(1, 2)};
 
           .MuiButton-startIcon,
           .MuiButton-endIcon {
@@ -256,10 +256,10 @@ function SidebarMenu() {
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
-                <NextLink href="/management/transactions" passHref>
+                <NextLink href="/management/category" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/transactions'
+                      currentRoute === '/management/category'
                         ? 'active'
                         : ''
                     }
@@ -268,7 +268,79 @@ function SidebarMenu() {
                     onClick={closeSidebar}
                     startIcon={<TableChartTwoToneIcon />}
                   >
-                    Transactions List
+                    Danh mục khóa học
+                  </Button>
+                </NextLink>
+              </ListItem>
+
+              <ListItem component="div">
+                <NextLink href="/management/course" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/course'
+                        ? 'active'
+                        : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Khóa học
+                  </Button>
+                </NextLink>
+              </ListItem>
+
+              <ListItem component="div">
+                <NextLink href="/management/tutor" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/tutor'
+                        ? 'active'
+                        : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Gia sư
+                  </Button>
+                </NextLink>
+              </ListItem>
+
+              <ListItem component="div">
+                <NextLink href="/management/category" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/student'
+                        ? 'active'
+                        : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Học sinh
+                  </Button>
+                </NextLink>
+              </ListItem>
+
+              <ListItem component="div">
+                <NextLink href="/management/category" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/feedback'
+                        ? 'active'
+                        : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Đánh giá
                   </Button>
                 </NextLink>
               </ListItem>

@@ -1,32 +1,37 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container } from '@mui/material';
-import Footer from '@/components/Footer';
+import { Grid, Container, Box, IconButton } from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
-import { useEffect, useState } from 'react';
-import api from '@/api';
 import MyTable from 'pages/components/table';
+import { useState } from 'react';
+import CategoryForm from '@/components/management/category/CategoryForm';
+
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
 
 function ApplicationsTransactions() {
-  const [data, setData] = useState([]);
+
+  const[isOpenForm, setIsOpenForm] = useState(false)
 
   const columns: ProColumns<any>[] = [
+    {
+      width: 250,
+      title: 'Hình ảnh',
+      dataIndex: 'image_url',
+      fixed: 'left',
+    },
     {
       title: 'Danh mục',
       dataIndex: 'name',
       width: 250,
       fixed: 'left',
+      sorter: true,
       render: (dom, entity) => { // dom là field name (dataIndex), entity là cả row
         return <a style={{ fontWeight: '500' }}>{dom}</a>;
       }
     },
-    {
-      width: 250,
-      title: 'Demo',
-      dataIndex: 'desc',
-      valueType: 'textarea'
-    },
+   
     {
       width: 250,
       title:'Mô tả',
@@ -34,18 +39,27 @@ function ApplicationsTransactions() {
       sorter: true,
     },
     {
-      width: 250,
-      title:'Mô tả',
+      width: 100,
+      title:'Action',
+      align:'right',
       dataIndex: 'Action',
-      sorter: true,
+      fixed:'right',
+      render:(_,row)=><>
+        <Box sx={{display:'flex', justifyContent:'end'}}>
+          <IconButton aria-label="delete" color='secondary' size='small'>
+            <EditIcon fontSize='small' />
+          </IconButton>
+          <IconButton aria-label="delete" color='error' size='small'>
+            <DeleteOutlineIcon fontSize='small' />
+          </IconButton>
+        </Box>
+      </>
     }
   ];
 
-  useEffect(() => {
-    api.get('category').then((res) => {
-      setData(res.data?.data)
-    });
-  }, []);
+  const handleSaveData = (e)=>{
+    console.log(e)
+  }
 
   return (
     <>
@@ -68,16 +82,20 @@ function ApplicationsTransactions() {
           <Grid item xs={12}>
             <MyTable
               title={'Danh sách danh mục'}
-              rowKey="id"
+              rowKey="category_id"
               url={'category'}
               columns={columns}
               createText={'Thêm mới'}
-              onCreateData={()=>console.log('create popup')}
+              onCreateData={()=>setIsOpenForm(true)}
             />
           </Grid>
         </Grid>
       </Container>
-      <Footer />
+
+      {
+        isOpenForm &&
+        <CategoryForm data={null} isOpen={isOpenForm} onClose={()=>setIsOpenForm(false)} onSave={handleSaveData} key={''}/>
+      }
     </>
   );
 }
