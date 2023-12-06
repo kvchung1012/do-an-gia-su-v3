@@ -1,24 +1,19 @@
-import api from '@/api';
 import ProTable from '@ant-design/pro-table';
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 
-function MyTable({url,columns, title, rowKey, createText, onCreateData}) {
+function MyTable({dataRows,columns, title, rowKey, createText, onCreateData}) {
 
-  const [dataRoot, setDataRoot] = useState([]);
-  const [data, setData] = useState([]);
-  
-  useEffect(() => {
-    api.get(url).then((res) => {
-      setData([...res?.data?.data])
-      setDataRoot([...res?.data?.data])
-    });
-  }, []);
+  const [data, setData] = useState(dataRows);
   
   const handleTableChange = (pagination, filters, sorter) => {
     let dataSort = [...data];
     setData([...dataSort.sort((a,b) => (a[sorter.field] > b[sorter.field]) ? 1 : ((b[sorter.field] > a[sorter.field]) ? -1 : 0))]);
   };
+
+  useEffect(()=>{
+    setData(dataRows)
+  },[dataRows])
 
   return (
     <div>
