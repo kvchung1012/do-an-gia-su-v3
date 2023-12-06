@@ -1,3 +1,4 @@
+import api from '@/api';
 import {
   Dialog,
   DialogTitle,
@@ -7,37 +8,32 @@ import {
   FormGroup,
   TextField
 } from '@mui/material';
-import { useFormik } from 'formik';
-import React from 'react';
+import { Formik, useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 
 const validationSchema = yup.object({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
-  email: yup
-    .string()
-    .email('Invalid email format')
-    .required('Email is required')
+  name: yup.string().required('Tên danh mục không được trống'),
+  description: yup.string().nullable()
 });
 
-function CategoryForm({ isOpen, onSave, onClose, data }) {
+function CategoryForm({ isOpen, onClose, data, onSave }) {
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      email: ''
+      ...data
     },
-    
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
-      console.log('Form submitted with values:', values);
-    }
-  });
- 
+      if (!formik.isValid) {
+        return;
+      }
+
+      onSave({...data,...values})
+}});
+
   return (
     <div>
-      <form onSubmit={formik.handleSubmit}>
+      <form>
         <Dialog
           open={isOpen}
           onClose={onClose}
@@ -48,37 +44,40 @@ function CategoryForm({ isOpen, onSave, onClose, data }) {
           <DialogTitle id="alert-dialog-title">
             {data?.category_id ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}
           </DialogTitle>
-          <DialogContent sx={{
-            width:'572px'
-          }}>
+          <DialogContent
+            sx={{
+              width: '572px'
+            }}
+          >
             <FormGroup>
               <TextField
-                id="firstName"
-                label="First Name"
-                variant="outlined"
+                id="name"
+                label="Tiêu đề"
+                variant="standard"
                 fullWidth
                 margin="normal"
-                {...formik.getFieldProps('firstName')}
-                error={
-                  formik.touched.firstName && Boolean(formik.errors.firstName)
-                }
-                helperText={formik.touched.firstName && formik.errors.firstName}
+                {...formik.getFieldProps('name')}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
               />
 
               <TextField
-                id="lastName"
-                label="Last Name"
-                variant="outlined"
+                id="description"
+                label="Mô tả"
+                variant="standard"
                 fullWidth
                 margin="normal"
-                {...formik.getFieldProps('lastName')}
+                {...formik.getFieldProps('description')}
                 error={
-                  formik.touched.lastName && Boolean(formik.errors.lastName)
+                  formik.touched.description &&
+                  Boolean(formik.errors.description)
                 }
-                helperText={formik.touched.lastName && formik.errors.lastName}
+                helperText={
+                  formik.touched.description && formik.errors.description
+                }
               />
 
-              <TextField
+              {/* <TextField
                 id="email"
                 label="Email"
                 variant="outlined"
@@ -87,7 +86,7 @@ function CategoryForm({ isOpen, onSave, onClose, data }) {
                 {...formik.getFieldProps('email')}
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
-              />
+              /> */}
             </FormGroup>
           </DialogContent>
           <DialogActions>
@@ -95,7 +94,7 @@ function CategoryForm({ isOpen, onSave, onClose, data }) {
               Hủy
             </Button>
             <Button
-              type='submit'
+              type="submit"
               color="primary"
               variant="contained"
               onClick={formik.submitForm}

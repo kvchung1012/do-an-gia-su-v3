@@ -1,25 +1,33 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container, Box, IconButton , Checkbox} from '@mui/material';
+import { Grid, Container, Box, IconButton, Checkbox } from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
-import MyTable from 'pages/components/table';
-import { useState } from 'react';
+import MyTable from '@/components/base/table';
+import React, { useEffect, useState } from 'react'
 import CategoryForm from '@/components/management/category/CategoryForm';
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
+import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
+import api from '@/api';
 
 function ApplicationsTransactions() {
+  const [data, setData] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [dataSelected, setDataSelected] = useState<any>();
 
-  const[isOpenForm, setIsOpenForm] = useState(false)
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   const columns: ProColumns<any>[] = [
     {
-      width: 20,
+      width: 15,
       fixed: 'left',
-      align:'center',
-      render:(_,row)=><Checkbox size='small'/>
+      align: 'center',
+      render: (_, row) => <Checkbox size="small" />
     },
     {
       title: 'Danh mục',
@@ -27,7 +35,8 @@ function ApplicationsTransactions() {
       width: 200,
       fixed: 'left',
       sorter: true,
-      render: (dom, entity) => { // dom là field name (dataIndex), entity là cả row
+      render: (dom, entity) => {
+        // dom là field name (dataIndex), entity là cả row
         return <a style={{ fontWeight: '500' }}>{dom}</a>;
       }
     },
@@ -35,41 +44,86 @@ function ApplicationsTransactions() {
       width: 150,
       title: 'Hình ảnh',
       dataIndex: 'image_url',
-      fixed: 'left',
+      fixed: 'left'
     },
     {
       width: 300,
-      title:'Mô tả',
+      title: 'Mô tả',
       dataIndex: 'description',
-      sorter: true,
+      sorter: true
     },
     {
-      width: 100,
-      title:'Action',
-      align:'right',
+      width: 60,
+      title: 'Action',
+      align: 'center',
       dataIndex: 'Action',
-      fixed:'right',
-      render:(_,row)=><>
-        <Box sx={{display:'flex', justifyContent:'end'}}>
-          <IconButton aria-label="delete" color='secondary' size='small'>
-            <EditIcon fontSize='small' />
-          </IconButton>
-          <IconButton aria-label="delete" color='error' size='small'>
-            <DeleteOutlineIcon fontSize='small' />
-          </IconButton>
-        </Box>
-      </>
+      fixed: 'right',
+      render: (_, row) => (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <IconButton
+              aria-label="delete"
+              color="secondary"
+              size="small"
+              onClick={() => {
+                setDataSelected(row);
+                setShowForm(true);
+              }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              aria-label="delete"
+              color="error"
+              size="small"
+              onClick={() => {
+                setDataSelected(row);
+                setShowConfirmDelete(true);
+              }}
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </>
+      )
     }
   ];
 
-  const handleSaveData = (e)=>{
-    console.log(e)
+  const fetchData = ()=>{
+    api.get('category').then((res) => {
+      setData([...res?.data?.data])
+    });
   }
+
+  const handleDelete = () => {
+    const {category_id} = dataSelected;
+    api.delete(`category/${category_id}`).then(res=>{
+      fetchData()
+      setShowConfirmDelete(false)
+    })
+  };
+
+  const handleSaveData = (body)=>{
+      const request = !body?.category_id
+        ? api.post('category', body)
+        : api.put(`category/${body.category_id}`, body);
+      
+      request
+        .then((res) => {
+          console.log(res);
+          fetchData()
+          setShowForm(false)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
   return (
     <>
       <Head>
-        <title>Transactions - Applications</title>
+        <title>Quản lý danh mục</title>
       </Head>
       <Container
         maxWidth="lg"
@@ -88,19 +142,35 @@ function ApplicationsTransactions() {
             <MyTable
               title={'Danh sách danh mục'}
               rowKey="category_id"
-              url={'category'}
+              dataRows={data}
               columns={columns}
               createText={'Thêm mới'}
-              onCreateData={()=>setIsOpenForm(true)}
+              onCreateData={() => {
+                setDataSelected({});
+                setShowForm(true);
+              }}
             />
           </Grid>
         </Grid>
       </Container>
 
-      {
-        isOpenForm &&
-        <CategoryForm data={null} isOpen={isOpenForm} onClose={()=>setIsOpenForm(false)} onSave={handleSaveData} key={''}/>
-      }
+      {showForm && (
+        <CategoryForm
+          data={dataSelected}
+          isOpen={showForm}
+          onSave={handleSaveData}
+          onClose={() => setShowForm(false)}
+          key={''}
+        />
+      )}
+
+      {showConfirmDelete && (
+        <ConfirmDeleteModal
+          open={showConfirmDelete}
+          onClose={() => setShowConfirmDelete(false)}
+          onConfirm={handleDelete}
+        />
+      )}
     </>
   );
 }
