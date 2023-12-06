@@ -43,10 +43,13 @@ function MyTable({url,columns, title, rowKey, createText, onCreateData}) {
               columns={columns}
               pagination={{
                 total: data.length,
-                pageSize: 2,
+                pageSize: 10,
                 pageSizeOptions: [10, 20, 50],
                 showSizeChanger:true,
                 responsive: true,
+                showTotal: (total, range) => (
+                  <div>{`Showing ${range[0]}-${range[1]} of ${total} total items`}</div>
+                ),
               }}
             />
     </div>

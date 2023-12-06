@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container, Box, IconButton } from '@mui/material';
+import { Grid, Container, Box, IconButton , Checkbox} from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
 import MyTable from 'pages/components/table';
@@ -16,24 +16,29 @@ function ApplicationsTransactions() {
 
   const columns: ProColumns<any>[] = [
     {
-      width: 250,
-      title: 'Hình ảnh',
-      dataIndex: 'image_url',
+      width: 20,
       fixed: 'left',
+      align:'center',
+      render:(_,row)=><Checkbox size='small'/>
     },
     {
       title: 'Danh mục',
       dataIndex: 'name',
-      width: 250,
+      width: 200,
       fixed: 'left',
       sorter: true,
       render: (dom, entity) => { // dom là field name (dataIndex), entity là cả row
         return <a style={{ fontWeight: '500' }}>{dom}</a>;
       }
     },
-   
     {
-      width: 250,
+      width: 150,
+      title: 'Hình ảnh',
+      dataIndex: 'image_url',
+      fixed: 'left',
+    },
+    {
+      width: 300,
       title:'Mô tả',
       dataIndex: 'description',
       sorter: true,
