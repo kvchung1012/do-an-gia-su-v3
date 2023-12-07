@@ -21,7 +21,6 @@ const login = async (req, res) => {
 
     console.log(user);
 
-
     if (!user?.dataValues) {
       return failCode(res, "Tài khoản không tồn tại");
     }
@@ -44,7 +43,7 @@ const login = async (req, res) => {
     return succesCode(res, {
       type: "Bearer",
       access_token: getToken(user.dataValues),
-      role_id: user.dataValues.role_id
+      role_id: user.dataValues.role_id,
     });
   } catch (err) {
     errorCode(res, err);
@@ -58,13 +57,14 @@ const register = async (req, res) => {
       last_name,
       first_name,
       gender,
-      avatar_url,
+
       phone_number,
       google_id,
       role_id,
       type,
       password,
     } = req.body;
+    const avatar_url = req.file.path;
 
     let user = await models.users.create({
       user_id: uuidv4(),
