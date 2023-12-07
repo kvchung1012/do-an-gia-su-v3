@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z, ZodType } from 'zod';
 import {
   LOGIN_PATH,
+  REGISTER_PATH,
   ROLE_ADMIN_ID,
   ROLE_STUDENT_ID,
   ROLE_TEACHER_ID,
@@ -143,7 +144,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/authen/register" variant="body2">
+              <Link href={REGISTER_PATH} variant="body2">
                 {'Chưa có tài khoản? Đăng ký'}
               </Link>
             </Grid>

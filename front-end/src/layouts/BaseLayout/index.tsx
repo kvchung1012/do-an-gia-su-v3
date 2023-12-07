@@ -25,7 +25,8 @@ export const HeaderWrapper = styled(Card)(
   width: 100%;
   display: flex;
   align-items: center;
-  height: ${theme.spacing(10)};
+  height: 100px;
+  z-index: 9999,
 `
 );
 
@@ -111,14 +112,6 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                     vertical: 'top',
                     horizontal: 'right'
                   }}
-                  // slotProps={{
-                  //   paper: {
-                  //     sx: {
-                  //       boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.10)',
-                  //       borderRadius: '8px'
-                  //     }
-                  //   }
-                  // }}
                 >
                   <Typography
                     sx={{
@@ -165,7 +158,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
           </Box>
         </Container>
       </HeaderWrapper>
-      <Container>{children}</Container>
+      {children}
     </OverviewWrapper>
   );
 };

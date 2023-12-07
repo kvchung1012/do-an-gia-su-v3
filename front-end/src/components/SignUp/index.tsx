@@ -155,13 +155,6 @@ export default function SignUp() {
             autoComplete="off"
             helperText={errors['email'] ? errors['email'].message : ''}
             {...register('email')}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Mail />
-                </InputAdornment>
-              )
-            }}
           />
           <TextField
             margin="normal"
@@ -173,13 +166,6 @@ export default function SignUp() {
             {...register('password')}
             error={!!errors['password']}
             helperText={errors['password'] ? errors['password'].message : ''}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOpen />
-                </InputAdornment>
-              )
-            }}
           />
           <TextField
             label="Xác Nhận Mật Khẩu"
@@ -192,13 +178,6 @@ export default function SignUp() {
             helperText={
               errors['confirmPassword'] ? errors['confirmPassword'].message : ''
             }
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VpnKey />
-                </InputAdornment>
-              )
-            }}
           />
           <TextField
             margin="normal"
@@ -210,26 +189,12 @@ export default function SignUp() {
             helperText={
               errors['phone_number'] ? errors['phone_number'].message : ''
             }
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Phone />
-                </InputAdornment>
-              )
-            }}
           />
           <TextField
             margin="normal"
             fullWidth
             label="Họ"
             {...register('last_name')}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Person />
-                </InputAdornment>
-              )
-            }}
           />
           <TextField
             margin="normal"
@@ -241,13 +206,6 @@ export default function SignUp() {
               errors['first_name'] ? errors['first_name'].message : ''
             }
             error={!!errors['first_name']}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Person />
-                </InputAdornment>
-              )
-            }}
           />
           <FormControl>
             <FormLabel>Giới tính</FormLabel>

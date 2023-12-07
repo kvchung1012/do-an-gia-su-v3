@@ -1,8 +1,9 @@
+import TutorSection from '@/components/TutorSection';
 import BaseLayout from '@/layouts/BaseLayout';
 import { ReactElement } from 'react';
 
 const Overview = () => {
-  return <h1>Đây là trang chủ</h1>;
+  return <TutorSection />;
 };
 
 export default Overview;
