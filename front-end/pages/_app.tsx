@@ -14,6 +14,7 @@ import { SidebarProvider } from 'src/contexts/SidebarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
+import '../src/styles/globals.scss';
 
 const clientSideEmotionCache = createEmotionCache();
 

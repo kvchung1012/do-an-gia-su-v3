@@ -8,12 +8,10 @@ import {
   TEACHER_REGISTER_PATH
 } from '@/const';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LockOpen, Mail, Person, Phone, VpnKey } from '@mui/icons-material';
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputAdornment,
   Radio,
   RadioGroup
 } from '@mui/material';

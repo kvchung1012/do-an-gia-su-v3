@@ -69,6 +69,7 @@ export default function SignIn() {
       const response = await api.post(LOGIN_PATH, data);
       if (response.status === 200) {
         localStorage.setItem('access_token', response.data.data.access_token);
+        localStorage.setItem('avatar_url', response.data.data.avatar_url);
         if (
           response.data.data.role_id === ROLE_ADMIN_ID ||
           response.data.data.role_id === ROLE_TEACHER_ID ||
