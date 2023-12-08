@@ -36,9 +36,11 @@ const getUserInfo = async (req, res) => {
     }]
   })
 
-  entity.dataValues.student_profile = student_profile;
-
-  return succesCode(res, entity, "Success");
+  var response  = {
+     ...entity.dataValues,
+     student_profile : student_profile
+  }
+  return succesCode(res, response, "Success");
 };
 
 
