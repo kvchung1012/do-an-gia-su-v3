@@ -25,7 +25,7 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { ZodType, z } from 'zod';
 
 type FormData = {
@@ -35,6 +35,7 @@ type FormData = {
   password: string;
   confirmPassword: string;
   phone_number: string;
+  gender: string;
 };
 
 function Copyright(props) {
@@ -90,6 +91,7 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors }
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
@@ -207,14 +209,27 @@ export default function SignUp() {
           />
           <FormControl>
             <FormLabel>Giới tính</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
+
+            <Controller
+              rules={{ required: true }}
+              control={control}
+              name="gender"
               defaultValue="female"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-              <FormControlLabel value="male" control={<Radio />} label="Nam" />
-            </RadioGroup>
+              render={({ field }) => (
+                <RadioGroup {...field}>
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Nữ"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Nam"
+                  />
+                </RadioGroup>
+              )}
+            />
           </FormControl>
           <Button
             type="submit"
