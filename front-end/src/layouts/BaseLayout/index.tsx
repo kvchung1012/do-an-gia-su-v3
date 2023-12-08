@@ -5,7 +5,6 @@ import {
   Avatar,
   Box,
   Button,
-  Card,
   Container,
   Popover,
   Stack,
@@ -35,13 +34,14 @@ export const OverviewWrapper = styled(Box)(
 const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
   const router = useRouter();
   const loginPath = router.asPath === LOGIN_PATH;
-  const [isShowAvatar, setIsShowAvatar] = useState(false);
+  const [isShowAvatar, setIsShowAvatar] = useState('');
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     const access_token = localStorage.getItem('access_token');
+    const avatar_url = localStorage.getItem('avatar_url');
     if (access_token) {
-      setIsShowAvatar(true);
+      setIsShowAvatar(avatar_url);
     }
   }, [router.asPath]);
 
@@ -90,7 +90,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                 <>
                   <Avatar
                     alt="Remy Sharp"
-                    src="/static/images/avatars/2.jpg"
+                    src={'/static/images/avatars/2.jpg'}
                     sx={{ width: 48, height: 48, cursor: 'pointer' }}
                     onClick={handlePopoverOpen}
                   />

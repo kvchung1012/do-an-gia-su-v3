@@ -19,8 +19,6 @@ const login = async (req, res) => {
       },
     });
 
-    console.log(user);
-
     if (!user?.dataValues) {
       return failCode(res, "Tài khoản không tồn tại");
     }
@@ -44,6 +42,7 @@ const login = async (req, res) => {
       type: "Bearer",
       access_token: getToken(user.dataValues),
       role_id: user.dataValues.role_id,
+      avatar_url: user.dataValues.avatar_url
     });
   } catch (err) {
     errorCode(res, err);

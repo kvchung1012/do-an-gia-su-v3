@@ -1,5 +1,6 @@
 import api from '@/api';
 import BannerSection from '@/components/BannerSection';
+import SubjectSection from '@/components/SubjectSection';
 import TutorSection from '@/components/TutorSection';
 import BaseLayout from '@/layouts/BaseLayout';
 import { Stack } from '@mui/material';
@@ -22,6 +23,7 @@ const Overview = () => {
   return (
     <Stack minHeight="200vh">
       <BannerSection />
+      <SubjectSection />
       <TutorSection />
     </Stack>
   );

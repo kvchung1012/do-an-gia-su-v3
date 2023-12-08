@@ -40,7 +40,7 @@ const Footer = () => {
 
         <Stack direction="row" justifyContent="center" spacing={2}>
           <Typography color="white" variant="subtitle1">
-            &copy; 2023 - eZ Gia Sư create by Khất Chung, Khất Việt, Khất Phú
+            &copy; 2023 - eZ Gia Sư create by Khuất Chung, Khuất Việt, Khuất Phú
           </Typography>
           <Typography
             sx={{
