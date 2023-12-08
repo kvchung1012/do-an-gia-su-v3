@@ -11,6 +11,7 @@ const tutoringContractRoutes = require("./tutoring-contract.routes");
 const tutoringFeedbackRoutes = require("./tutoring-feedback.routes");
 const tutorAvailableRoutes = require("./tutoring-available-date.routes");
 const scheduleRoutes = require("./schedule.routes");
+const userRoutes = require("./user.routes");
 
 const routes = express.Router();
 
@@ -26,5 +27,6 @@ routes.use("/tutoring-contract", tutoringContractRoutes);
 routes.use("/tutoring-feedback", tutoringFeedbackRoutes);
 routes.use("/tutor-available-date", tutorAvailableRoutes);
 routes.use("/schedule", scheduleRoutes);
+routes.use("/user", userRoutes);
 
 module.exports = routes;
