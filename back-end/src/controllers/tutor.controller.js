@@ -69,7 +69,7 @@ const deleteById = async (req, res) => {
   let { id } = req.params;
   let result = await models.tutor_profile.destroy({
     where: {
-      course_id: id,
+      user_id: id,
     },
   });
 

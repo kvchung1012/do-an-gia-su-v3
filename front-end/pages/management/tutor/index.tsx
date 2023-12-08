@@ -12,8 +12,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
 import Image from 'next/image';
 import TutorForm from '@/components/management/tutor/TutorForm';
-import TutorInfoDetail from '@/components/management/tutor/TutorInfoDetail';
-import ModalShowInfo from '@/components/management/common/ModalShowInfo';
+import ModalShowInfo from '@/components/management/tutor/ModalShowInfo';
 
 function TutorProfile() {
   const [data, setData] = useState([]);
@@ -33,13 +32,11 @@ function TutorProfile() {
       align: 'center',
       render: (_, row) => (
         <IconButton
-          aria-label="delete"
           color="secondary"
           size="small"
           onClick={() => {
             setDataSelected(row);
             setShowFormDetail(true);
-            console.log(row);
           }}
         >
           <RemoveRedEyeIcon fontSize="small" />
@@ -124,14 +121,12 @@ function TutorProfile() {
   };
 
   const handleDelete = () => {
-    console.log(dataSelected);
     const tutor_id = dataSelected.user_id;
     api.delete(`tutor/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
   };
-  console.log(dataSelected);
 
   const handleSaveData = (body) => {
     const request = !body?.tutor_id
@@ -170,23 +165,13 @@ function TutorProfile() {
           <Grid item xs={12}>
             <MyTable
               title={'Danh sách gia sư'}
-              rowKey="category_id"
+              rowKey="tutor_profile_id"
               dataRows={data}
               columns={columns}
             />
           </Grid>
         </Grid>
       </Container>
-
-      {/* {showForm && (
-        <TutorForm
-          data={dataSelected}
-          isOpen={showForm}
-          onSave={handleSaveData}
-          onClose={() => setShowForm(false)}
-          key={''}
-        />
-      )} */}
 
       <ModalShowInfo
         firstName={dataSelected?.user?.first_name}
@@ -196,6 +181,7 @@ function TutorProfile() {
         gender={dataSelected?.user?.gender}
         phone={dataSelected?.user?.phone_number}
         email={dataSelected?.user?.email}
+        company={dataSelected?.tutor_experiences?.organization}
         setOpen={setShowFormDetail}
         open={showFormDetail}
       ></ModalShowInfo>

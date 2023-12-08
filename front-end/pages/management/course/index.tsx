@@ -1,20 +1,20 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container, Box, IconButton, Checkbox } from '@mui/material';
+import { Grid, Container, Box, IconButton } from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
 import MyTable from '@/components/base/table';
 import React, { useEffect, useState } from 'react';
-import CategoryForm from '@/components/management/category/CategoryForm';
-
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon from '@mui/icons-material/Edit';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
+import Image from 'next/image';
+import ModalInfoCourse from './ModalInfoCourse';
 
-function ApplicationsTransactions() {
+function CourseManage() {
   const [data, setData] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showFormDetail, setShowFormDetail] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
 
@@ -27,30 +27,63 @@ function ApplicationsTransactions() {
       width: 15,
       fixed: 'left',
       align: 'center',
-      render: (_) => <Checkbox size="small" />
+      render: (_, row) => (
+        <IconButton
+          color="secondary"
+          size="small"
+          onClick={() => {
+            setDataSelected(row);
+            setShowFormDetail(true);
+          }}
+        >
+          <RemoveRedEyeIcon fontSize="small" />
+        </IconButton>
+      )
     },
     {
-      title: 'Danh mục',
+      title: 'Tên khoá học',
       dataIndex: 'name',
       width: 200,
       fixed: 'left',
       sorter: true,
       render: (dom) => {
-        // dom là field name (dataIndex), entity là cả row
         return <a style={{ fontWeight: '500' }}>{dom}</a>;
       }
     },
     {
       width: 150,
       title: 'Hình ảnh',
-      dataIndex: 'image_url',
+      render: (_, row) =>
+        row.user?.avatar_url ? (
+          <Image width={50} height={50} src={row.user?.avatar_url}></Image>
+        ) : (
+          <></>
+        ),
       fixed: 'left'
     },
     {
-      width: 300,
+      title: 'Học phí',
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.price}</p>
+    },
+    {
       title: 'Mô tả',
-      dataIndex: 'description',
-      sorter: true
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.description}</p>
+    },
+    {
+      title: 'Người học',
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.category?.name}</p>
+    },
+    {
+      title: 'Gia sư',
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.tutor_profile?.user?.first_name}</p>
     },
     {
       width: 60,
@@ -61,18 +94,6 @@ function ApplicationsTransactions() {
       render: (_, row) => (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <IconButton
-              aria-label="delete"
-              color="secondary"
-              size="small"
-              onClick={() => {
-                setDataSelected(row);
-                setShowForm(true);
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-
             <IconButton
               aria-label="delete"
               color="error"
@@ -91,39 +112,24 @@ function ApplicationsTransactions() {
   ];
 
   const fetchData = () => {
-    api.get('category').then((res) => {
+    api.get('course').then((res) => {
       setData([...res?.data?.data]);
     });
   };
+  console.log(data);
 
   const handleDelete = () => {
-    const { category_id } = dataSelected;
-    api.delete(`category/${category_id}`).then(() => {
+    const courseId = dataSelected.course_id;
+    api.delete(`course/${courseId}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
   };
 
-  const handleSaveData = (body) => {
-    const request = !body?.category_id
-      ? api.post('category', body)
-      : api.put(`category/${body.category_id}`, body);
-
-    request
-      .then((res) => {
-        console.log(res);
-        fetchData();
-        setShowForm(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   return (
     <>
       <Head>
-        <title>Quản lý danh mục</title>
+        <title>Quản lý Profile gia sư</title>
       </Head>
       <Container
         maxWidth="lg"
@@ -140,29 +146,26 @@ function ApplicationsTransactions() {
         >
           <Grid item xs={12}>
             <MyTable
-              title={'Danh sách danh mục'}
-              rowKey="category_id"
+              title={'Danh sách gia sư'}
+              rowKey="tutor_profile_id"
               dataRows={data}
               columns={columns}
-              createText={'Thêm mới'}
-              onCreateData={() => {
-                setDataSelected({});
-                setShowForm(true);
-              }}
             />
           </Grid>
         </Grid>
       </Container>
 
-      {showForm && (
-        <CategoryForm
-          data={dataSelected}
-          isOpen={showForm}
-          onSave={handleSaveData}
-          onClose={() => setShowForm(false)}
-          key={''}
-        />
-      )}
+      <ModalInfoCourse
+        name={dataSelected?.name}
+        avatar={dataSelected?.image_url}
+        description={dataSelected?.description}
+        ratting={dataSelected?.ratting}
+        price={dataSelected?.price}
+        tutor={dataSelected?.tutor_profile?.last_name}
+        spendTime={dataSelected?.spend_time}
+        setOpen={setShowFormDetail}
+        open={showFormDetail}
+      ></ModalInfoCourse>
 
       {showConfirmDelete && (
         <ConfirmDeleteModal
@@ -175,8 +178,6 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
-  <SidebarLayout>{page}</SidebarLayout>
-);
+CourseManage.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default ApplicationsTransactions;
+export default CourseManage;

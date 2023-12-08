@@ -19,33 +19,28 @@ interface IStyleProps {
 interface IModalManage {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  firstName: string;
-  lastName: string;
-  gender: number;
-  phone: string;
-  email: string;
+  name: string;
   avatar: string;
   description: string;
+  price?: number;
+  ratting: number;
+  tutor: string;
+  spendTime: number;
 }
 
 const ModalShowInfo: React.FC<IModalManage> = ({
   setOpen,
   open,
-  gender,
-  email,
-  phone,
-  firstName,
-  lastName,
+  price,
+  tutor,
+  name,
+  ratting,
   avatar,
-  description
+  description,
+  spendTime
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-  const GenderFormatter = (value) => {
-    const formattedGender = value === 0 ? 'Nữ' : 'Nam';
-    return formattedGender;
-  };
 
   return (
     <Dialog
@@ -75,7 +70,7 @@ const ModalShowInfo: React.FC<IModalManage> = ({
         <Stack sx={style.bottom}>
           <Box sx={style.contentTop}>
             <Typography fontSize={25} color={'#459D7AFF'} fontWeight={600}>
-              {firstName} {lastName}
+              {name}
             </Typography>
           </Box>
           <Stack sx={style.contentBottom}>
@@ -89,30 +84,21 @@ const ModalShowInfo: React.FC<IModalManage> = ({
             >
               Thông tin
             </Typography>
-            <Box sx={style.converseText}>
-              <Box display="flex" alignItems="center">
-                <Typography
-                  marginLeft={'5px'}
-                  fontSize={16}
-                  color={'#6F7787FF'}
-                  fontWeight={500}
-                >
-                  Giới tính
-                </Typography>
+            {price && (
+              <Box sx={style.converseText}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    marginLeft={'5px'}
+                    fontSize={16}
+                    color={'#6F7787FF'}
+                    fontWeight={500}
+                  >
+                    Học Phí
+                  </Typography>
+                </Box>
+                <Box>{price}</Box>
               </Box>
-              <Box>
-                <Chip
-                  sx={{
-                    backgroundColor: '#5ff290b0',
-                    width: '58px',
-                    height: '24px',
-                    fontSize: '12px',
-                    color: '#0EAA42FF'
-                  }}
-                  label={GenderFormatter(gender)}
-                />
-              </Box>
-            </Box>
+            )}
             <Box sx={style.converseText}>
               <Box display="flex" alignItems="center">
                 <Typography
@@ -138,12 +124,12 @@ const ModalShowInfo: React.FC<IModalManage> = ({
                   color={'#6F7787FF'}
                   fontWeight={500}
                 >
-                  Điện thoại
+                  Đánh giá
                 </Typography>
               </Box>
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
-                  {phone}
+                  {ratting}
                 </Typography>
               </Box>
             </Box>
@@ -155,12 +141,29 @@ const ModalShowInfo: React.FC<IModalManage> = ({
                   color={'#6F7787FF'}
                   fontWeight={500}
                 >
-                  Email
+                  Gia sư
                 </Typography>
               </Box>
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
-                  {email}
+                  {tutor}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={style.converseText}>
+              <Box display="flex" alignItems="center">
+                <Typography
+                  marginLeft={'5px'}
+                  fontSize={16}
+                  color={'#6F7787FF'}
+                  fontWeight={500}
+                >
+                  Thời gian học
+                </Typography>
+              </Box>
+              <Box>
+                <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
+                  {spendTime}
                 </Typography>
               </Box>
             </Box>
