@@ -101,7 +101,8 @@ const register = async (req, res) => {
         status: "1",
         is_stripe_verified: "1",
         balance: 0,
-        has_charge_first_time: false
+        has_charge_first_time: false,
+        user_id: user.dataValues.user_id
       });
 
       user.tutor_profile = tutorProfile
@@ -109,6 +110,7 @@ const register = async (req, res) => {
     else{
       let studentProfile = await models.student_profile.create({
         student_profile_id: uuidv4(),
+        student_id: user.dataValues.user_id
       });
 
       user.student_profile = studentProfile
