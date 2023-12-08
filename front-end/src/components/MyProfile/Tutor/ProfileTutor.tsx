@@ -1,69 +1,91 @@
 import api from '@/api';
+import ControlTextField from '@/components/ControlTextField';
 import {
   Box,
   Button,
   Card,
+  FormControl,
+  FormControlLabel,
   FormGroup,
-  InputAdornment,
-  Switch,
+  FormLabel,
+  Radio,
+  RadioGroup,
   Tab,
   Tabs,
-  TextField,
+  TextField
 } from '@mui/material';
-import { useFormik } from 'formik';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useEffect, useState } from 'react';
-import * as yup from 'yup';
-import jwt_decode from 'jwt-decode';
+import { Controller, useForm } from 'react-hook-form';
 
-const validationSchema = yup.object({
-  // name: yup.string().required('Tên danh mục không được trống'),
-  // description: yup.string().nullable()
-});
+type FormData = {
+  last_name: string;
+  first_name: string;
+  email: string;
+  password: string;
+  phone_number: string;
+  gender: string;
+  balance: string;
+  stripe_account_id: string;
+  description: string;
+};
+
+const defaultValue = {
+  last_name: '',
+  first_name: '',
+  email: '',
+  password: '',
+  phone_number: '',
+  gender: 'female',
+  balance: '',
+  stripe_account_id: '',
+  description: ''
+};
 
 function ProfileTutor() {
-  const userId = '5cb003c7-5133-47a7-bc28-0c4598fae73c';
-  const [tutor, setTutor] = useState<any>();
+  const { handleSubmit, control, setValue } = useForm<FormData>({
+    values: defaultValue
+  });
 
   const [tab, setTab] = useState(0);
-
-  const formik = useFormik({
-    initialValues: {
-      ...tutor
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      if (!formik.isValid) {
-        return;
-      }
-
-      // onSave({...data,...values})
-    }
-  });
-
-  const formikProfile = useFormik({
-    initialValues: {
-      ...tutor?.tutor_profile
-    },
-    onSubmit: (values) => {
-      if (!formikProfile.isValid) {
-        return;
-      }
-
-      // onSave({...data,...values})
-    }
-  });
+  const userId = 'e5a096df-b351-452c-a004-142b0ae7124b';
 
   useEffect(() => {
-    api.get(`/tutor/get-tutor-by-userId/${userId}`).then((res) => {
-      setTutor(res.data.data);
-      formik.setValues(res.data.data);
-      formikProfile.setValues({...res.data.data?.tutor_profiles[0]});
-    });
+    const getInfoUser = async () => {
+      try {
+        const res = await api.get(`/user/get-user-info/${userId}`);
+
+        if (res.status === 200) {
+          const user = res.data.data;
+          const tutor_profile = res.data.data.tutor_profiles[0];
+          setValue('first_name', user.first_name);
+          setValue('last_name', user.last_name || '');
+          setValue('email', user.email);
+          setValue('phone_number', user.phone_number || '');
+          setValue('gender', user.gender || 'female');
+
+          // tutor
+          setValue('balance', tutor_profile.balance || '');
+          setValue('stripe_account_id', tutor_profile.stripe_account_id || '');
+          setValue('description', tutor_profile.description || '');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getInfoUser();
   }, []);
 
-  const handleChange = (_ , value) => {
+  const handleChange = (_, value) => {
     setTab(value);
+  };
+
+  const handleSaveInfo = async (data) => {
+    try {
+      const res = api.put(`/user/update-user-info/${userId}`, data);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   function CustomTabPanel(props: any) {
@@ -77,7 +99,10 @@ function ProfileTutor() {
   }
 
   return (
-    <>
+    <Box
+      component="form"
+      // onSubmit={handleSubmit(handleSaveInfo)}
+    >
       <Box sx={{ my: 3 }}>
         <Tabs
           value={tab}
@@ -96,95 +121,70 @@ function ProfileTutor() {
             background: 'white',
             py: '1rem',
             boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-            px: '3rem'
+            px: '3rem',
+            width: '100%',
+            height: '100vh'
           }}
         >
           <h3>Thông tin tài khoản</h3>
           <Box>
-            <form>
-              <FormGroup>
-                <TextField
-                  id="firstName"
-                  label="Tên gia sư"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formik.getFieldProps('first_name')}
-                  error={
-                    formik.touched['first_name'] &&
-                    Boolean(formik.errors['first_name'])
-                  }
-                  helperText={
-                    formik.touched['first_name'] && formik.errors['first_name']
-                  }
-                />
+            <ControlTextField
+              control={control}
+              name="first_name"
+              label="Tên gia sư"
+            />
+            <ControlTextField
+              control={control}
+              name="last_name"
+              label="Họ gia sư"
+            />
+            <ControlTextField control={control} name="email" label="email" />
+            <ControlTextField
+              control={control}
+              name="phone_number"
+              label="Số điện thoại"
+            />
+            <Box sx={{ mt: 3 }}>
+              <FormControl>
+                <FormLabel>Giới tính</FormLabel>
 
-                <TextField
-                  id="firstName"
-                  label="Tên gia sư"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formik.getFieldProps('last_name')}
-                  error={
-                    formik.touched['last_name'] &&
-                    Boolean(formik.errors['last_name'])
-                  }
-                  helperText={
-                    formik.touched['last_name'] && formik.errors['last_name']
-                  }
+                <Controller
+                  rules={{ required: true }}
+                  control={control}
+                  name="gender"
+                  defaultValue="female"
+                  render={({ field }) => (
+                    <RadioGroup {...field}>
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio />}
+                        label="Nữ"
+                      />
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio />}
+                        label="Nam"
+                      />
+                    </RadioGroup>
+                  )}
                 />
-
-                <TextField
-                  id="email"
-                  label="Email"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formik.getFieldProps('email')}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
-                />
-                <Box sx={{ mt: 3 }}>
-                  <label>Giới tính:</label>
-                  <Switch
-                    {...formik.getFieldProps('gender')}
-                    onChange={(e) =>
-                      formik.setFieldValue('gender', e.target.value)
-                    }
-                  />
-                  {formik.getFieldProps('gender').value == '1' ? 'Nam' : 'Nữ'}
-                </Box>
-
-                <TextField
-                  id="phone"
-                  label="Phone"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formik.getFieldProps('phone')}
-                  error={formik.touched.phone && Boolean(formik.errors.phone)}
-                  helperText={formik.touched.phone && formik.errors.phone}
-                />
-              </FormGroup>
-
-              <Box
-                sx={{
-                  mt: 3,
-                  display: 'flex',
-                  justifyContent: 'end'
-                }}
+              </FormControl>
+            </Box>
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                justifyContent: 'end'
+              }}
+            >
+              <Button
+                onClick={handleSubmit(handleSaveInfo)}
+                color="primary"
+                variant="contained"
               >
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  onClick={formik.submitForm}
-                >
-                  Lưu
-                </Button>
-              </Box>
-            </form>
+                Lưu
+              </Button>
+            </Box>
           </Box>
         </Card>
       </CustomTabPanel>
@@ -201,83 +201,92 @@ function ProfileTutor() {
         >
           <h3>Thông tin gia sư</h3>
           <Box>
-            <form>
-              <FormGroup>
-              <TextField
-                  id="stripe_account_id"
-                  label="Tài khoản ngân hàng"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formikProfile.getFieldProps('stripe_account_id')}
-                  error={
-                    formikProfile.touched['stripe_account_id'] &&
-                    Boolean(formikProfile.errors['stripe_account_id'])
-                  }
-                  helperText={
-                    formikProfile.touched['stripe_account_id'] && formikProfile.errors['stripe_account_id']
-                  }
+            {/* <TextField
+              id="stripe_account_id"
+              label="Tài khoản ngân hàng"
+              variant="standard"
+              fullWidth
+              margin="normal"
+              // {...formikProfile.getFieldProps('stripe_account_id')}
+              // error={
+              //   formikProfile.touched['stripe_account_id'] &&
+              //   Boolean(formikProfile.errors['stripe_account_id'])
+              // }
+              // helperText={
+              //   formikProfile.touched['stripe_account_id'] &&
+              //   formikProfile.errors['stripe_account_id']
+              // }
+              // InputProps={{
+              //   endAdornment: (
+              //     <InputAdornment position="end">
+              //       <CheckCircleIcon
+              //         color={
+              //           tutor?.tutor_profile?.is_stripe_verified
+              //             ? 'success'
+              //             : 'secondary'
+              //         }
+              //       />
+              //     </InputAdornment>
+              //   )
+              // }}
+            /> */}
 
-                  InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                        <CheckCircleIcon color={tutor?.tutor_profile?.is_stripe_verified?'success':'secondary'} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+            <ControlTextField
+              control={control}
+              name="stripe_account_id"
+              label="Tài khoản ngân hàng"
+            />
 
-                <TextField
-                  id="balance"
-                  label="Số dư"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  {...formikProfile.getFieldProps('balance')}
-                  
-                  disabled
-                />
+            <ControlTextField control={control} name="balance" label="Số dư" />
 
-                <TextField
-                  id="description"
-                  label="Mô tả về bản thân"
-                  variant="standard"
-                  fullWidth
-                  margin="normal"
-                  multiline
-                  rows={5}
-                  {...formikProfile.getFieldProps('description')}
-                  error={
-                    formikProfile.touched['description'] &&
-                    Boolean(formikProfile.errors['description'])
-                  }
-                  helperText={
-                    formikProfile.touched['description'] && formikProfile.errors['description']
-                  }
-                />
-              </FormGroup>
+            <ControlTextField
+              control={control}
+              name="description"
+              label="Mô tả về bản thân"
+              textfieldProps={{
+                multiline: true,
+                rows: 5
+              }}
+            />
 
-              <Box
-                sx={{
-                  mt: 3,
-                  display: 'flex',
-                  justifyContent: 'end'
-                }}
+            {/* <TextField
+              id="description"
+              label="Mô tả về bản thân"
+              variant="standard"
+              fullWidth
+              margin="normal"
+              multiline
+              rows={5}
+              // {...formikProfile.getFieldProps('description')}
+              // error={
+              //   formikProfile.touched['description'] &&
+              //   Boolean(formikProfile.errors['description'])
+              // }
+              // helperText={
+              //   formikProfile.touched['description'] &&
+              //   formikProfile.errors['description']
+              // }
+            /> */}
+
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                justifyContent: 'end'
+              }}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSubmit(handleSaveInfo)}
               >
-                <Button
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  onClick={formik.submitForm}
-                >
-                  Lưu
-                </Button>
-              </Box>
-            </form>
+                Lưu
+              </Button>
+            </Box>
           </Box>
         </Card>
       </CustomTabPanel>
-    </>
+    </Box>
   );
 }
 
