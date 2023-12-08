@@ -11,7 +11,6 @@ const Footer = () => {
         height: 370,
         width: '100%',
         backgroundColor: 'text.primary',
-        mt: 10,
         position: 'relative',
         overflow: 'hidden'
       }}

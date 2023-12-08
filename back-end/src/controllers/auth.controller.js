@@ -104,4 +104,5 @@ const getToken = (user) => {
   return token;
 };
 
+
 module.exports = { login, register };

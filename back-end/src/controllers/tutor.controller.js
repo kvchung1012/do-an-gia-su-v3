@@ -156,6 +156,26 @@ const updateTutorExperience = async (req, res) => {
   return succesCode(res, entity);
 };
 
+
+
+const getTutorByUserId = async (req, res) => {
+  let { id } = req.params;
+  let entity = await models.users.findOne({
+    where: {
+      user_id: id,
+    },
+    include: [
+      {
+        model: models.tutor_profile,
+        as: "tutor_profiles",
+        include: ['tutor_certifications','tutor_educations','tutor_experiences']
+      },
+    ],
+  });
+
+  return succesCode(res, entity, "Success");
+};
+
 module.exports = {
   findAll,
   findById,
@@ -165,4 +185,5 @@ module.exports = {
   updateTutorCertifications,
   updateTutorEducations,
   updateTutorExperience,
+  getTutorByUserId
 };
