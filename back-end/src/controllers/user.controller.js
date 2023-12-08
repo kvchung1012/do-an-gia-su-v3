@@ -36,7 +36,7 @@ const getUserInfo = async (req, res) => {
     }]
   })
 
-  entity.student_profile = student_profile;
+  entity.dataValues.student_profile = student_profile;
 
   return succesCode(res, entity, "Success");
 };
