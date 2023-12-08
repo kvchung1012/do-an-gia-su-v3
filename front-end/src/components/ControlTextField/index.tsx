@@ -42,6 +42,7 @@ const AppFormControlTextField = <T extends FieldValues>({
             }}
             {...otherFieldProps}
             {...textfieldProps}
+            fullWidth
           />
         )}
       />
