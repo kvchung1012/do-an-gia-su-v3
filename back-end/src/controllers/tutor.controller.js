@@ -160,8 +160,6 @@ const updateTutorExperience = async (req, res) => {
   return succesCode(res, entity);
 };
 
-
-
 const getTutorByUserId = async (req, res) => {
   let { id } = req.params;
   let entity = await models.users.findOne({
@@ -172,7 +170,11 @@ const getTutorByUserId = async (req, res) => {
       {
         model: models.tutor_profile,
         as: "tutor_profiles",
-        include: ['tutor_certifications','tutor_educations','tutor_experiences']
+        include: [
+          "tutor_certifications",
+          "tutor_educations",
+          "tutor_experiences",
+        ],
       },
     ],
   });
@@ -189,5 +191,5 @@ module.exports = {
   updateTutorCertifications,
   updateTutorEducations,
   updateTutorExperience,
-  getTutorByUserId
+  getTutorByUserId,
 };

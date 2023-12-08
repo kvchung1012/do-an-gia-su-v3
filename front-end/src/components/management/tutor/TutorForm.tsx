@@ -1,4 +1,3 @@
-import api from '@/api';
 import {
   Dialog,
   DialogTitle,
@@ -8,8 +7,8 @@ import {
   FormGroup,
   TextField
 } from '@mui/material';
-import { Formik, useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import { useFormik } from 'formik';
+import React from 'react';
 import * as yup from 'yup';
 
 const validationSchema = yup.object({
@@ -17,7 +16,7 @@ const validationSchema = yup.object({
   description: yup.string().nullable()
 });
 
-function CategoryForm({ isOpen, onClose, data, onSave }) {
+function TutorForm({ isOpen, onClose, data, onSave }) {
   const formik = useFormik({
     initialValues: {
       ...data
@@ -43,7 +42,9 @@ function CategoryForm({ isOpen, onClose, data, onSave }) {
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">
-            {data?.category_id ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}
+            {data?.category_id
+              ? 'Chỉnh sửa thông tin gia sư'
+              : 'Thêm mới thông tin gia sư'}
           </DialogTitle>
           <DialogContent
             sx={{
@@ -53,7 +54,7 @@ function CategoryForm({ isOpen, onClose, data, onSave }) {
             <FormGroup>
               <TextField
                 id="name"
-                label="Tiêu đề"
+                label="Tên"
                 variant="standard"
                 fullWidth
                 margin="normal"
@@ -77,17 +78,6 @@ function CategoryForm({ isOpen, onClose, data, onSave }) {
                   formik.touched.description && formik.errors.description
                 }
               />
-
-              {/* <TextField
-                id="email"
-                label="Email"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                {...formik.getFieldProps('email')}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-              /> */}
             </FormGroup>
           </DialogContent>
           <DialogActions>
@@ -109,4 +99,4 @@ function CategoryForm({ isOpen, onClose, data, onSave }) {
   );
 }
 
-export default CategoryForm;
+export default TutorForm;

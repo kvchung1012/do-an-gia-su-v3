@@ -5,18 +5,20 @@ import { Grid, Container, Box, IconButton, Avatar } from '@mui/material';
 import { ProColumns } from '@ant-design/pro-table';
 import MyTable from '@/components/base/table';
 import React, { useEffect, useState } from 'react';
-import CategoryForm from '@/components/management/category/CategoryForm';
-
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
 import Image from 'next/image';
+import TutorForm from '@/components/management/tutor/TutorForm';
+import TutorInfoDetail from '@/components/management/tutor/TutorInfoDetail';
+import ModalShowInfo from '@/components/management/common/ModalShowInfo';
 
 function TutorProfile() {
   const [data, setData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showFormDetail, setShowFormDetail] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
 
@@ -36,7 +38,8 @@ function TutorProfile() {
           size="small"
           onClick={() => {
             setDataSelected(row);
-            setShowForm(true);
+            setShowFormDetail(true);
+            console.log(row);
           }}
         >
           <RemoveRedEyeIcon fontSize="small" />
@@ -44,28 +47,37 @@ function TutorProfile() {
       )
     },
     {
-      title: 'Gia Sư',
+      title: 'Tên gia sư',
       width: 200,
       fixed: 'left',
-      sorter: true,
-      render: (_, row) => <p>{row.user?.last_name}</p>
+      render: (_, row) => (
+        <p>
+          {row.user?.first_name} {row.user?.last_name}
+        </p>
+      )
     },
     {
-      width: 150,
+      width: 80,
       title: 'Ảnh đại diện',
       fixed: 'left',
       render: (_, row) =>
         row.user?.avatar_url ? (
-          <Image width={20} height={20} src={row.user.avatar_url}></Image>
+          <Image width={50} height={50} src={row.user?.avatar_url}></Image>
         ) : (
           <Avatar></Avatar>
         )
     },
     {
-      width: 300,
-      title: 'Mô tả',
-      dataIndex: 'description',
-      sorter: true
+      title: 'Email',
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.user?.email}</p>
+    },
+    {
+      title: 'Sđt',
+      width: 200,
+      fixed: 'left',
+      render: (_, row) => <p>{row.user?.phone_number}</p>
     },
     {
       width: 60,
@@ -76,7 +88,7 @@ function TutorProfile() {
       render: (_, row) => (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <IconButton
+            {/* <IconButton
               aria-label="delete"
               color="secondary"
               size="small"
@@ -86,7 +98,7 @@ function TutorProfile() {
               }}
             >
               <EditIcon fontSize="small" />
-            </IconButton>
+            </IconButton> */}
 
             <IconButton
               aria-label="delete"
@@ -104,7 +116,6 @@ function TutorProfile() {
       )
     }
   ];
-  console.log(data);
 
   const fetchData = () => {
     api.get('tutor').then((res) => {
@@ -113,12 +124,14 @@ function TutorProfile() {
   };
 
   const handleDelete = () => {
-    const { tutor_id } = dataSelected;
+    console.log(dataSelected);
+    const tutor_id = dataSelected.user_id;
     api.delete(`tutor/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
   };
+  console.log(dataSelected);
 
   const handleSaveData = (body) => {
     const request = !body?.tutor_id
@@ -165,15 +178,27 @@ function TutorProfile() {
         </Grid>
       </Container>
 
-      {showForm && (
-        <CategoryForm
+      {/* {showForm && (
+        <TutorForm
           data={dataSelected}
           isOpen={showForm}
           onSave={handleSaveData}
           onClose={() => setShowForm(false)}
           key={''}
         />
-      )}
+      )} */}
+
+      <ModalShowInfo
+        firstName={dataSelected?.user?.first_name}
+        lastName={dataSelected?.user?.last_name}
+        avatar={dataSelected?.user?.avatar_url}
+        description={dataSelected?.description}
+        gender={dataSelected?.user?.gender}
+        phone={dataSelected?.user?.phone_number}
+        email={dataSelected?.user?.email}
+        setOpen={setShowFormDetail}
+        open={showFormDetail}
+      ></ModalShowInfo>
 
       {showConfirmDelete && (
         <ConfirmDeleteModal
