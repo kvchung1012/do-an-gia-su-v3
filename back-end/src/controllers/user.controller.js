@@ -36,9 +36,25 @@ const getUserInfo = async (req, res) => {
     }]
   })
 
-  entity.student_profile = student_profile;
+  var response  = {
+     ...entity.dataValues,
+     student_profile : student_profile
+  }
+  return succesCode(res, response, "Success");
+};
+
+
+const updateUserInfo = async (req, res) => {
+  let { id } = req.params;
+  let entity = await models.users.findOne({
+    where: {
+      user_id: id,
+    }
+  });
+
+  entity.update(req.body)
 
   return succesCode(res, entity, "Success");
 };
 
-module.exports = { getUserInfo };
+module.exports = { getUserInfo , updateUserInfo};

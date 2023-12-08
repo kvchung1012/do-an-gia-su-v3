@@ -356,6 +356,26 @@
         }
       }
     },
+    "/tutor/get-tutor-by-userId/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "description": "",
@@ -392,9 +412,6 @@
                   "gender": {
                     "example": "any"
                   },
-                  "avatar_url": {
-                    "example": "any"
-                  },
                   "phone_number": {
                     "example": "any"
                   },
@@ -408,6 +425,9 @@
                     "example": "any"
                   },
                   "password": {
+                    "example": "any"
+                  },
+                  "tutor_profile": {
                     "example": "any"
                   }
                 }
@@ -1029,6 +1049,46 @@
         }
       },
       "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user/get-user-info/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user/update-user-info/{id}": {
+      "put": {
         "description": "",
         "parameters": [
           {

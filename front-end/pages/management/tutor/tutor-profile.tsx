@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container, Box, IconButton, Checkbox } from '@mui/material';
+import { Grid, Container, Box, IconButton, Avatar } from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
 import MyTable from '@/components/base/table';
@@ -10,9 +10,11 @@ import CategoryForm from '@/components/management/category/CategoryForm';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
+import Image from 'next/image';
 
-function ApplicationsTransactions() {
+function TutorProfile() {
   const [data, setData] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -27,24 +29,37 @@ function ApplicationsTransactions() {
       width: 15,
       fixed: 'left',
       align: 'center',
-      render: (_) => <Checkbox size="small" />
+      render: (_, row) => (
+        <IconButton
+          aria-label="delete"
+          color="secondary"
+          size="small"
+          onClick={() => {
+            setDataSelected(row);
+            setShowForm(true);
+          }}
+        >
+          <RemoveRedEyeIcon fontSize="small" />
+        </IconButton>
+      )
     },
     {
-      title: 'Danh mục',
-      dataIndex: 'name',
+      title: 'Gia Sư',
       width: 200,
       fixed: 'left',
       sorter: true,
-      render: (dom) => {
-        // dom là field name (dataIndex), entity là cả row
-        return <a style={{ fontWeight: '500' }}>{dom}</a>;
-      }
+      render: (_, row) => <p>{row.user?.last_name}</p>
     },
     {
       width: 150,
-      title: 'Hình ảnh',
-      dataIndex: 'image_url',
-      fixed: 'left'
+      title: 'Ảnh đại diện',
+      fixed: 'left',
+      render: (_, row) =>
+        row.user?.avatar_url ? (
+          <Image width={20} height={20} src={row.user.avatar_url}></Image>
+        ) : (
+          <Avatar></Avatar>
+        )
     },
     {
       width: 300,
@@ -89,25 +104,26 @@ function ApplicationsTransactions() {
       )
     }
   ];
+  console.log(data);
 
   const fetchData = () => {
-    api.get('category').then((res) => {
+    api.get('tutor').then((res) => {
       setData([...res?.data?.data]);
     });
   };
 
   const handleDelete = () => {
-    const { category_id } = dataSelected;
-    api.delete(`category/${category_id}`).then(() => {
+    const { tutor_id } = dataSelected;
+    api.delete(`tutor/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
   };
 
   const handleSaveData = (body) => {
-    const request = !body?.category_id
-      ? api.post('category', body)
-      : api.put(`category/${body.category_id}`, body);
+    const request = !body?.tutor_id
+      ? api.post('tutor', body)
+      : api.put(`tutor/${body.tutor_id}`, body);
 
     request
       .then((res) => {
@@ -123,7 +139,7 @@ function ApplicationsTransactions() {
   return (
     <>
       <Head>
-        <title>Quản lý danh mục</title>
+        <title>Quản lý Profile gia sư</title>
       </Head>
       <Container
         maxWidth="lg"
@@ -140,15 +156,10 @@ function ApplicationsTransactions() {
         >
           <Grid item xs={12}>
             <MyTable
-              title={'Danh sách danh mục'}
+              title={'Danh sách gia sư'}
               rowKey="category_id"
               dataRows={data}
               columns={columns}
-              createText={'Thêm mới'}
-              onCreateData={() => {
-                setDataSelected({});
-                setShowForm(true);
-              }}
             />
           </Grid>
         </Grid>
@@ -175,8 +186,6 @@ function ApplicationsTransactions() {
   );
 }
 
-ApplicationsTransactions.getLayout = (page) => (
-  <SidebarLayout>{page}</SidebarLayout>
-);
+TutorProfile.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default ApplicationsTransactions;
+export default TutorProfile;
