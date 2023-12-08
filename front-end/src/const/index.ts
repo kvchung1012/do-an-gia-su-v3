@@ -5,6 +5,7 @@ export const LOGOUT_PATH = '/auth/logout';
 export const REGISTER_PATH = '/auth/register';
 export const STUDENT_REGISTER_PATH = '/auth/register/student';
 export const TEACHER_REGISTER_PATH = '/auth/register/teacher';
+export const MY_PROFILE_PATH = '/my-profile';
 
 // App const
 export const ROLE_STUDENT_ID = '3fd935a1-4ef6-403c-976a-df558dd911e1';

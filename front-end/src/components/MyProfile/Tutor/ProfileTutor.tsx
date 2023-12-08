@@ -1,20 +1,22 @@
 import api from '@/api';
 import ControlTextField from '@/components/ControlTextField';
+import { VerifyIcon } from '@/components/icons';
+import { ROLE_TEACHER_ID } from '@/const';
 import {
   Box,
   Button,
   Card,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormLabel,
+  InputAdornment,
   Radio,
   RadioGroup,
   Tab,
-  Tabs,
-  TextField
+  Tabs
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { enqueueSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 type FormData = {
@@ -45,6 +47,8 @@ function ProfileTutor() {
   const { handleSubmit, control, setValue } = useForm<FormData>({
     values: defaultValue
   });
+  const [tutorId, setTutorId] = useState(0);
+  const [verified, setVerified] = useState(false);
 
   const [tab, setTab] = useState(0);
   const userId = 'e5a096df-b351-452c-a004-142b0ae7124b';
@@ -64,9 +68,18 @@ function ProfileTutor() {
           setValue('gender', user.gender || 'female');
 
           // tutor
-          setValue('balance', tutor_profile.balance || '');
-          setValue('stripe_account_id', tutor_profile.stripe_account_id || '');
-          setValue('description', tutor_profile.description || '');
+          if (user.role_id === ROLE_TEACHER_ID) {
+            setValue('balance', tutor_profile.balance || '');
+            setValue(
+              'stripe_account_id',
+              tutor_profile.stripe_account_id || ''
+            );
+            setValue('description', tutor_profile.description || '');
+            setTutorId(tutor_profile.tutor_profile_id);
+            setVerified(
+              Boolean(Number(tutor_profile.is_stripe_verified)) || false
+            );
+          }
         }
       } catch (error) {
         console.log(error);
@@ -81,8 +94,32 @@ function ProfileTutor() {
 
   const handleSaveInfo = async (data) => {
     try {
-      const res = api.put(`/user/update-user-info/${userId}`, data);
-      console.log(res);
+      const res = await api.put(`/user/update-user-info/${userId}`, data);
+      if (res.status === 200) {
+        enqueueSnackbar({
+          message: 'Cập nhật thông tin tài khoản thành công',
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSaveTutorInfo = async (data) => {
+    try {
+      const payload = {
+        stripe_account_id: data.stripe_account_id,
+        balance: data.balance,
+        description: data.description
+      };
+      const res = await api.put(`/tutor/${tutorId}`, payload);
+      if (res.status === 200) {
+        enqueueSnackbar({
+          message: 'Cập nhật thông tin gia sư thành công',
+          variant: 'success'
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +138,9 @@ function ProfileTutor() {
   return (
     <Box
       component="form"
-      // onSubmit={handleSubmit(handleSaveInfo)}
+      sx={{
+        minHeight: '600px'
+      }}
     >
       <Box sx={{ my: 3 }}>
         <Tabs
@@ -110,7 +149,7 @@ function ProfileTutor() {
           aria-label="basic tabs example"
         >
           <Tab label="Thông tin tài khoản" />
-          <Tab label="Thông tin gia sư" />
+          {Boolean(tutorId) === true && <Tab label="Thông tin gia sư" />}
         </Tabs>
       </Box>
 
@@ -201,44 +240,27 @@ function ProfileTutor() {
         >
           <h3>Thông tin gia sư</h3>
           <Box>
-            {/* <TextField
-              id="stripe_account_id"
-              label="Tài khoản ngân hàng"
-              variant="standard"
-              fullWidth
-              margin="normal"
-              // {...formikProfile.getFieldProps('stripe_account_id')}
-              // error={
-              //   formikProfile.touched['stripe_account_id'] &&
-              //   Boolean(formikProfile.errors['stripe_account_id'])
-              // }
-              // helperText={
-              //   formikProfile.touched['stripe_account_id'] &&
-              //   formikProfile.errors['stripe_account_id']
-              // }
-              // InputProps={{
-              //   endAdornment: (
-              //     <InputAdornment position="end">
-              //       <CheckCircleIcon
-              //         color={
-              //           tutor?.tutor_profile?.is_stripe_verified
-              //             ? 'success'
-              //             : 'secondary'
-              //         }
-              //       />
-              //     </InputAdornment>
-              //   )
-              // }}
-            /> */}
-
             <ControlTextField
               control={control}
               name="stripe_account_id"
               label="Tài khoản ngân hàng"
+              textfieldProps={{
+                InputProps: {
+                  endAdornment: (
+                    <InputAdornment sx={{ mx: 0 }} position="start">
+                      {verified && (
+                        <VerifyIcon
+                          sx={{
+                            color: '#4caf50'
+                          }}
+                        />
+                      )}
+                    </InputAdornment>
+                  )
+                }
+              }}
             />
-
             <ControlTextField control={control} name="balance" label="Số dư" />
-
             <ControlTextField
               control={control}
               name="description"
@@ -248,25 +270,6 @@ function ProfileTutor() {
                 rows: 5
               }}
             />
-
-            {/* <TextField
-              id="description"
-              label="Mô tả về bản thân"
-              variant="standard"
-              fullWidth
-              margin="normal"
-              multiline
-              rows={5}
-              // {...formikProfile.getFieldProps('description')}
-              // error={
-              //   formikProfile.touched['description'] &&
-              //   Boolean(formikProfile.errors['description'])
-              // }
-              // helperText={
-              //   formikProfile.touched['description'] &&
-              //   formikProfile.errors['description']
-              // }
-            /> */}
 
             <Box
               sx={{
@@ -278,7 +281,7 @@ function ProfileTutor() {
               <Button
                 color="primary"
                 variant="contained"
-                onClick={handleSubmit(handleSaveInfo)}
+                onClick={handleSubmit(handleSaveTutorInfo)}
               >
                 Lưu
               </Button>
