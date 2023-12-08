@@ -18,15 +18,15 @@ import {
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
-import { useForm } from 'react-hook-form';
+import { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { ZodType, z } from 'zod';
+import ControlTextField from '../ControlTextField';
 
 type FormData = {
   last_name: string;
@@ -35,6 +35,24 @@ type FormData = {
   password: string;
   confirmPassword: string;
   phone_number: string;
+  gender: string;
+  stripe_account_id: string;
+  description: string;
+  avatar_url: string;
+};
+
+const defaultValues = {
+  last_name: '',
+  first_name: '',
+  email: '',
+  password: '',
+  phone_number: '',
+  gender: 'female',
+  balance: '',
+  stripe_account_id: '',
+  description: '',
+  confirmPassword: '',
+  avatar_url: ''
 };
 
 function Copyright(props) {
@@ -62,6 +80,9 @@ export default function SignUp() {
   const schema: ZodType = z
     .object({
       last_name: z.string(),
+      gender: z.string(),
+      description: z.string(),
+      stripe_account_id: z.string(),
       first_name: z.string().min(1, 'Vui lòng nhập tên'),
       phone_number: z
         .string()
@@ -88,39 +109,64 @@ export default function SignUp() {
     });
 
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors }
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+  } = useForm<FormData>({ resolver: zodResolver(schema), defaultValues });
 
   const handleRegister = async (data) => {
-    if (router.asPath === STUDENT_REGISTER_PATH) {
-      data.role_id = ROLE_STUDENT_ID;
-    } else if (router.asPath === TEACHER_REGISTER_PATH) {
-      data.role_id = ROLE_TEACHER_ID;
-    }
-
     try {
-      const res = await api.post(REGISTER_PATH, data);
-
-      if (res.status === 200) {
-        enqueueSnackbar({
-          message: 'Đăng ký thành công!',
-          variant: 'success'
-        });
-        router.push(LOGIN_PATH);
+      if (router.asPath === STUDENT_REGISTER_PATH) {
+        data.role_id = ROLE_STUDENT_ID;
+        data.type = '1';
+        data.avatar_url = '';
+        const res = await api.post(REGISTER_PATH, data);
+        if (res.status === 200) {
+          enqueueSnackbar({
+            message: 'Đăng ký thành công!',
+            variant: 'success'
+          });
+          router.push(LOGIN_PATH);
+        }
+      } else if (router.asPath === TEACHER_REGISTER_PATH) {
+        const payload = {
+          email: data.email,
+          last_name: data.last_name,
+          first_name: data.first_name,
+          password: data.password,
+          phone_number: data.phone_number,
+          gender: data.gender,
+          role_id: ROLE_TEACHER_ID,
+          avatar_url: '',
+          type: '0',
+          tutor_profile: {
+            stripe_account_id: data.stripe_account_id,
+            description: data.description
+          }
+        };
+        const res = await api.post(REGISTER_PATH, payload);
+        if (res.status === 200) {
+          enqueueSnackbar({
+            message: 'Đăng ký thành công!',
+            variant: 'success'
+          });
+          router.push(LOGIN_PATH);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const isTutor = useMemo(() => {
+    return router.asPath === TEACHER_REGISTER_PATH;
+  }, [router.asPath]);
+
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <Container maxWidth="xs">
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 5,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center'
@@ -138,83 +184,121 @@ export default function SignUp() {
         <Box
           component="form"
           onSubmit={handleSubmit(handleRegister)}
-          // noValidate
-          sx={{ mt: 1 }}
+          sx={{
+            mt: 1,
+            width: 400
+          }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email đăng nhập"
+          <ControlTextField
+            control={control}
             name="email"
-            autoFocus
-            error={!!errors['email']}
-            autoComplete="off"
-            helperText={errors['email'] ? errors['email'].message : ''}
-            {...register('email')}
-          />
-          <TextField
-            margin="normal"
+            label="Email đăng nhập"
             required
-            fullWidth
+            textfieldProps={{
+              size: 'medium',
+              error: Boolean(errors.email),
+              helperText: errors.email?.message || ''
+            }}
+          />
+          <ControlTextField
+            control={control}
             name="password"
             label="Mật khẩu"
-            type="password"
-            {...register('password')}
-            error={!!errors['password']}
-            helperText={errors['password'] ? errors['password'].message : ''}
+            required
+            textfieldProps={{
+              type: 'password',
+              size: 'medium',
+              error: Boolean(errors.password),
+              helperText: errors.password?.message || ''
+            }}
           />
-          <TextField
+          <ControlTextField
+            control={control}
+            name="confirmPassword"
             label="Xác Nhận Mật Khẩu"
-            fullWidth
             required
-            margin="normal"
-            type="password"
-            {...register('confirmPassword')}
-            error={!!errors['confirmPassword']}
-            helperText={
-              errors['confirmPassword'] ? errors['confirmPassword'].message : ''
-            }
+            textfieldProps={{
+              type: 'password',
+              size: 'medium',
+              error: Boolean(errors.confirmPassword),
+              helperText: errors.confirmPassword?.message || ''
+            }}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
+          <ControlTextField
+            control={control}
+            name="phone_number"
             label="Số điện thoại"
-            {...register('phone_number')}
-            error={!!errors['phone_number']}
-            helperText={
-              errors['phone_number'] ? errors['phone_number'].message : ''
-            }
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            label="Họ"
-            {...register('last_name')}
-          />
-          <TextField
-            margin="normal"
             required
-            fullWidth
-            label="Tên"
-            {...register('first_name')}
-            helperText={
-              errors['first_name'] ? errors['first_name'].message : ''
-            }
-            error={!!errors['first_name']}
+            textfieldProps={{
+              size: 'medium',
+              error: Boolean(errors.phone_number),
+              helperText: errors.phone_number?.message || ''
+            }}
           />
+          <ControlTextField
+            control={control}
+            name="first_name"
+            label="Tên"
+            required
+            textfieldProps={{
+              size: 'medium',
+              error: Boolean(errors.first_name),
+              helperText: errors.first_name?.message || ''
+            }}
+          />
+          <ControlTextField
+            control={control}
+            name="last_name"
+            label="Họ"
+            textfieldProps={{
+              size: 'medium'
+            }}
+          />
+
+          {isTutor && (
+            <ControlTextField
+              control={control}
+              name="stripe_account_id"
+              label="Tài khoản ngân hàng"
+              textfieldProps={{
+                type: 'number'
+              }}
+            />
+          )}
+
+          {isTutor && (
+            <ControlTextField
+              control={control}
+              name="description"
+              label="Mô tả về bản thân"
+              textfieldProps={{
+                multiline: true,
+                rows: 5
+              }}
+            />
+          )}
+
           <FormControl>
             <FormLabel>Giới tính</FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="female" control={<Radio />} label="Nữ" />
-              <FormControlLabel value="male" control={<Radio />} label="Nam" />
-            </RadioGroup>
+            <Controller
+              rules={{ required: true }}
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <RadioGroup {...field}>
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Nữ"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Nam"
+                  />
+                </RadioGroup>
+              )}
+            />
           </FormControl>
           <Button
             type="submit"

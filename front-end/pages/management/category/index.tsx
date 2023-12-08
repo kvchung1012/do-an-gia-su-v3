@@ -95,6 +95,7 @@ function ApplicationsTransactions() {
       setData([...res?.data?.data]);
     });
   };
+  console.log(dataSelected);
 
   const handleDelete = () => {
     const { category_id } = dataSelected;

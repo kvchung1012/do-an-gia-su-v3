@@ -1,9 +1,9 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("doangiasu", "root", '1234', {
+const sequelize = new Sequelize("doangiasu", "root", null, {
   port: 3306,
   host: "localhost",
-  password: '1234',
+  password: null,
   dialect:
     "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
   define: {

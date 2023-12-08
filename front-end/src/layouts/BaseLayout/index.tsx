@@ -1,5 +1,10 @@
 import Footer from '@/components/Footer';
-import { LOGIN_PATH, LOGOUT_PATH, REGISTER_PATH } from '@/const';
+import {
+  LOGIN_PATH,
+  LOGOUT_PATH,
+  MY_PROFILE_PATH,
+  REGISTER_PATH
+} from '@/const';
 import {
   AppBar,
   Avatar,
@@ -61,7 +66,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
       <Head>
         <title>Ez Gia sư</title>
       </Head>
-      <Stack justifyContent="space-between">
+      <Stack justifyContent="space-between" mt="88px">
         <AppBar
           sx={{
             height: 88,
@@ -126,6 +131,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                           backgroundColor: '#fafafa'
                         }
                       }}
+                      onClick={() => router.push(MY_PROFILE_PATH)}
                       variant="h4"
                     >
                       Tài khoản của tôi
