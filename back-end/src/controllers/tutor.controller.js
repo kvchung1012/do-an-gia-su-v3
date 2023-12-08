@@ -16,7 +16,11 @@ const findAll = async (req, res) => {
       "user",
     ],
   });
-  return succesCode(res, entities, "Lấy danh sách gia sư thành công!!!");
+  return succesCode(
+    res,
+    entities,
+    "Lấy danh sách profile gia sư thành công!!!"
+  );
 };
 
 const findById = async (req, res) => {
