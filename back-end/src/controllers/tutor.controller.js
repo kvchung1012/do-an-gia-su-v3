@@ -33,7 +33,7 @@ const findById = async (req, res) => {
       "tutor_educations",
       "tutor_certifications",
       "tutor_experiences",
-      "users",
+      "user",
     ],
   });
 
