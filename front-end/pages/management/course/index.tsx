@@ -116,7 +116,6 @@ function CourseManage() {
       setData([...res?.data?.data]);
     });
   };
-  console.log(data);
 
   const handleDelete = () => {
     const courseId = dataSelected.course_id;
