@@ -1,5 +1,6 @@
 const sequelize = require("../models/index");
 const initModel = require("../models/init-models");
+const tutor_available_date = require("../models/tutor_available_date");
 const { succesCode, errorCode, failCode } = require("../responses/response");
 const models = initModel(sequelize);
 const { Op } = require("sequelize");
@@ -22,12 +23,31 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
   let body = req.body;
-  let entity = await models.tutorintutor_available_dateg_feedback.create({
+  let entity = await models.tutor_available_date.create({
     tutor_available_date_id: uuidv4(),
     ...body,
   });
 
   return succesCode(res, entity);
+};
+
+const createMany = async (req, res) => {
+  let body = req.body;
+  var datas = body
+              .map((x)=>{
+                return {
+                  tutor_available_date_id: uuidv4(), 
+                  start_time: x.start_time,
+                  end_time: x.end_time,
+                  tutor_id: x.tutor_id
+                }
+              });
+
+    
+  let entities = await models.tutor_available_date
+              .bulkCreate(datas);
+
+  return succesCode(res, entities);
 };
 
 const update = async (req, res) => {
@@ -56,4 +76,16 @@ const deleteById = async (req, res) => {
   return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
 };
 
-module.exports = { findAll, findById, create, update, deleteById };
+const findByUserId = async (req, res) => {
+  let {id } = req.params;
+  let entities = await models.tutor_available_date.findAll({
+    where:{
+      tutor_id: id,
+    },
+    include: ["schedule"],
+  });
+  
+  return succesCode(res, entities, "Lấy danh sách thành công!!!");
+};
+
+module.exports = { findAll, findById, create, update, deleteById , createMany, findByUserId};
