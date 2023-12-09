@@ -1,5 +1,8 @@
 const express = require("express");
-const { getUserInfo, updateUserInfo } = require("../controllers/user.controller");
+const {
+  getUserInfo,
+  updateUserInfo,
+} = require("../controllers/user.controller");
 const userRouters = express.Router();
 
 userRouters.get("/get-user-info/:id", getUserInfo);

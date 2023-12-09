@@ -10,8 +10,6 @@ var jwt = require("jsonwebtoken");
 const login = async (req, res) => {
   try {
     const { email, password } = { ...req.body };
-    console.log(email);
-    console.log(password);
 
     let user = await models.users.findOne({
       where: {
