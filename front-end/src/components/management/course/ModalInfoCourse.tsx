@@ -1,8 +1,6 @@
 import React, { memo } from 'react';
 import {
-  Avatar,
   Box,
-  Chip,
   Dialog,
   Stack,
   SxProps,
@@ -11,6 +9,8 @@ import {
   useTheme
 } from '@mui/material';
 import { Theme } from '@mui/material/styles';
+import Image from 'next/image';
+import StarIcon from '@mui/icons-material/Star';
 
 interface IStyleProps {
   [x: string]: SxProps<Theme>;
@@ -52,20 +52,17 @@ const ModalShowInfo: React.FC<IModalManage> = ({
     >
       <Stack sx={style.flex}>
         <Stack sx={style.top}>
-          <Avatar
-            src={avatar}
+          <Box
+            width={'100%'}
+            height={'200px'}
             sx={{
-              width: 140,
-              height: 140,
               position: 'absolute',
               backgroundRepeat: 'no-repeat',
-              backgroundSize: '100%',
-              left: '50%',
-              right: '50%',
-              top: '100%',
-              transform: 'translate(-50%,-50%)'
+              backgroundSize: '100%'
             }}
-          />
+          >
+            <Image src={avatar} layout="fill" />
+          </Box>
         </Stack>
         <Stack sx={style.bottom}>
           <Box sx={style.contentTop}>
@@ -74,14 +71,7 @@ const ModalShowInfo: React.FC<IModalManage> = ({
             </Typography>
           </Box>
           <Stack sx={style.contentBottom}>
-            <Typography
-              fontSize={20}
-              color={'#459D7AFF'}
-              fontWeight={500}
-              sx={{
-                margin: '50px 0 20px 0'
-              }}
-            >
+            <Typography fontSize={20} color={'#459D7AFF'} fontWeight={500}>
               Thông tin
             </Typography>
             {price && (
@@ -96,7 +86,7 @@ const ModalShowInfo: React.FC<IModalManage> = ({
                     Học Phí
                   </Typography>
                 </Box>
-                <Box>{price}</Box>
+                <Box>{price}/buổi</Box>
               </Box>
             )}
             <Box sx={style.converseText}>
@@ -127,10 +117,11 @@ const ModalShowInfo: React.FC<IModalManage> = ({
                   Đánh giá
                 </Typography>
               </Box>
-              <Box>
+              <Box display="flex">
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
                   {ratting}
                 </Typography>
+                <StarIcon />
               </Box>
             </Box>
             <Box sx={style.converseText}>
@@ -163,7 +154,7 @@ const ModalShowInfo: React.FC<IModalManage> = ({
               </Box>
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
-                  {spendTime}
+                  {spendTime} buổi
                 </Typography>
               </Box>
             </Box>

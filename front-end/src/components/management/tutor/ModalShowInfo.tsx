@@ -27,6 +27,7 @@ interface IModalManage {
   avatar: string;
   description: string;
   company: string;
+  subject: string;
 }
 
 const ModalShowInfo: React.FC<IModalManage> = ({
@@ -39,7 +40,8 @@ const ModalShowInfo: React.FC<IModalManage> = ({
   lastName,
   avatar,
   description,
-  company
+  company,
+  subject
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -182,6 +184,23 @@ const ModalShowInfo: React.FC<IModalManage> = ({
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
                   {company}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={style.converseText}>
+              <Box display="flex" alignItems="center">
+                <Typography
+                  marginLeft={'5px'}
+                  fontSize={16}
+                  color={'#6F7787FF'}
+                  fontWeight={500}
+                >
+                  Môn dạy
+                </Typography>
+              </Box>
+              <Box>
+                <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
+                  {subject}
                 </Typography>
               </Box>
             </Box>

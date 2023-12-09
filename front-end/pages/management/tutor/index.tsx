@@ -6,17 +6,14 @@ import { ProColumns } from '@ant-design/pro-table';
 import MyTable from '@/components/base/table';
 import React, { useEffect, useState } from 'react';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon from '@mui/icons-material/Edit';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
 import Image from 'next/image';
-import TutorForm from '@/components/management/tutor/TutorForm';
 import ModalShowInfo from '@/components/management/tutor/ModalShowInfo';
 
 function TutorProfile() {
   const [data, setData] = useState([]);
-  const [showForm, setShowForm] = useState(false);
   const [showFormDetail, setShowFormDetail] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
@@ -45,7 +42,7 @@ function TutorProfile() {
     },
     {
       title: 'Tên gia sư',
-      width: 200,
+      width: 150,
       fixed: 'left',
       render: (_, row) => (
         <p>
@@ -54,7 +51,7 @@ function TutorProfile() {
       )
     },
     {
-      width: 80,
+      width: 100,
       title: 'Ảnh đại diện',
       fixed: 'left',
       render: (_, row) =>
@@ -63,6 +60,12 @@ function TutorProfile() {
         ) : (
           <Avatar></Avatar>
         )
+    },
+    {
+      title: 'Môn dạy',
+      width: 100,
+      fixed: 'left',
+      render: (_, row) => <p>{row.tutor_educations[0]?.favorite_subject}</p>
     },
     {
       title: 'Email',
@@ -85,18 +88,6 @@ function TutorProfile() {
       render: (_, row) => (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            {/* <IconButton
-              aria-label="delete"
-              color="secondary"
-              size="small"
-              onClick={() => {
-                setDataSelected(row);
-                setShowForm(true);
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton> */}
-
             <IconButton
               aria-label="delete"
               color="error"
@@ -121,27 +112,11 @@ function TutorProfile() {
   };
 
   const handleDelete = () => {
-    const tutor_id = dataSelected.user_id;
+    const tutor_id = dataSelected.tutor_profile_id;
     api.delete(`tutor/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
-  };
-
-  const handleSaveData = (body) => {
-    const request = !body?.tutor_id
-      ? api.post('tutor', body)
-      : api.put(`tutor/${body.tutor_id}`, body);
-
-    request
-      .then((res) => {
-        console.log(res);
-        fetchData();
-        setShowForm(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   return (
@@ -181,7 +156,8 @@ function TutorProfile() {
         gender={dataSelected?.user?.gender}
         phone={dataSelected?.user?.phone_number}
         email={dataSelected?.user?.email}
-        company={dataSelected?.tutor_experiences?.organization}
+        company={dataSelected?.tutor_experiences[0]?.organization}
+        subject={dataSelected?.tutor_educations[0]?.favorite_subject}
         setOpen={setShowFormDetail}
         open={showFormDetail}
       ></ModalShowInfo>

@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Grid, Container, Box, IconButton } from '@mui/material';
+import { Grid, Container, Box, IconButton, Avatar } from '@mui/material';
 
 import { ProColumns } from '@ant-design/pro-table';
 import MyTable from '@/components/base/table';
@@ -10,9 +10,9 @@ import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
 import Image from 'next/image';
-import ModalInfoCourse from '../../../src/components/management/course/ModalInfoCourse';
+import ModalShowInfo from '@/components/management/tutor/ModalShowInfo';
 
-function CourseManage() {
+function StudentProfile() {
   const [data, setData] = useState([]);
   const [showFormDetail, setShowFormDetail] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -41,49 +41,43 @@ function CourseManage() {
       )
     },
     {
-      title: 'Tên khoá học',
-      dataIndex: 'name',
-      width: 200,
+      title: 'Tên gia sư',
+      width: 150,
       fixed: 'left',
-      sorter: true,
-      render: (dom) => {
-        return <a style={{ fontWeight: '500' }}>{dom}</a>;
-      }
+      render: (_, row) => (
+        <p>
+          {row.user?.first_name} {row.user?.last_name}
+        </p>
+      )
     },
     {
-      width: 150,
-      title: 'Hình ảnh',
+      width: 100,
+      title: 'Ảnh đại diện',
+      fixed: 'left',
       render: (_, row) =>
         row.user?.avatar_url ? (
           <Image width={50} height={50} src={row.user?.avatar_url}></Image>
         ) : (
-          <></>
-        ),
-      fixed: 'left'
+          <Avatar></Avatar>
+        )
     },
     {
-      title: 'Học phí',
-      width: 200,
+      title: 'Môn dạy',
+      width: 100,
       fixed: 'left',
-      render: (_, row) => <p>{row.price}</p>
+      render: (_, row) => <p>{row.tutor_educations?.[0]?.favorite_subject}</p>
     },
     {
-      title: 'Mô tả',
+      title: 'Email',
       width: 200,
       fixed: 'left',
-      render: (_, row) => <p>{row.description}</p>
+      render: (_, row) => <p>{row.user?.email}</p>
     },
     {
-      title: 'Người học',
+      title: 'Sđt',
       width: 200,
       fixed: 'left',
-      render: (_, row) => <p>{row.category?.name}</p>
-    },
-    {
-      title: 'Gia sư',
-      width: 200,
-      fixed: 'left',
-      render: (_, row) => <p>{row.tutor_profile?.user?.first_name}</p>
+      render: (_, row) => <p>{row.user?.phone_number}</p>
     },
     {
       width: 60,
@@ -110,16 +104,17 @@ function CourseManage() {
       )
     }
   ];
+  console.log(dataSelected);
 
   const fetchData = () => {
-    api.get('course').then((res) => {
+    api.get('student').then((res) => {
       setData([...res?.data?.data]);
     });
   };
 
   const handleDelete = () => {
-    const courseId = dataSelected.course_id;
-    api.delete(`course/${courseId}`).then((res) => {
+    const tutor_id = dataSelected.tutor_profile_id;
+    api.delete(`student/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
@@ -154,17 +149,19 @@ function CourseManage() {
         </Grid>
       </Container>
 
-      <ModalInfoCourse
-        name={dataSelected?.name}
-        avatar={dataSelected?.image_url}
+      <ModalShowInfo
+        firstName={dataSelected?.user?.first_name}
+        lastName={dataSelected?.user?.last_name}
+        avatar={dataSelected?.user?.avatar_url}
         description={dataSelected?.description}
-        ratting={dataSelected?.ratting}
-        price={dataSelected?.price}
-        tutor={dataSelected?.tutor_profile?.user?.last_name}
-        spendTime={dataSelected?.spend_time}
+        gender={dataSelected?.user?.gender}
+        phone={dataSelected?.user?.phone_number}
+        email={dataSelected?.user?.email}
+        company={dataSelected?.tutor_experiences[0]?.organization}
+        subject={dataSelected?.tutor_educations[0]?.favorite_subject}
         setOpen={setShowFormDetail}
         open={showFormDetail}
-      ></ModalInfoCourse>
+      ></ModalShowInfo>
 
       {showConfirmDelete && (
         <ConfirmDeleteModal
@@ -177,6 +174,6 @@ function CourseManage() {
   );
 }
 
-CourseManage.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+StudentProfile.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default CourseManage;
+export default StudentProfile;
