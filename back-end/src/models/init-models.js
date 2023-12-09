@@ -64,8 +64,11 @@ function initModels(sequelize) {
   school.hasMany(tutor_education, { as: "tutor_educations", foreignKey: "school_id"});
   student_education.belongsTo(student_profile, { as: "student_profile", foreignKey: "student_profile_id"});
   student_profile.hasMany(student_education, { as: "student_educations", foreignKey: "student_profile_id"});
-  schedule.belongsTo(tutor_available_date, { as: "tutor_available_date", foreignKey: "tutor_available_date_id"});
-  tutor_available_date.hasMany(schedule, { as: "schedules", foreignKey: "tutor_available_date_id"});
+  schedule.hasMany(tutor_available_date, { as: "tutor_available_date", foreignKey: "tutor_available_date_id"});
+  
+  tutor_available_date.belongsTo(schedule, { as: "schedule", foreignKey: "tutor_available_date_id"});
+  tutor_available_date.belongsTo(users, { as: "user", foreignKey: "tutor_id"});
+  
   course.belongsTo(tutor_profile, { as: "tutor_profile", foreignKey: "tutor_profile_id"});
   tutor_profile.hasMany(course, { as: "courses", foreignKey: "tutor_profile_id"});
   tutor_certification.belongsTo(tutor_profile, { as: "tutor_profile", foreignKey: "tutor_profile_id"});
@@ -90,6 +93,8 @@ function initModels(sequelize) {
   users.hasMany(tutor_profile, { as: "tutor_profiles", foreignKey: "user_id"});
   tutoring_contract.belongsTo(users, { as: "tutor", foreignKey: "tutor_id"});
   users.hasMany(tutoring_contract, { as: "tutoring_contracts", foreignKey: "tutor_id"});
+  
+  users.hasMany(tutor_available_date, { as: "tutor_available_dates", foreignKey: "tutor_id"});
 
   return {
     booked_session,
