@@ -12,7 +12,7 @@ import api from '@/api';
 import Image from 'next/image';
 import ModalShowInfo from '@/components/management/tutor/ModalShowInfo';
 
-function TutorProfile() {
+function StudentProfile() {
   const [data, setData] = useState([]);
   const [showFormDetail, setShowFormDetail] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -65,7 +65,7 @@ function TutorProfile() {
       title: 'Môn dạy',
       width: 100,
       fixed: 'left',
-      render: (_, row) => <p>{row.tutor_educations[0]?.favorite_subject}</p>
+      render: (_, row) => <p>{row.tutor_educations?.[0]?.favorite_subject}</p>
     },
     {
       title: 'Email',
@@ -104,16 +104,17 @@ function TutorProfile() {
       )
     }
   ];
+  console.log(dataSelected);
 
   const fetchData = () => {
-    api.get('tutor').then((res) => {
+    api.get('student').then((res) => {
       setData([...res?.data?.data]);
     });
   };
 
   const handleDelete = () => {
     const tutor_id = dataSelected.tutor_profile_id;
-    api.delete(`tutor/${tutor_id}`).then((res) => {
+    api.delete(`student/${tutor_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
@@ -173,6 +174,6 @@ function TutorProfile() {
   );
 }
 
-TutorProfile.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+StudentProfile.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default TutorProfile;
+export default StudentProfile;

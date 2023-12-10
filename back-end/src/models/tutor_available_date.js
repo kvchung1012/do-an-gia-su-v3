@@ -26,6 +26,10 @@ class tutor_available_date extends Sequelize.Model {
     set_id: {
       type: DataTypes.STRING(50),
       allowNull: true
+    },
+    tutor_id: {
+      type: DataTypes.STRING(100),
+      allowNull: true
     }
   }, {
     sequelize,

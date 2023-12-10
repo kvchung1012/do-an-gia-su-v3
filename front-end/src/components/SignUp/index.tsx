@@ -83,6 +83,7 @@ export default function SignUp() {
       gender: z.string(),
       description: z.string(),
       stripe_account_id: z.string(),
+      avatar_url: z.string(),
       first_name: z.string().min(1, 'Vui lòng nhập tên'),
       phone_number: z
         .string()
@@ -137,7 +138,7 @@ export default function SignUp() {
           phone_number: data.phone_number,
           gender: data.gender,
           role_id: ROLE_TEACHER_ID,
-          avatar_url: '',
+          file: data.avatar_url,
           type: '0',
           tutor_profile: {
             stripe_account_id: data.stripe_account_id,
@@ -184,6 +185,7 @@ export default function SignUp() {
         <Box
           component="form"
           onSubmit={handleSubmit(handleRegister)}
+          encType="multipart/form-data"
           sx={{
             mt: 1,
             width: 400

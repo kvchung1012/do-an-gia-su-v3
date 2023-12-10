@@ -20,12 +20,13 @@ interface IModalManage {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   firstName: string;
-  lastName: string;
-  gender: number;
+  lastName?: string;
+  gender?: number;
   phone: string;
   email: string;
   avatar: string;
   description: string;
+  company: string;
 }
 
 const ModalShowInfo: React.FC<IModalManage> = ({
@@ -37,7 +38,8 @@ const ModalShowInfo: React.FC<IModalManage> = ({
   firstName,
   lastName,
   avatar,
-  description
+  description,
+  company
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -75,7 +77,7 @@ const ModalShowInfo: React.FC<IModalManage> = ({
         <Stack sx={style.bottom}>
           <Box sx={style.contentTop}>
             <Typography fontSize={25} color={'#459D7AFF'} fontWeight={600}>
-              {firstName} {lastName}
+              {firstName} {lastName && lastName}
             </Typography>
           </Box>
           <Stack sx={style.contentBottom}>
@@ -89,30 +91,32 @@ const ModalShowInfo: React.FC<IModalManage> = ({
             >
               Thông tin
             </Typography>
-            <Box sx={style.converseText}>
-              <Box display="flex" alignItems="center">
-                <Typography
-                  marginLeft={'5px'}
-                  fontSize={16}
-                  color={'#6F7787FF'}
-                  fontWeight={500}
-                >
-                  Giới tính
-                </Typography>
+            {gender && (
+              <Box sx={style.converseText}>
+                <Box display="flex" alignItems="center">
+                  <Typography
+                    marginLeft={'5px'}
+                    fontSize={16}
+                    color={'#6F7787FF'}
+                    fontWeight={500}
+                  >
+                    Giới tính
+                  </Typography>
+                </Box>
+                <Box>
+                  <Chip
+                    sx={{
+                      backgroundColor: '#5ff290b0',
+                      width: '58px',
+                      height: '24px',
+                      fontSize: '12px',
+                      color: '#0EAA42FF'
+                    }}
+                    label={GenderFormatter(gender)}
+                  />
+                </Box>
               </Box>
-              <Box>
-                <Chip
-                  sx={{
-                    backgroundColor: '#5ff290b0',
-                    width: '58px',
-                    height: '24px',
-                    fontSize: '12px',
-                    color: '#0EAA42FF'
-                  }}
-                  label={GenderFormatter(gender)}
-                />
-              </Box>
-            </Box>
+            )}
             <Box sx={style.converseText}>
               <Box display="flex" alignItems="center">
                 <Typography
@@ -161,6 +165,23 @@ const ModalShowInfo: React.FC<IModalManage> = ({
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
                   {email}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={style.converseText}>
+              <Box display="flex" alignItems="center">
+                <Typography
+                  marginLeft={'5px'}
+                  fontSize={16}
+                  color={'#6F7787FF'}
+                  fontWeight={500}
+                >
+                  Kinh nghiệm làm việc
+                </Typography>
+              </Box>
+              <Box>
+                <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
+                  {company}
                 </Typography>
               </Box>
             </Box>
