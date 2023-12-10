@@ -20,6 +20,7 @@ import {
   ROOT_PATH
 } from '@/const';
 import { useRouter } from 'next/router';
+import { Stack } from '@mui/material';
 
 function Copyright(props) {
   return (
@@ -84,75 +85,87 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
+    <Container>
       <Box
         sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
+          background:
+            'no-repeat right / contain url(/static/images/avatars/background-Login.svg)'
         }}
+        width="90%"
+        pl={10}
       >
-        <Image
-          alt="ETH"
-          src="https://i.imgur.com/frEuf3a.png"
-          height={48}
-          width={48}
-        />
-        <Typography component="h1" variant="h5">
-          ez Gia sư
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit(handleLogin)}
-          noValidate
-          sx={{ mt: 1 }}
-        >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email đăng nhập"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            {...register('email')}
-            error={!!errors['email']}
-            helperText={errors['email'] ? errors['email'].message : ''}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Mật khẩu"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            {...register('password')}
-            error={!!errors['password']}
-            helperText={errors['password'] ? errors['password'].message : ''}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+        <Stack width="30%">
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
           >
-            Đăng nhập
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link href={REGISTER_PATH} variant="body2">
-                {'Chưa có tài khoản? Đăng ký'}
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
+            <Image
+              alt="ETH"
+              src="https://i.imgur.com/frEuf3a.png"
+              height={48}
+              width={48}
+            />
+            <Typography component="h1" variant="h5">
+              ez Gia sư
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit(handleLogin)}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email đăng nhập"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                {...register('email')}
+                error={!!errors['email']}
+                helperText={errors['email'] ? errors['email'].message : ''}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Mật khẩu"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                {...register('password')}
+                error={!!errors['password']}
+                helperText={
+                  errors['password'] ? errors['password'].message : ''
+                }
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Đăng nhập
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link href={REGISTER_PATH} variant="body2">
+                    {'Chưa có tài khoản? Đăng ký'}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+          <Copyright sx={{ mt: 8, mb: 4 }} />
+        </Stack>
       </Box>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
   );
 }

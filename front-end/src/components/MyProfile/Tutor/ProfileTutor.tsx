@@ -15,9 +15,11 @@ import {
   Tab,
   Tabs
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { jwtDecode } from 'jwt-decode';
 
 type FormData = {
   last_name: string;
@@ -49,14 +51,17 @@ function ProfileTutor() {
   });
   const [tutorId, setTutorId] = useState(0);
   const [verified, setVerified] = useState(false);
+  const router = useRouter();
 
   const [tab, setTab] = useState(0);
-  const userId = 'e5a096df-b351-452c-a004-142b0ae7124b';
+  const userId = router.query.id;
 
   useEffect(() => {
     const getInfoUser = async () => {
+      const token = localStorage.getItem('access_token');
+      const decoded = jwtDecode<any>(token);
       try {
-        const res = await api.get(`/user/get-user-info/${userId}`);
+        const res = await api.get(`/user/get-user-info/${decoded?.user_id}`);
 
         if (res.status === 200) {
           const user = res.data.data;

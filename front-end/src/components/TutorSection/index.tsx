@@ -4,8 +4,10 @@ import { ArrowIcon } from '../icons';
 import { useEffect, useState } from 'react';
 import api from '@/api';
 import { TUTOR_PATH } from '@/const';
+import { useRouter } from 'next/router';
 
 const TutorSection = () => {
+  const router = useRouter();
   const [tutorList, setTutorList] = useState([]);
 
   useEffect(() => {
@@ -56,6 +58,7 @@ const TutorSection = () => {
             }}
             endIcon={<ArrowIcon />}
             variant="outlined"
+            onClick={() => router.push(TUTOR_PATH)}
           >
             Xem tất cả gia sư
           </Button>

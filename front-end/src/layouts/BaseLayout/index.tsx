@@ -52,7 +52,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
     const access_token = localStorage.getItem('access_token');
     const avatar_url = localStorage.getItem('avatar_url');
     if (access_token) {
-      setIsShowAvatar(avatar_url);
+      setIsShowAvatar(avatar_url || '/static/images/avatars/2.jpg');
     }
   }, [router.asPath]);
 
@@ -119,9 +119,9 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
               <Stack direction="row" spacing={8} alignItems="center">
                 <Image
                   alt="ETH"
-                  src="https://i.imgur.com/frEuf3a.png"
-                  height={48}
-                  width={48}
+                  src="https://i.imgur.com/qtOjSFU.jpg"
+                  height={80}
+                  width={80}
                   style={{ cursor: 'pointer' }}
                   onClick={() => router.push('/')}
                 />
@@ -161,7 +161,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                 <>
                   <Avatar
                     alt="Remy Sharp"
-                    src={'/static/images/avatars/2.jpg'}
+                    src={isShowAvatar}
                     sx={{ width: 48, height: 48, cursor: 'pointer' }}
                     onClick={handlePopoverOpen}
                   />
@@ -248,6 +248,5 @@ export default BaseLayout;
 
 const homeCategories = [
   { name: 'Trang Chủ', value: ROOT_PATH },
-  { name: 'Gia sư', value: TUTOR_PATH },
-  { name: 'Học Sinh', value: STUDENT_PATH }
+  { name: 'Gia sư', value: TUTOR_PATH }
 ];

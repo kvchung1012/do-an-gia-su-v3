@@ -53,7 +53,6 @@ const ControlTextField = <T extends FieldValues>({
           <TextField
             size="small"
             margin="normal"
-            label={label}
             id={name}
             required={required}
             onChange={(event) => {
