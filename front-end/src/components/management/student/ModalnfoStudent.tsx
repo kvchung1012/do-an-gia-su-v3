@@ -19,14 +19,16 @@ interface IStyleProps {
 interface IModalManage {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  firstName: string;
+  firstName?: string;
   lastName?: string;
+  avatar?: string;
   gender?: number;
   phone: string;
   email: string;
-  avatar: string;
-  description: string;
-  company: string;
+
+  school: string;
+  startSchool: string;
+  endSchool: string;
 }
 
 const ModalShowInfo: React.FC<IModalManage> = ({
@@ -38,8 +40,9 @@ const ModalShowInfo: React.FC<IModalManage> = ({
   firstName,
   lastName,
   avatar,
-  description,
-  company
+  school,
+  startSchool,
+  endSchool
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -125,12 +128,29 @@ const ModalShowInfo: React.FC<IModalManage> = ({
                   color={'#6F7787FF'}
                   fontWeight={500}
                 >
-                  Giới thiệu
+                  Trường đang học
                 </Typography>
               </Box>
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
-                  {description}
+                  {school}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={style.converseText}>
+              <Box display="flex" alignItems="center">
+                <Typography
+                  marginLeft={'5px'}
+                  fontSize={16}
+                  color={'#6F7787FF'}
+                  fontWeight={500}
+                >
+                  Thời gian học
+                </Typography>
+              </Box>
+              <Box>
+                <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
+                  {startSchool} - {endSchool}
                 </Typography>
               </Box>
             </Box>
@@ -165,23 +185,6 @@ const ModalShowInfo: React.FC<IModalManage> = ({
               <Box>
                 <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
                   {email}
-                </Typography>
-              </Box>
-            </Box>
-            <Box sx={style.converseText}>
-              <Box display="flex" alignItems="center">
-                <Typography
-                  marginLeft={'5px'}
-                  fontSize={16}
-                  color={'#6F7787FF'}
-                  fontWeight={500}
-                >
-                  Kinh nghiệm làm việc
-                </Typography>
-              </Box>
-              <Box>
-                <Typography fontSize={16} color={'#6F7787FF'} fontWeight={500}>
-                  {company}
                 </Typography>
               </Box>
             </Box>
