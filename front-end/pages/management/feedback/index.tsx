@@ -10,9 +10,8 @@ import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import api from '@/api';
 import Image from 'next/image';
-import ModalnfoStudent from '@/components/management/student/ModalnfoStudent';
 
-function StudentProfile() {
+function RatingPage() {
   const [data, setData] = useState([]);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
@@ -107,14 +106,14 @@ function StudentProfile() {
   console.log(dataSelected);
 
   const fetchData = () => {
-    api.get('student').then((res) => {
+    api.get('tutoring-feedback').then((res) => {
       setData([...res?.data?.data]);
     });
   };
 
   const handleDelete = () => {
-    const student_id = dataSelected.student_profile_id;
-    api.delete(`student/${student_id}`).then((res) => {
+    const rating_id = dataSelected.student_profile_id;
+    api.delete(`tutoring-feedback/${rating_id}`).then((res) => {
       fetchData();
       setShowConfirmDelete(false);
     });
@@ -123,7 +122,7 @@ function StudentProfile() {
   return (
     <>
       <Head>
-        <title>Quản lý Profile Học sinh</title>
+        <title>Quản lý đánh giá gia sư</title>
       </Head>
       <Container
         maxWidth="lg"
@@ -149,20 +148,6 @@ function StudentProfile() {
         </Grid>
       </Container>
 
-      <ModalnfoStudent
-        firstName={dataSelected?.user?.first_name}
-        lastName={dataSelected?.user?.last_name}
-        avatar={dataSelected?.user?.avatar_url}
-        school={dataSelected?.student_educations?.[0]?.school?.name}
-        startSchool={dataSelected?.student_educations?.[0].from_year}
-        endSchool={dataSelected?.student_educations?.[0].to_year}
-        gender={dataSelected?.user?.gender}
-        phone={dataSelected?.user?.phone_number}
-        email={dataSelected?.user?.email}
-        setOpen={setShowFormDetail}
-        open={showFormDetail}
-      />
-
       {showConfirmDelete && (
         <ConfirmDeleteModal
           open={showConfirmDelete}
@@ -174,6 +159,6 @@ function StudentProfile() {
   );
 }
 
-StudentProfile.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+RatingPage.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default StudentProfile;
+export default RatingPage;

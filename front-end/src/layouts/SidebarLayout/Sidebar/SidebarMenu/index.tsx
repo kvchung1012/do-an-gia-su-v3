@@ -36,7 +36,7 @@ import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTo
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
-    padding: ${theme.spacing(0.5,1)};
+    padding: ${theme.spacing(0.5, 1)};
 
     & > .MuiList-root {
       padding: 0 ${theme.spacing(0)} ${theme.spacing(1)};
@@ -259,9 +259,7 @@ function SidebarMenu() {
                 <NextLink href="/management/category" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/category'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/category' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
@@ -277,9 +275,7 @@ function SidebarMenu() {
                 <NextLink href="/management/course" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/course'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/course' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
@@ -295,9 +291,7 @@ function SidebarMenu() {
                 <NextLink href="/management/tutor" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/tutor'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/tutor' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
@@ -310,12 +304,10 @@ function SidebarMenu() {
               </ListItem>
 
               <ListItem component="div">
-                <NextLink href="/management/category" passHref>
+                <NextLink href="/management/student" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/student'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/student' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
@@ -328,12 +320,10 @@ function SidebarMenu() {
               </ListItem>
 
               <ListItem component="div">
-                <NextLink href="/management/category" passHref>
+                <NextLink href="/management/feedback" passHref>
                   <Button
                     className={
-                      currentRoute === '/management/feedback'
-                        ? 'active'
-                        : ''
+                      currentRoute === '/management/feedback' ? 'active' : ''
                     }
                     disableRipple
                     component="a"
