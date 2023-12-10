@@ -95,10 +95,10 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
       <Head>
         <title>Ez Gia sư</title>
       </Head>
-      <Stack justifyContent="space-between" mt="88px">
+      <Stack justifyContent="space-between" mt="70px">
         <AppBar
           sx={{
-            height: 88,
+            height: 70,
             backgroundColor: 'common.white',
             boxShadow: '0px 2px 4px -1px rgba(57,76,96,.15)',
             transition: 'top 0.3s ease-in-out, opacity 0.3s ease-in-out',
@@ -120,8 +120,8 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                 <Image
                   alt="ETH"
                   src="https://i.imgur.com/qtOjSFU.jpg"
-                  height={80}
-                  width={80}
+                  height={70}
+                  width={70}
                   style={{ cursor: 'pointer' }}
                   onClick={() => router.push('/')}
                 />
@@ -143,14 +143,13 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                       key={item.value}
                       sx={{
                         px: 0,
-                        mx: 3,
                         minWidth: 'unset',
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: 400,
-                        lineHeight: '24px',
+                        lineHeight: '16px',
 
                         '&.Mui-selected': {
-                          fontWeight: 700
+                          fontWeight: 500,
                         }
                       }}
                     />
@@ -247,6 +246,6 @@ BaseLayout.propTypes = {
 export default BaseLayout;
 
 const homeCategories = [
-  { name: 'Trang Chủ', value: ROOT_PATH },
+  // { name: 'Trang Chủ', value: ROOT_PATH },
   { name: 'Gia sư', value: TUTOR_PATH }
 ];
