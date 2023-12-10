@@ -72,11 +72,12 @@ export default function SignIn() {
         localStorage.setItem('access_token', response.data.data.access_token);
         localStorage.setItem('avatar_url', response.data.data.avatar_url);
         if (
-          response.data.data.role_id === ROLE_ADMIN_ID ||
           response.data.data.role_id === ROLE_TEACHER_ID ||
           response.data.data.role_id === ROLE_STUDENT_ID
         ) {
           router.push(ROOT_PATH);
+        } else if (response.data.data.role_id === ROLE_ADMIN_ID) {
+          router.push('/management/category');
         }
       }
     } catch (error) {
