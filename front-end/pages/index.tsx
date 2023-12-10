@@ -7,18 +7,18 @@ import { Stack } from '@mui/material';
 import { ReactElement, useEffect } from 'react';
 
 const Overview = () => {
-  // useEffect(() => {
-  //   const getTutor = async () => {
-  //     try {
-  //       const res = await api.get('/tutor');
-  //       console.log(res);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const getTutor = async () => {
+      try {
+        const res = await api.get('/tutor');
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  //   getTutor();
-  // }, []);
+    getTutor();
+  }, []);
 
   return (
     <Stack minHeight="200vh">

@@ -67,13 +67,13 @@ const register = async (req, res) => {
       },
     } = req.body;
 
-    const avatar_url = req.file.path;
+    const avatar_url = req.file?.path ? req.file.path : "";
     var check = await models.users.findOne({
       where:{
         email : email
       }
     })
-    if(!check){
+    if(check){
       return errorCode(res, 'Email đã tồn tại. Vui lòng đăng nhập hoặc tạo tài khoản mới');
     }
     

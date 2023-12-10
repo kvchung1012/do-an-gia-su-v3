@@ -3,7 +3,10 @@ import {
   LOGIN_PATH,
   LOGOUT_PATH,
   MY_PROFILE_PATH,
-  REGISTER_PATH
+  REGISTER_PATH,
+  ROOT_PATH,
+  STUDENT_PATH,
+  TUTOR_PATH
 } from '@/const';
 import {
   AppBar,
@@ -13,6 +16,8 @@ import {
   Container,
   Popover,
   Stack,
+  Tab,
+  Tabs,
   Typography,
   styled
 } from '@mui/material';
@@ -61,6 +66,13 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
     router.push(LOGOUT_PATH);
   };
 
+  const [value, setValue] = useState(ROOT_PATH);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+    router.push(newValue);
+  };
+
   return (
     <OverviewWrapper>
       <Head>
@@ -83,14 +95,47 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Image
-                alt="ETH"
-                src="https://i.imgur.com/frEuf3a.png"
-                height={48}
-                width={48}
-                style={{ cursor: 'pointer' }}
-                onClick={() => router.push('/')}
-              />
+              <Stack direction="row" spacing={8} alignItems="center">
+                <Image
+                  alt="ETH"
+                  src="https://i.imgur.com/frEuf3a.png"
+                  height={48}
+                  width={48}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => router.push('/')}
+                />
+
+                <Tabs
+                  sx={{
+                    minHeight: '40px',
+                    '& .MuiTabs-flexContainer': {
+                      height: '100%'
+                    }
+                  }}
+                  value={value}
+                  onChange={handleChange}
+                >
+                  {homeCategories.map((item) => (
+                    <Tab
+                      value={item.value}
+                      label={item.name}
+                      key={item.value}
+                      sx={{
+                        px: 0,
+                        mx: 3,
+                        minWidth: 'unset',
+                        fontSize: 20,
+                        fontWeight: 400,
+                        lineHeight: '24px',
+
+                        '&.Mui-selected': {
+                          fontWeight: 700
+                        }
+                      }}
+                    />
+                  ))}
+                </Tabs>
+              </Stack>
               {isShowAvatar ? (
                 <>
                   <Avatar
@@ -179,3 +224,9 @@ BaseLayout.propTypes = {
 };
 
 export default BaseLayout;
+
+const homeCategories = [
+  { name: 'Trang Chủ', value: ROOT_PATH },
+  { name: 'Học Sinh', value: STUDENT_PATH },
+  { name: 'Gia sư', value: TUTOR_PATH }
+];
