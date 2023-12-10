@@ -24,9 +24,9 @@ app.use(express.static("."));
 // config api
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-// app.use("/", (req, res, next) => {
-//   authMiddleware(req, res, next);
-// });
+app.use("/", (req, res, next) => {
+  handleExceptionMiddleware(req, res, next);
+});
 
 // config routers
 app.use("/api/v1", routes);

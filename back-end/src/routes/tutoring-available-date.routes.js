@@ -13,6 +13,7 @@ const tutorAvailableRoutes = express.Router();
 /**
  * Mô tả router
  */
+
 tutorAvailableRoutes.get("/", findAll);
 tutorAvailableRoutes.get("/find-by-userid/:id", findByUserId);
 tutorAvailableRoutes.get("/:id", findById);

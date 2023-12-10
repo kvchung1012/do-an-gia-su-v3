@@ -7,7 +7,14 @@ const { errorCode } = require("../responses/response");
  * @param {*} res
  * @param {*} next
  */
-function handleExceptionMiddleware(req, res, next) {}
+function handleExceptionMiddleware(req, res, next) {
+  try{
+    next()
+  }
+  catch(err){
+    return errorCode(res, err)
+  }
+}
 
 function authMiddleware(req, res, next) {
   var token =
