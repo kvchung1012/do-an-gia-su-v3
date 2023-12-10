@@ -1,4 +1,11 @@
-import { Stack, StackProps, TextField, TextFieldProps } from '@mui/material';
+import {
+  InputLabel,
+  InputLabelProps,
+  Stack,
+  StackProps,
+  TextField,
+  TextFieldProps
+} from '@mui/material';
 import React, { memo } from 'react';
 import {
   Control,
@@ -9,7 +16,7 @@ import {
   RegisterOptions
 } from 'react-hook-form';
 
-const AppFormControlTextField = <T extends FieldValues>({
+const ControlTextField = <T extends FieldValues>({
   label,
   control,
   name,
@@ -18,10 +25,25 @@ const AppFormControlTextField = <T extends FieldValues>({
   required = false,
   textfieldProps,
   onChangeValueForm,
+  labelProps,
   ...otherProps
 }: AppFormControlTextFieldProps<T>) => {
   return (
     <Stack {...otherProps}>
+      {label && (
+        <InputLabel
+          sx={{
+            '&': {
+              mb: 0.5
+            }
+          }}
+          required={required}
+          {...labelProps}
+        >
+          {label}
+        </InputLabel>
+      )}
+
       <Controller
         control={control}
         name={name}
@@ -60,6 +82,7 @@ export type AppFormControlTextFieldProps<T extends FieldValues> = StackProps & {
   controlProps?: Omit<ControllerProps, 'render' | 'name' | 'control'>;
   textfieldProps?: TextFieldProps;
   onChangeValueForm?: (event?: React.ChangeEvent) => void;
+  labelProps?: InputLabelProps;
 };
 
-export default memo(AppFormControlTextField);
+export default memo(ControlTextField);

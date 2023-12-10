@@ -1,13 +1,9 @@
 import BaseLayout from '@/layouts/BaseLayout';
-import { Container, Stack } from '@mui/material';
+import { Container } from '@mui/material';
 import { ReactElement } from 'react';
 
 const Student = () => {
-  return (
-    <Container>
-      <Stack height="100%">trang list student</Stack>
-    </Container>
-  );
+  return <Container sx={{ minHeight: '100vh' }}></Container>;
 };
 
 export default Student;

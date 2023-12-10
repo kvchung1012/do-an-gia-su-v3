@@ -6,8 +6,9 @@ export const REGISTER_PATH = '/auth/register';
 export const STUDENT_REGISTER_PATH = '/auth/register/student';
 export const TEACHER_REGISTER_PATH = '/auth/register/teacher';
 export const MY_PROFILE_PATH = '/my-profile';
-export const TUTOR_PATH = '/tutor';
 export const STUDENT_PATH = '/student';
+export const TUTOR_PATH = '/tutor';
+export const TUTOR_DETAIL_PATH = '/tutor/[id]';
 
 // App const
 export const ROLE_STUDENT_ID = '3fd935a1-4ef6-403c-976a-df558dd911e1';

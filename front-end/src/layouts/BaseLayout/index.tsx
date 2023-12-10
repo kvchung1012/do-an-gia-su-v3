@@ -6,6 +6,7 @@ import {
   REGISTER_PATH,
   ROOT_PATH,
   STUDENT_PATH,
+  TUTOR_DETAIL_PATH,
   TUTOR_PATH
 } from '@/const';
 import {
@@ -25,7 +26,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import Link from 'src/components/Link';
 
 interface BaseLayoutProps {
@@ -66,12 +67,28 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
     router.push(LOGOUT_PATH);
   };
 
-  const [value, setValue] = useState(ROOT_PATH);
-
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
     router.push(newValue);
   };
+
+  const valueTab = useMemo(() => {
+    const pathname = `/${router.pathname.split('/')[1]}`;
+
+    switch (pathname) {
+      case ROOT_PATH:
+        return ROOT_PATH;
+
+      case TUTOR_DETAIL_PATH:
+      case TUTOR_PATH:
+        return TUTOR_PATH;
+
+      case STUDENT_PATH:
+        return STUDENT_PATH;
+
+      default:
+        return false;
+    }
+  }, [router]);
 
   return (
     <OverviewWrapper>
@@ -86,7 +103,11 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
             boxShadow: '0px 2px 4px -1px rgba(57,76,96,.15)',
             transition: 'top 0.3s ease-in-out, opacity 0.3s ease-in-out',
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
+
+            '& .MuiTabs-indicator': {
+              border: 'unset'
+            }
           }}
         >
           <Container maxWidth="lg">
@@ -112,7 +133,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
                       height: '100%'
                     }
                   }}
-                  value={value}
+                  value={valueTab}
                   onChange={handleChange}
                 >
                   {homeCategories.map((item) => (
@@ -227,6 +248,6 @@ export default BaseLayout;
 
 const homeCategories = [
   { name: 'Trang Chủ', value: ROOT_PATH },
-  { name: 'Học Sinh', value: STUDENT_PATH },
-  { name: 'Gia sư', value: TUTOR_PATH }
+  { name: 'Gia sư', value: TUTOR_PATH },
+  { name: 'Học Sinh', value: STUDENT_PATH }
 ];

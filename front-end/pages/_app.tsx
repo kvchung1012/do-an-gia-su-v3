@@ -14,6 +14,7 @@ import { SidebarProvider } from 'src/contexts/SidebarContext';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { SnackbarProvider } from 'notistack';
+import { StyledEngineProvider } from '@mui/material/styles';
 import '../src/styles/globals.scss';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -37,23 +38,25 @@ function TokyoApp(props: TokyoAppProps) {
 
   return (
     <SnackbarProvider maxSnack={3}>
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <title>Tokyo Free White NextJS Typescript Admin Dashboard</title>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-        </Head>
-        <SidebarProvider>
-          <ThemeProvider>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <CssBaseline />
-              {getLayout(<Component {...pageProps} />)}
-            </LocalizationProvider>
-          </ThemeProvider>
-        </SidebarProvider>
-      </CacheProvider>
+      <StyledEngineProvider injectFirst>
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <title>Tokyo Free White NextJS Typescript Admin Dashboard</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no"
+            />
+          </Head>
+          <SidebarProvider>
+            <ThemeProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <CssBaseline />
+                {getLayout(<Component {...pageProps} />)}
+              </LocalizationProvider>
+            </ThemeProvider>
+          </SidebarProvider>
+        </CacheProvider>
+      </StyledEngineProvider>
     </SnackbarProvider>
   );
 }

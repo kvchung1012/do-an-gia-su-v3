@@ -1,8 +1,28 @@
 import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 import TutorCard from '../card/TutorCard';
 import { ArrowIcon } from '../icons';
+import { useEffect, useState } from 'react';
+import api from '@/api';
+import { TUTOR_PATH } from '@/const';
 
 const TutorSection = () => {
+  const [tutorList, setTutorList] = useState([]);
+
+  useEffect(() => {
+    const getTutor = async () => {
+      try {
+        const res = await api.get(TUTOR_PATH);
+        if (res.status === 200) {
+          setTutorList(res.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getTutor();
+  }, []);
+
   return (
     <Stack mt={3} height="80vh" width="100%">
       <Container sx={{ height: '100%' }}>
@@ -13,24 +33,11 @@ const TutorSection = () => {
           </Typography>
           <Box>
             <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
-              <Grid item xs={4}>
-                <TutorCard />
-              </Grid>
+              {tutorList.slice(0, 6).map((item) => (
+                <Grid key={item.tutor_profile_id} item xs={4}>
+                  <TutorCard data={item} />
+                </Grid>
+              ))}
             </Grid>
           </Box>
 

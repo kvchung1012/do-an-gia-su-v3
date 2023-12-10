@@ -1,6 +1,6 @@
 import { Avatar, Card, CardContent, Typography } from '@mui/material';
 
-const TutorCard = () => {
+const TutorCard = ({ data }) => {
   return (
     <Card
       sx={{
@@ -31,7 +31,7 @@ const TutorCard = () => {
       >
         <Avatar
           alt="Remy Sharp"
-          src="/static/images/avatars/2.jpg"
+          src={data?.user?.avatar_url || '/static/images/avatars/3.jpg'}
           sx={{ width: 112, height: 112 }}
         />
         <Typography
@@ -40,7 +40,7 @@ const TutorCard = () => {
           textAlign="center"
           color="text.secondary"
         >
-          Nguyễn Văn A
+          {data?.user?.first_name || 'Gia sư ẩn danh'}
         </Typography>
 
         <Typography
