@@ -468,34 +468,7 @@ function ProfileTutor() {
         >
           <h3>Thông tin học vấn</h3>
           <Grid container spacing={2}>
-            {tutorEdu?.map((x) => (
-                <Box key={x.tutor_educations_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Typography variant="h6">
-                      {x?.from_year} - {x?.to_year || 'Hiện tại'}
-                    </Typography>
-                    <Box marginLeft={3}>
-                      <Typography variant="h4">
-                        {x?.school?.name || 'THPT Duy Tân'}
-                      </Typography>
-
-                      <Typography variant="subtitle2">
-                        {x?.score_url}
-                      </Typography>
-
-                      <Typography variant="subtitle2">
-                        {x?.favorite_subject}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Divider sx={{ margin: 4 }} />
-                </Box>
-              ))}
+        
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -550,6 +523,35 @@ function ProfileTutor() {
               Lưu
             </Button>
           </Box>
+
+          {tutorEdu?.map((x) => (
+                <Box key={x.tutor_educations_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Typography variant="h6">
+                      {x?.from_year} - {x?.to_year || 'Hiện tại'}
+                    </Typography>
+                    <Box marginLeft={3}>
+                      <Typography variant="h4">
+                        {x?.school?.name || 'THPT Duy Tân'}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.score_url}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.favorite_subject}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
         </Card>
 
         <Card
@@ -563,30 +565,7 @@ function ProfileTutor() {
         >
           <h3>Thông tin chứng chỉ</h3>
           <Grid container spacing={2}>
-            {tutorCer.map((x) => (
-                <Box key={x.tutor_certification_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="h4">{x?.name}</Typography>
-
-                      <Typography variant="subtitle2">
-                        {x?.organization}
-                      </Typography>
-
-                      <Typography variant="subtitle2">
-                        {x?.award_url}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Divider sx={{ margin: 4 }} />
-                </Box>
-              ))}
-
+            
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -610,6 +589,31 @@ function ProfileTutor() {
               />
             </Grid>
           </Grid>
+
+          {tutorCer.map((x) => (
+                <Box key={x.tutor_certification_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="h4">{x?.name}</Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.organization}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.award_url}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
+
         </Card>
       </CustomTabPanel>
 

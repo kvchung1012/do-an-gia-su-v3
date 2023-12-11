@@ -63,29 +63,7 @@ function TutorAvailableDate({ userId }) {
         <Button variant="contained" onClick={()=>{setShowForm(true)}}>Thêm mới</Button>
       </Box>
       <Box>
-        {availableDate?.map((x, index) => (
-          <Box key={index}>
-            <Box>
-              <Typography sx={{ fontWeight: 600 }}>{x.date}</Typography>
-              <Box display={'flex'}>
-                <Box
-                  sx={{
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    border: '1px solid #ddd',
-                    marginTop: '8px'
-                  }}
-                >
-                  <Box>
-                    {x.start_time} - {x.end_time}
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-
-            <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
-          </Box>
-        ))}
+        
       </Box>
     </Card>
       </> 
