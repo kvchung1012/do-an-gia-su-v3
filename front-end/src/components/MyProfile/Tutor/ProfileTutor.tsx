@@ -23,6 +23,7 @@ import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
+import TutorAvailableDate from './TutorAvailableDate';
 
 type FormData = {
   last_name: string;
@@ -161,6 +162,7 @@ function ProfileTutor() {
           <Tab label="Thông tin tài khoản" />
           {Boolean(tutorId) === true && <Tab label="Thông tin gia sư" />}
           {Boolean(tutorId) === true && <Tab label="Kinh nghiệm - học vấn" />}
+          {Boolean(tutorId) === true && <Tab label="Thời gian dạy" />}
         </Tabs>
       </Box>
 
@@ -406,9 +408,7 @@ function ProfileTutor() {
                     }}
                   >
                     <Box>
-                      <Typography variant="h4">
-                        {x?.name}
-                      </Typography>
+                      <Typography variant="h4">{x?.name}</Typography>
 
                       <Typography variant="subtitle2">
                         {x?.organization}
@@ -425,6 +425,10 @@ function ProfileTutor() {
               ))}
           </Stack>
         </Card>
+      </CustomTabPanel>
+
+      <CustomTabPanel index={3}>
+        <TutorAvailableDate userId={user.user_id}/>
       </CustomTabPanel>
     </Box>
   );

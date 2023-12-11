@@ -19,6 +19,10 @@ const getUserInfo = async (req, res) => {
         as: "tutor_profiles",
         include: ['tutor_certifications','tutor_educations','tutor_experiences']
       },
+      {
+        model: models.tutor_available_date,
+        as:'tutor_available_dates',
+      }
     ],
   });
 
