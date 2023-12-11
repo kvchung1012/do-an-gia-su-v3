@@ -26,7 +26,7 @@ const TutorSection = () => {
   }, []);
 
   return (
-    <Stack mt={3} height="80vh" width="100%">
+    <Stack mt={3} mb={10} height="80vh" width="100%">
       <Container sx={{ height: '100%' }}>
         <Stack direction="column" spacing={2} alignItems="center" height="100%">
           <Typography variant="h1">Gặp gỡ gia sư của chúng tôi</Typography>
@@ -49,6 +49,7 @@ const TutorSection = () => {
               border: '2px solid #14398a',
               borderRadius: '20px',
               height: 48,
+              marginBottom: 3,
 
               '&:hover': {
                 color: 'white',

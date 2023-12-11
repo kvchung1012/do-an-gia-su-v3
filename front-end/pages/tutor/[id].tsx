@@ -75,6 +75,7 @@ const DetailTutor = () => {
 
   const handleChangeDay = (value) => {
     const day = value.format('DD/MM/YYYY');
+    console.log(day);
     setTimeAvailableDay(chooseAllTimeAvailable(day, availableDay));
   };
 
@@ -184,8 +185,8 @@ const DetailTutor = () => {
               Thời gian có thể dạy trong ngày
             </Typography>
             <Stack direction="row" spacing={1}>
-              {timeAvaiLableDay.length ? (
-                timeAvaiLableDay.map((item, i) => (
+              {timeAvaiLableDay?.length ? (
+                timeAvaiLableDay?.map((item, i) => (
                   <Chip
                     key={i}
                     label={`${item.start_time} : ${item.end_time}`}
@@ -201,21 +202,102 @@ const DetailTutor = () => {
       </Stack>
 
       <Divider sx={{ mt: 2 }} />
+
       <Stack mt={2} width="70%" gap="8px">
         <Typography variant="h3">Mô tả gia sư</Typography>
-        <Typography variant="h4" fontWeight={400}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop publishing software like Aldus PageMaker
-          including versions of Lorem Ipsum.
+        <Typography variant="h6" fontWeight={400}>
+          {tutor?.description}
         </Typography>
       </Stack>
 
+      <Divider sx={{ mt: 2 }} />
+
+
+      <Stack>
+        <h3>Thông tin kinh nghiệm</h3>
+        <Stack>
+          {tutor?.tutor_experiences?.map((x) => (
+            <Box key={x.tutor_experience_id}>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <Typography variant="h6">
+                  {x?.start_time} - {x?.end_time || 'Hiện tại'}
+                </Typography>
+                <Box marginLeft={3}>
+                  <Typography variant="h4">{x?.organization}</Typography>
+                  <Typography variant="subtitle1">{x?.position}</Typography>
+                  <Typography variant="subtitle2">{x?.description}</Typography>
+                </Box>
+              </Box>
+
+              <Divider sx={{ margin: 4 }} />
+            </Box>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Stack>
+        <h3>Thông tin học vấn</h3>
+        <Stack>
+          {tutor?.tutor_educations?.map((x) => (
+            <Box key={x.tutor_educations_id}>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <Typography variant="h6">
+                  {x?.from_year} - {x?.to_year || 'Hiện tại'}
+                </Typography>
+                <Box marginLeft={3}>
+                  <Typography variant="h4">
+                    {x?.school?.name || 'THPT Duy Tân'}
+                  </Typography>
+
+                  <Typography variant="subtitle2">{x?.score_url}</Typography>
+
+                  <Typography variant="subtitle2">
+                    {x?.favorite_subject}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider sx={{ margin: 4 }} />
+            </Box>
+          ))}
+        </Stack>
+      </Stack>
+
+
+      <Divider sx={{ mt: 2 }} />
+
+      <Stack>
+        <h3>Thông tin chứng chỉ</h3>
+        <Stack>
+          {tutor?.tutor_certifications?.map((x) => (
+            <Box key={x.tutor_certification_id}>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <Box>
+                  <Typography variant="h4">{x?.name}</Typography>
+
+                  <Typography variant="subtitle2">{x?.organization}</Typography>
+
+                  <Typography variant="subtitle2">{x?.award_url}</Typography>
+                </Box>
+              </Box>
+
+              <Divider sx={{ margin: 4 }} />
+            </Box>
+          ))}
+        </Stack>
+      </Stack>
       <Divider sx={{ mt: 2 }} />
       <Stack mt={2} gap="8px">
         <Typography variant="h3">Tổng đánh giá gia sư</Typography>
@@ -329,9 +411,9 @@ function findDayHightLight(arr) {
 }
 
 const chooseAllTimeAvailable = (day, arr) => {
-  const dateNow = arr.filter((item) => item.date === day);
+  const dateNow = arr?.filter((item) => item.date === day);
 
-  return dateNow.map((item) => ({
+  return dateNow?.map((item) => ({
     start_time: item.start_time,
     end_time: item.end_time
   }));

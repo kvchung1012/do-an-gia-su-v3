@@ -1,8 +1,13 @@
 import { Avatar, Card, CardContent, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 
 const TutorCard = ({ data }) => {
+
+  const router = useRouter();
+
   return (
     <Card
+      onClick={()=>{router.push('tutor/'+ data?.tutor_profile_id)}}
       sx={{
         transition: 'transform .5s',
         borderRadius: '12px',
@@ -17,6 +22,7 @@ const TutorCard = ({ data }) => {
           transform: 'translate(0, -4px)',
           cursor: 'pointer'
         }
+
       }}
     >
       <CardContent
@@ -49,7 +55,7 @@ const TutorCard = ({ data }) => {
           textAlign="center"
           color="text.secondary"
         >
-          Toán, văn, sử, địa
+          {data?.description || 'Chuyên gia hàng đầu trong giáo dục'}
         </Typography>
       </CardContent>
     </Card>
