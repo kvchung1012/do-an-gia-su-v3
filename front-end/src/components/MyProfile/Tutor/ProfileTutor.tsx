@@ -92,6 +92,9 @@ function ProfileTutor() {
   const [tab, setTab] = useState(2);
   const userId = router.query.id;
 
+  const [tutorEdu, setTutorEdu] = useState<any>([]);
+  const [tutorExp, setTutorExp] = useState<any>([]);
+  const [tutorCer, setTutorCer] = useState<any>([]);
   const [user, setUser] = useState<any>({});
   useEffect(() => {
     const getInfoUser = async () => {
@@ -141,6 +144,9 @@ function ProfileTutor() {
               'position',
               tutor_profile.tutor_experiences.position || ''
             );
+            setTutorCer(tutor_profile?.tutor_certifications)
+            setTutorEdu(tutor_profile?.tutor_educations)
+            setTutorExp(tutor_profile?.tutor_experiences)
           }
         }
       } catch (error) {
@@ -188,7 +194,8 @@ function ProfileTutor() {
   };
 
   const handleSaveExperience = (data) => {
-    console.log(data);
+    console.log(data)
+    setTutorCer([...tutorExp, data])
   };
 
   function CustomTabPanel(props: any) {
@@ -370,30 +377,9 @@ function ProfileTutor() {
           }}
         >
           <h3>Thông tin kinh nghiệm</h3>
+          
           <Grid container spacing={2}>
-            {user?.tutor_profiles
-              ?.find(() => true)
-              ?.tutor_experiences?.map((x) => (
-                <Box key={x.tutor_experience_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Typography variant="h6">
-                      {x?.start_time} - {x?.end_time || 'Hiện tại'}
-                    </Typography>
-                    <Box marginLeft={3}>
-                      <Typography variant="h4">{x?.organization}</Typography>
-                      <Typography variant="subtitle1">{x?.position}</Typography>
-                      <Typography variant="subtitle2">
-                        {x?.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Divider sx={{ margin: 4 }} />
-                </Box>
-              ))}
+            
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -447,6 +433,28 @@ function ProfileTutor() {
               Lưu
             </Button>
           </Box>
+
+          {tutorExp?.map((x) => (
+                <Box key={x.tutor_experience_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Typography variant="h6">
+                      {x?.start_time} - {x?.end_time || 'Hiện tại'}
+                    </Typography>
+                    <Box marginLeft={3}>
+                      <Typography variant="h4">{x?.organization}</Typography>
+                      <Typography variant="subtitle1">{x?.position}</Typography>
+                      <Typography variant="subtitle2">
+                        {x?.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
         </Card>
 
         <Card
@@ -460,9 +468,7 @@ function ProfileTutor() {
         >
           <h3>Thông tin học vấn</h3>
           <Grid container spacing={2}>
-            {user?.tutor_profiles
-              ?.find(() => true)
-              ?.tutor_educations?.map((x) => (
+            {tutorEdu?.map((x) => (
                 <Box key={x.tutor_educations_id}>
                   <Box
                     sx={{
@@ -557,9 +563,7 @@ function ProfileTutor() {
         >
           <h3>Thông tin chứng chỉ</h3>
           <Grid container spacing={2}>
-            {user?.tutor_profiles
-              ?.find(() => true)
-              ?.tutor_certifications?.map((x) => (
+            {tutorCer.map((x) => (
                 <Box key={x.tutor_certification_id}>
                   <Box
                     sx={{
