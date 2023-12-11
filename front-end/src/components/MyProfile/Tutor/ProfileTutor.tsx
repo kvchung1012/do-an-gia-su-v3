@@ -1,6 +1,6 @@
 import api from '@/api';
 import ControlTextField from '@/components/ControlTextField';
-import { VerifyIcon } from '@/components/icons';
+import { ArrowIcon, VerifyIcon } from '@/components/icons';
 import { ROLE_TEACHER_ID } from '@/const';
 import {
   Box,
@@ -11,9 +11,11 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
+  IconButton,
   InputAdornment,
   Radio,
   RadioGroup,
+  Stack,
   Tab,
   Tabs,
   Typography
@@ -82,7 +84,7 @@ const defaultValue = {
 };
 
 function ProfileTutor() {
-  const { handleSubmit, control, setValue } = useForm<FormData>({
+  const { handleSubmit, control, setValue, resetField } = useForm<FormData>({
     values: defaultValue
   });
   const [tutorId, setTutorId] = useState(0);
@@ -133,7 +135,7 @@ function ProfileTutor() {
               tutor_profile.tutor_experiences.start_time || ''
             );
             setValue(
-              'start_time',
+              'end_time',
               tutor_profile.tutor_experiences.end_time || ''
             );
             setValue(
@@ -144,9 +146,30 @@ function ProfileTutor() {
               'position',
               tutor_profile.tutor_experiences.position || ''
             );
-            setTutorCer(tutor_profile?.tutor_certifications)
-            setTutorEdu(tutor_profile?.tutor_educations)
-            setTutorExp(tutor_profile?.tutor_experiences)
+            setTutorEdu(tutor_profile?.tutor_educations);
+            setTutorExp(
+              tutor_profile?.tutor_experiences?.map((item) => {
+                return {
+                  organization: item.organization,
+                  start_time: item.start_time,
+                  end_time: item.end_time,
+                  position: item.position,
+                  description: item.description,
+                  tutor_profile_id: tutorId
+                };
+              })
+            );
+
+            setTutorCer(
+              tutor_profile?.tutor_certifications?.map((item) => {
+                return {
+                  name: item.name,
+                  organization: item.organization,
+                  award_url: item.award_url,
+                  tutor_profile_id: tutorId
+                };
+              })
+            );
           }
         }
       } catch (error) {
@@ -194,8 +217,88 @@ function ProfileTutor() {
   };
 
   const handleSaveExperience = (data) => {
-    console.log(data)
-    setTutorCer([...tutorExp, data])
+    console.log(data);
+
+    // setTutorCer([...tutorExp, data]);
+  };
+
+  const handleSaveStudy = async (data) => {
+    try {
+      const payload = {
+        from_year: data.from_year,
+        to_year: data.to_year,
+        name: data.school_name,
+        score_url: data.score_url,
+        favorite_subject: data.favorite_subject,
+        tutor_profile_id: tutorId
+      };
+
+      const res = await api.put(
+        `/tutor/update-tutor-educations/${tutorId}`,
+        payload
+      );
+      if (res.status === 200) {
+        enqueueSnackbar({
+          message: 'Cập nhật học vấn gia sư thành công',
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addCer = (data) => {
+    const payload = {
+      name: data.certification_name,
+      organization: data.organization_certification,
+      award_url: data.award_url,
+      tutor_profile_id: tutorId
+    };
+    setTutorCer((prev) => [payload, ...prev]);
+    resetField('award_url');
+    resetField('organization_certification');
+    resetField('certification_name');
+  };
+
+  const addExp = (data) => {
+    const payload = {
+      organization: data.organization,
+      position: data.position,
+      start_time: data.start_time,
+      end_time: data.end_time,
+      description: data.description_tutor_experiences,
+      tutor_profile_id: tutorId
+    };
+    setTutorExp((prev) => [payload, ...prev]);
+    resetField('organization');
+    resetField('position');
+    resetField('start_time');
+    resetField('end_time');
+    resetField('description_tutor_experiences');
+  };
+
+  const handleSaveCertificate = async () => {
+    try {
+      const res = await api.put(
+        `/tutor/update-tutor-certifications/${tutorId}`,
+        tutorCer
+      );
+      if (res.status === 200) {
+        enqueueSnackbar({
+          message: 'Cập nhật chứng chỉ gia sư thành công',
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteCer = (index) => {
+    const newArray = [...tutorCer];
+    newArray.splice(index, 1);
+    setTutorCer(newArray);
   };
 
   function CustomTabPanel(props: any) {
@@ -377,9 +480,8 @@ function ProfileTutor() {
           }}
         >
           <h3>Thông tin kinh nghiệm</h3>
-          
+
           <Grid container spacing={2}>
-            
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -428,33 +530,43 @@ function ProfileTutor() {
             <Button
               color="primary"
               variant="contained"
-              onClick={handleSubmit(handleSaveExperience)}
+              onClick={handleSubmit(addExp)}
+            >
+              Thêm mới
+            </Button>
+          </Box>
+
+          {tutorExp?.map((x, i) => (
+            <Box mt={2} key={i}>
+              <Stack direction="row" justifyContent="space-between" spacing={2}>
+                <Box>
+                  <Typography variant="h4">{x?.organization}</Typography>
+                  <Typography variant="h6">
+                    {x?.start_time} - {x?.end_time || 'Hiện tại'}
+                  </Typography>
+                  <Typography variant="subtitle2">{x?.position}</Typography>
+                  <Typography variant="subtitle2">{x?.description}</Typography>
+                </Box>
+                <Button onClick={() => deleteCer(i)}>Xoá</Button>
+              </Stack>
+              <Divider sx={{ mt: 2 }} />
+            </Box>
+          ))}
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSaveExperience}
             >
               Lưu
             </Button>
           </Box>
-
-          {tutorExp?.map((x) => (
-                <Box key={x.tutor_experience_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Typography variant="h6">
-                      {x?.start_time} - {x?.end_time || 'Hiện tại'}
-                    </Typography>
-                    <Box marginLeft={3}>
-                      <Typography variant="h4">{x?.organization}</Typography>
-                      <Typography variant="subtitle1">{x?.position}</Typography>
-                      <Typography variant="subtitle2">
-                        {x?.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Divider sx={{ margin: 4 }} />
-                </Box>
-              ))}
         </Card>
 
         <Card
@@ -468,7 +580,6 @@ function ProfileTutor() {
         >
           <h3>Thông tin học vấn</h3>
           <Grid container spacing={2}>
-        
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -518,40 +629,38 @@ function ProfileTutor() {
             <Button
               color="primary"
               variant="contained"
-              onClick={handleSubmit(handleSaveExperience)}
+              onClick={handleSubmit(handleSaveStudy)}
             >
               Lưu
             </Button>
           </Box>
 
           {tutorEdu?.map((x) => (
-                <Box key={x.tutor_educations_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Typography variant="h6">
-                      {x?.from_year} - {x?.to_year || 'Hiện tại'}
-                    </Typography>
-                    <Box marginLeft={3}>
-                      <Typography variant="h4">
-                        {x?.school?.name || 'THPT Duy Tân'}
-                      </Typography>
+            <Box key={x.tutor_educations_id}>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                <Typography variant="h6">
+                  {x?.from_year} - {x?.to_year || 'Hiện tại'}
+                </Typography>
+                <Box marginLeft={3}>
+                  <Typography variant="h4">
+                    {x?.school?.name || 'THPT Duy Tân'}
+                  </Typography>
 
-                      <Typography variant="subtitle2">
-                        {x?.score_url}
-                      </Typography>
+                  <Typography variant="subtitle2">{x?.score_url}</Typography>
 
-                      <Typography variant="subtitle2">
-                        {x?.favorite_subject}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Divider sx={{ margin: 4 }} />
+                  <Typography variant="subtitle2">
+                    {x?.favorite_subject}
+                  </Typography>
                 </Box>
-              ))}
+              </Box>
+
+              <Divider sx={{ margin: 4 }} />
+            </Box>
+          ))}
         </Card>
 
         <Card
@@ -565,7 +674,6 @@ function ProfileTutor() {
         >
           <h3>Thông tin chứng chỉ</h3>
           <Grid container spacing={2}>
-            
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
@@ -577,7 +685,7 @@ function ProfileTutor() {
             <Grid item xs={12}>
               <ControlTextField
                 control={control}
-                name="organization"
+                name="organization_certification"
                 label="Năm"
               />
             </Grid>
@@ -590,30 +698,51 @@ function ProfileTutor() {
             </Grid>
           </Grid>
 
-          {tutorCer.map((x) => (
-                <Box key={x.tutor_certification_id}>
-                  <Box
-                    sx={{
-                      display: 'flex'
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="h4">{x?.name}</Typography>
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSubmit(addCer)}
+            >
+              Thêm mới
+            </Button>
+          </Box>
 
-                      <Typography variant="subtitle2">
-                        {x?.organization}
-                      </Typography>
-
-                      <Typography variant="subtitle2">
-                        {x?.award_url}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  <Divider sx={{ margin: 4 }} />
+          <Divider sx={{ mt: 4 }} />
+          {tutorCer.map((x, i) => (
+            <Box mt={2} key={i}>
+              <Stack direction="row" justifyContent="space-between" spacing={2}>
+                <Box>
+                  <Typography variant="h4">{x?.name}</Typography>
+                  <Typography variant="subtitle2">{x?.organization}</Typography>
+                  <Typography variant="subtitle2">{x?.award_url}</Typography>
                 </Box>
-              ))}
-
+                <Button onClick={() => deleteCer(i)}>Xoá</Button>
+              </Stack>
+              <Divider sx={{ mt: 2 }} />
+            </Box>
+          ))}
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSaveCertificate}
+            >
+              Lưu
+            </Button>
+          </Box>
         </Card>
       </CustomTabPanel>
 
