@@ -6,20 +6,24 @@ import {
   Box,
   Button,
   Card,
+  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
   InputAdornment,
   Radio,
   RadioGroup,
+  Stack,
   Tab,
-  Tabs
+  Tabs,
+  Typography
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
+import TutorAvailableDate from './TutorAvailableDate';
 
 type FormData = {
   last_name: string;
@@ -53,9 +57,10 @@ function ProfileTutor() {
   const [verified, setVerified] = useState(false);
   const router = useRouter();
 
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(2);
   const userId = router.query.id;
 
+  const [user, setUser] = useState<any>({});
   useEffect(() => {
     const getInfoUser = async () => {
       const token = localStorage.getItem('access_token');
@@ -64,6 +69,7 @@ function ProfileTutor() {
         const res = await api.get(`/user/get-user-info/${decoded?.user_id}`);
 
         if (res.status === 200) {
+          setUser(res.data.data);
           const user = res.data.data;
           const tutor_profile = res.data.data.tutor_profiles[0];
           setValue('first_name', user.first_name);
@@ -155,6 +161,8 @@ function ProfileTutor() {
         >
           <Tab label="Thông tin tài khoản" />
           {Boolean(tutorId) === true && <Tab label="Thông tin gia sư" />}
+          {Boolean(tutorId) === true && <Tab label="Kinh nghiệm - học vấn" />}
+          {Boolean(tutorId) === true && <Tab label="Thời gian dạy" />}
         </Tabs>
       </Box>
 
@@ -293,6 +301,134 @@ function ProfileTutor() {
             </Box>
           </Box>
         </Card>
+      </CustomTabPanel>
+
+      {/* kinh nghiệm học vấn*/}
+      <CustomTabPanel index={2}>
+        <Card
+          sx={{
+            background: 'white',
+            py: '1rem',
+            boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+            px: '3rem',
+            mb: 3
+          }}
+        >
+          <h3>Thông tin kinh nghiệm</h3>
+          <Stack>
+            {user?.tutor_profiles
+              ?.find(() => true)
+              ?.tutor_experiences?.map((x) => (
+                <Box key={x.tutor_experience_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Typography variant="h6">
+                      {x?.start_time} - {x?.end_time || 'Hiện tại'}
+                    </Typography>
+                    <Box marginLeft={3}>
+                      <Typography variant="h4">{x?.organization}</Typography>
+                      <Typography variant="subtitle1">{x?.position}</Typography>
+                      <Typography variant="subtitle2">
+                        {x?.description}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
+          </Stack>
+        </Card>
+
+        <Card
+          sx={{
+            background: 'white',
+            py: '1rem',
+            boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+            px: '3rem',
+            mb: 3
+          }}
+        >
+          <h3>Thông tin học vấn</h3>
+          <Stack>
+            {user?.tutor_profiles
+              ?.find(() => true)
+              ?.tutor_educations?.map((x) => (
+                <Box key={x.tutor_educations_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Typography variant="h6">
+                      {x?.from_year} - {x?.to_year || 'Hiện tại'}
+                    </Typography>
+                    <Box marginLeft={3}>
+                      <Typography variant="h4">
+                        {x?.school?.name || 'THPT Duy Tân'}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.score_url}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.favorite_subject}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
+          </Stack>
+        </Card>
+
+        <Card
+          sx={{
+            background: 'white',
+            py: '1rem',
+            boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+            px: '3rem',
+            mb: 3
+          }}
+        >
+          <h3>Thông tin chứng chỉ</h3>
+          <Stack>
+            {user?.tutor_profiles
+              ?.find(() => true)
+              ?.tutor_certifications?.map((x) => (
+                <Box key={x.tutor_certification_id}>
+                  <Box
+                    sx={{
+                      display: 'flex'
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="h4">{x?.name}</Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.organization}
+                      </Typography>
+
+                      <Typography variant="subtitle2">
+                        {x?.award_url}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Divider sx={{ margin: 4 }} />
+                </Box>
+              ))}
+          </Stack>
+        </Card>
+      </CustomTabPanel>
+
+      <CustomTabPanel index={3}>
+        <TutorAvailableDate userId={user.user_id}/>
       </CustomTabPanel>
     </Box>
   );
