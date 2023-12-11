@@ -14,7 +14,6 @@ import {
   InputAdornment,
   Radio,
   RadioGroup,
-  Stack,
   Tab,
   Tabs,
   Typography
