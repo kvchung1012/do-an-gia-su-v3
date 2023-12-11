@@ -5,32 +5,30 @@ import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import dayjs, { Dayjs } from 'dayjs';
-import * as React from 'react';
 import { VerifyIcon } from '../icons';
+import { memo, useRef, useState } from 'react';
 
-function getRandomNumber(min: number, max: number) {
-  return Math.round(Math.random() * (max - min) + min);
-}
+// function getRandomNumber(min: number, max: number) {
+//   return Math.round(Math.random() * (max - min) + min);
+// }
 
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-  return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() =>
-        getRandomNumber(1, daysInMonth)
-      );
+// function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
+//   return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
+//     const timeout = setTimeout(() => {
+//       const daysInMonth = date.daysInMonth();
+//       const daysToHighlight = [1, 2, 3].map(() =>
+//         getRandomNumber(1, daysInMonth)
+//       );
 
-      resolve({ daysToHighlight });
-    }, 500);
+//       resolve({ daysToHighlight });
+//     }, 500);
 
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException('aborted', 'AbortError'));
-    };
-  });
-}
-
-const initialValue = dayjs('2023-10-23');
+//     signal.onabort = () => {
+//       clearTimeout(timeout);
+//       reject(new DOMException('aborted', 'AbortError'));
+//     };
+//   });
+// }
 
 function ServerDay(
   props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }
@@ -65,49 +63,48 @@ function ServerDay(
   );
 }
 
-export default function DateCalendarServerRequest() {
-  const requestAbortController = React.useRef<AbortController | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
+function DateCalendarServerRequest({
+  handleMonthChange,
+  highlightedDays,
+  onChangeDay
+}) {
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchHighlightedDays = (date: Dayjs) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal
-    })
-      .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        if (error.name !== 'AbortError') {
-          throw error;
-        }
-      });
+  // const fetchHighlightedDays = (date: Dayjs) => {
+  //   const controller = new AbortController();
+  //   fakeFetch(date, {
+  //     signal: controller.signal
+  //   })
+  //     .then(({ daysToHighlight }) => {
+  //  console.log(daysToHighlight);
 
-    requestAbortController.current = controller;
-  };
+  //       setHighlightedDays(daysToHighlight);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       if (error.name !== 'AbortError') {
+  //         throw error;
+  //       }
+  //     });
 
-  React.useEffect(() => {
-    fetchHighlightedDays(initialValue);
-    // abort request on unmount
-    return () => requestAbortController.current?.abort();
-  }, []);
+  //   requestAbortController.current = controller;
+  // };
 
-  const handleMonthChange = (date: Dayjs) => {
-    if (requestAbortController.current) {
-      requestAbortController.current.abort();
-    }
+  // useEffect(() => {
+  //   fetchHighlightedDays(initialValue);
+  //   return () => requestAbortController.current?.abort();
+  // }, []);
 
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
-  };
+  const [value, setValue] = useState(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
-        defaultValue={initialValue}
+        value={value}
+        onChange={(newValue) => {
+          setValue(newValue);
+          onChangeDay(newValue);
+        }}
         loading={isLoading}
         onMonthChange={handleMonthChange}
         renderLoading={() => <DayCalendarSkeleton />}
@@ -119,11 +116,9 @@ export default function DateCalendarServerRequest() {
             highlightedDays
           } as any
         }}
-        readOnly
-        sx={{
-          margin: 0
-        }}
       />
     </LocalizationProvider>
   );
 }
+
+export default memo(DateCalendarServerRequest);

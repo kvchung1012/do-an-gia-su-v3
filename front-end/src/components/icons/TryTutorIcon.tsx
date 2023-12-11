@@ -11,7 +11,7 @@ const TryTutorIcon = ({ sx, ...otherProps }: IIconProps) => {
       <path
         fillRule="evenodd"
         d="m14 10 1-8L2 14h9l-1 8 12-12h-8Z"
-        clip-rule="evenodd"
+        clipRule="evenodd"
       ></path>
     </SvgIcon>
   );

@@ -150,6 +150,7 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
 
                         '&.Mui-selected': {
                           fontWeight: 500,
+                          border: '1px slid red'
                         }
                       }}
                     />

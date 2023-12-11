@@ -17,29 +17,45 @@ import BaseLayout from '@/layouts/BaseLayout';
 import {
   Box,
   Button,
+  Chip,
   Container,
   Divider,
   Stack,
   Typography
 } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const DetailTutor = () => {
+  const ref = useRef<AbortController | null>(null);
   const router = useRouter();
   const id = router.query.id;
   const [tutor, setTutor] = useState(null);
+  const [availableDay, setAvailableDay] = useState(null);
+  const [highlightedDays, setHighlightedDays] = useState([]);
+  const [timeAvaiLableDay, setTimeAvailableDay] = useState([]);
 
   useEffect(() => {
     if (id) {
       const getDetailTutor = async () => {
         try {
-          const res = await api.get(`/tutor/${id}`);
-          if (res.status === 200) {
-            setTutor(res.data.data);
+          const tutorProfile = await api.get(`/tutor/${id}`);
+          if (tutorProfile.status === 200) {
+            setTutor(tutorProfile.data.data);
+            const availableTime = await api.get(
+              `/tutor-available-date/find-by-userid/${tutorProfile.data.data.user_id}`
+            );
+            setAvailableDay(availableTime.data.data);
+            setHighlightedDays(findDayHightLight(availableTime.data.data));
+            setTimeAvailableDay(
+              chooseAllTimeAvailable(
+                dayjs().format('DD'),
+                availableTime.data.data
+              )
+            );
           }
-          console.log(res);
         } catch (error) {
           console.log(error);
         }
@@ -48,6 +64,23 @@ const DetailTutor = () => {
       getDetailTutor();
     }
   }, [id]);
+
+  const handleMonthChange = (date: Dayjs) => {
+    if (ref.current) {
+      ref.current.abort();
+    }
+    // setHighlightedDays([]);
+    // fetchHighlightedDays(date);
+  };
+
+  const handleChangeDay = (value) => {
+    const day = value.format('DD/MM/YYYY');
+    setTimeAvailableDay(chooseAllTimeAvailable(day, availableDay));
+  };
+
+  const handleClickChip = () => {
+    console.log('haha');
+  };
 
   return (
     <Container sx={{ minHeight: '100vh' }}>
@@ -75,7 +108,7 @@ const DetailTutor = () => {
               alignItems="center"
               gap="8px"
             >
-              {tutor?.user.first_name || 'Gia sư ẩn danh'}{' '}
+              {tutor?.user?.first_name || 'Gia sư ẩn danh'}{' '}
               <VerifyIcon sx={{ fontSize: 18, color: '#4caf50' }} />
             </Typography>
             <Typography variant="h5" color="secondary">
@@ -140,7 +173,31 @@ const DetailTutor = () => {
       <Divider sx={{ mt: 2 }} />
       <Stack mt={2} width="70%" gap="8px">
         <Typography variant="h3">Thời gian rảnh trong tuần</Typography>
-        <DateCalendarValue />
+        <Stack direction="row" spacing={6}>
+          <DateCalendarValue
+            highlightedDays={highlightedDays}
+            handleMonthChange={handleMonthChange}
+            onChangeDay={handleChangeDay}
+          />
+          <Stack pt={2} spacing={2}>
+            <Typography variant="h4">
+              Thời gian có thể dạy trong ngày
+            </Typography>
+            <Stack direction="row" spacing={1}>
+              {timeAvaiLableDay.length ? (
+                timeAvaiLableDay.map((item, i) => (
+                  <Chip
+                    key={i}
+                    label={`${item.start_time} : ${item.end_time}`}
+                    onClick={handleClickChip}
+                  />
+                ))
+              ) : (
+                <Typography>Không có thời gian rảnh trong ngày này!</Typography>
+              )}
+            </Stack>
+          </Stack>
+        </Stack>
       </Stack>
 
       <Divider sx={{ mt: 2 }} />
@@ -262,3 +319,20 @@ const DetailTutor = () => {
 export default DetailTutor;
 
 DetailTutor.getLayout = (page) => <BaseLayout>{page}</BaseLayout>;
+
+function findDayHightLight(arr) {
+  const dates = arr.map((item) => {
+    const day = item.date.split('/')[0];
+    return parseInt(day);
+  });
+  return dates;
+}
+
+const chooseAllTimeAvailable = (day, arr) => {
+  const dateNow = arr.filter((item) => item.date === day);
+
+  return dateNow.map((item) => ({
+    start_time: item.start_time,
+    end_time: item.end_time
+  }));
+};
