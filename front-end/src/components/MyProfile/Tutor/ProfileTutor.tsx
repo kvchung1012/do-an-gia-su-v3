@@ -216,36 +216,46 @@ function ProfileTutor() {
     }
   };
 
-  const handleSaveExperience = (data) => {
-    console.log(data);
-
-    // setTutorCer([...tutorExp, data]);
-  };
-
-  const handleSaveStudy = async (data) => {
+  const handleSaveExperience = async () => {
     try {
-      const payload = {
-        from_year: data.from_year,
-        to_year: data.to_year,
-        name: data.school_name,
-        score_url: data.score_url,
-        favorite_subject: data.favorite_subject,
-        tutor_profile_id: tutorId
-      };
-
       const res = await api.put(
-        `/tutor/update-tutor-educations/${tutorId}`,
-        payload
+        `/tutor/update-tutor-experience/${tutorId}`,
+        tutorExp
       );
       if (res.status === 200) {
         enqueueSnackbar({
-          message: 'Cập nhật học vấn gia sư thành công',
+          message: 'Cập nhật kinh nghiệm thành công',
           variant: 'success'
         });
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSaveStudy = async (data) => {
+    // try {
+    //   const payload = {
+    //     from_year: data.from_year,
+    //     to_year: data.to_year,
+    //     name: data.school_name,
+    //     score_url: data.score_url,
+    //     favorite_subject: data.favorite_subject,
+    //     tutor_profile_id: tutorId
+    //   };
+    //   const res = await api.put(
+    //     `/tutor/update-tutor-educations/${tutorId}`,
+    //     payload
+    //   );
+    //   if (res.status === 200) {
+    //     enqueueSnackbar({
+    //       message: 'Cập nhật học vấn gia sư thành công',
+    //       variant: 'success'
+    //     });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const addCer = (data) => {
@@ -278,6 +288,20 @@ function ProfileTutor() {
     resetField('description_tutor_experiences');
   };
 
+  const addEdu = (data) => {
+    const payload = {
+      name: data.school?.name,
+      from_year: data.from_year,
+      // from_year: data.from_year,
+      award_url: data.award_url,
+      tutor_profile_id: tutorId
+    };
+    setTutorCer((prev) => [payload, ...prev]);
+    resetField('award_url');
+    resetField('organization_certification');
+    resetField('certification_name');
+  };
+
   const handleSaveCertificate = async () => {
     try {
       const res = await api.put(
@@ -295,10 +319,39 @@ function ProfileTutor() {
     }
   };
 
+  const handleSaveEdu = async () => {
+    try {
+      const res = await api.put(
+        `/tutor/update-tutor-educations/${tutorId}`,
+        tutorEdu
+      );
+      if (res.status === 200) {
+        enqueueSnackbar({
+          message: 'Cập nhật học vấn gia sư thành công',
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deleteCer = (index) => {
     const newArray = [...tutorCer];
     newArray.splice(index, 1);
     setTutorCer(newArray);
+  };
+
+  const deleteExp = (index) => {
+    const newArray = [...tutorExp];
+    newArray.splice(index, 1);
+    setTutorExp(newArray);
+  };
+
+  const deleteEdu = (index) => {
+    const newArray = [...tutorEdu];
+    newArray.splice(index, 1);
+    setTutorEdu(newArray);
   };
 
   function CustomTabPanel(props: any) {
@@ -547,7 +600,7 @@ function ProfileTutor() {
                   <Typography variant="subtitle2">{x?.position}</Typography>
                   <Typography variant="subtitle2">{x?.description}</Typography>
                 </Box>
-                <Button onClick={() => deleteCer(i)}>Xoá</Button>
+                <Button onClick={() => deleteExp(i)}>Xoá</Button>
               </Stack>
               <Divider sx={{ mt: 2 }} />
             </Box>
@@ -619,7 +672,7 @@ function ProfileTutor() {
               />
             </Grid>
           </Grid>
-          <Box
+          {/* <Box
             sx={{
               mt: 3,
               display: 'flex',
@@ -629,11 +682,11 @@ function ProfileTutor() {
             <Button
               color="primary"
               variant="contained"
-              onClick={handleSubmit(handleSaveStudy)}
+              onClick={handleSubmit(addEdu)}
             >
               Lưu
             </Button>
-          </Box>
+          </Box> */}
 
           {tutorEdu?.map((x) => (
             <Box key={x.tutor_educations_id}>
