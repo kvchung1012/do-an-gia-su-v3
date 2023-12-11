@@ -29,7 +29,6 @@ function TutorAvailableDate({ userId }) {
   const [showForm, setShowForm] = useState(false);
   const [itemSelected, setItemSelected] = useState<any>({});
 
-  
   const ref = useRef<AbortController | null>(null);
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [datePick, setDatePick] = useState(dayjs().format('D/MM/YYYY'));
@@ -52,78 +51,94 @@ function TutorAvailableDate({ userId }) {
 
   const handleChangeDay = (value) => {
     const day = value.format('DD/MM/YYYY');
-    setDatePick(day)
-  }
+    setDatePick(day);
+  };
 
- const handleSaveDate = async (e)=>{
-   var body = {
-    ...e,
-    date: datePick,
-    tutor_id: userId
-   }
+  const handleSaveDate = async (e) => {
+    var body = {
+      ...e,
+      date: datePick,
+      tutor_id: userId
+    };
 
-   await api.post('tutor-available-date', body)
-   fetchData(userId)
-   setShowForm(false)
- }
+    await api.post('tutor-available-date', body);
+    fetchData(userId);
+    setShowForm(false);
+  };
   return (
-    <><Card
-      sx={{
-        background: 'white',
-        py: '1rem',
-        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-        px: '3rem'
-      }}
-    >
-      <Box display={'flex'} justifyContent={'space-between'}>
-        <h3>Thời gian dạy</h3>
-        <Button variant="contained" onClick={()=>{setShowForm(true)}}>Thêm mới</Button>
-      </Box>
-      <Box>
-      <Stack mt={2} width="70%" gap="8px">
-        <Typography variant="h3">Thời gian rảnh trong tuần</Typography>
-        <Stack direction="row" spacing={6}>
-          <DateCalendarValue
-            highlightedDays={highlightedDays}
-            handleMonthChange={handleMonthChange}
-            onChangeDay={handleChangeDay}
-          />
-          <Stack pt={2} spacing={2}>
-            <Typography variant="h4">
-              Thời gian có thể dạy trong ngày
-            </Typography>
-            <Stack direction="row" spacing={1}>
-              {availableDate ? (
-                availableDate.filter(x=>x.date == datePick)?.map((item, i) => (
-                  <Chip
-                    key={i}
-                    label={`${item.start_time} : ${item.end_time}`}
-                    // onClick={handleClickChip}
-                  />
-                ))
-              ) : (
-                <Typography>Không có thời gian rảnh trong ngày này!</Typography>
-              )}
+    <>
+      <Card
+        sx={{
+          background: 'white',
+          py: '1rem',
+          boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+          px: '3rem'
+        }}
+      >
+        <Box display={'flex'} justifyContent={'space-between'}>
+          <h3>Thời gian dạy</h3>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShowForm(true);
+            }}
+          >
+            Thêm mới
+          </Button>
+        </Box>
+        <Box>
+          <Stack mt={2} width="70%" gap="8px">
+            <Typography variant="h3">Thời gian rảnh trong tuần</Typography>
+            <Stack direction="row" spacing={6}>
+              <DateCalendarValue
+                highlightedDays={highlightedDays}
+                handleMonthChange={handleMonthChange}
+                onChangeDay={handleChangeDay}
+              />
+              <Stack pt={2} spacing={2}>
+                <Typography variant="h4">
+                  Thời gian có thể dạy trong ngày
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  {availableDate ? (
+                    availableDate.sort(function(a, b) {
+                      return a.start_time.localeCompare(b.start_time);
+                    })
+                      .filter((x) => x.date == datePick)
+                      ?.map((item, i) => (
+                        <Chip
+                          key={i}
+                          label={`${item.start_time} : ${item.end_time}`}
+                          // onClick={handleClickChip}
+                        />
+                      ))
+                  ) : (
+                    <Typography>
+                      Không có thời gian rảnh trong ngày này!
+                    </Typography>
+                  )}
+                </Stack>
+              </Stack>
             </Stack>
           </Stack>
-        </Stack>
-      </Stack>
+        </Box>
 
-      </Box>
-
-      {
-  showForm && <TutorDateForm isOpen={showForm} onClose={()=>{setShowForm(false)}} data={undefined} onSave={handleSaveDate}/>
-}
-    </Card>
-
-
-      </> 
-
+        {showForm && (
+          <TutorDateForm
+            isOpen={showForm}
+            onClose={() => {
+              setShowForm(false);
+            }}
+            data={undefined}
+            onSave={handleSaveDate}
+          />
+        )}
+      </Card>
+    </>
   );
 }
 
 export default TutorAvailableDate;
-
 
 const chooseAllTimeAvailable = (day, arr) => {
   const dateNow = arr?.filter((item) => item.date === day);

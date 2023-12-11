@@ -186,7 +186,9 @@ const DetailTutor = () => {
             </Typography>
             <Stack direction="row" spacing={1}>
               {timeAvaiLableDay?.length ? (
-                timeAvaiLableDay?.map((item, i) => (
+                timeAvaiLableDay.sort(function(a, b) {
+                  return a.start_time.localeCompare(b.start_time);
+                })?.map((item, i) => (
                   <Chip
                     key={i}
                     label={`${item.start_time} : ${item.end_time}`}
