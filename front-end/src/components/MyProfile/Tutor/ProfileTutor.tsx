@@ -10,6 +10,7 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   InputAdornment,
   Radio,
   RadioGroup,
@@ -35,6 +36,22 @@ type FormData = {
   balance: string;
   stripe_account_id: string;
   description: string;
+
+  start_time: string;
+  end_time: string;
+  organization: string;
+  position: string;
+  description_tutor_experiences: string;
+
+  school_name: string;
+  score_url: string;
+  from_year: string;
+  to_year: string;
+  favorite_subject: string;
+
+  certification_name: string;
+  organization_certification: string;
+  award_url: string;
 };
 
 const defaultValue = {
@@ -46,7 +63,23 @@ const defaultValue = {
   gender: 'female',
   balance: '',
   stripe_account_id: '',
-  description: ''
+  description: '',
+
+  start_time: '',
+  end_time: '',
+  organization: '',
+  position: '',
+  description_tutor_experiences: '',
+
+  school_name: '',
+  score_url: '',
+  from_year: '',
+  to_year: '',
+  favorite_subject: '',
+
+  certification_name: '',
+  organization_certification: '',
+  award_url: ''
 };
 
 function ProfileTutor() {
@@ -70,6 +103,8 @@ function ProfileTutor() {
 
         if (res.status === 200) {
           setUser(res.data.data);
+          console.log(res.data.data);
+
           const user = res.data.data;
           const tutor_profile = res.data.data.tutor_profiles[0];
           setValue('first_name', user.first_name);
@@ -89,6 +124,23 @@ function ProfileTutor() {
             setTutorId(tutor_profile.tutor_profile_id);
             setVerified(
               Boolean(Number(tutor_profile.is_stripe_verified)) || false
+            );
+
+            setValue(
+              'start_time',
+              tutor_profile.tutor_experiences.start_time || ''
+            );
+            setValue(
+              'start_time',
+              tutor_profile.tutor_experiences.end_time || ''
+            );
+            setValue(
+              'organization',
+              tutor_profile.tutor_experiences.organization || ''
+            );
+            setValue(
+              'position',
+              tutor_profile.tutor_experiences.position || ''
             );
           }
         }
@@ -134,6 +186,10 @@ function ProfileTutor() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleSaveExperience = (data) => {
+    console.log(data);
   };
 
   function CustomTabPanel(props: any) {
@@ -315,7 +371,7 @@ function ProfileTutor() {
           }}
         >
           <h3>Thông tin kinh nghiệm</h3>
-          <Stack>
+          <Grid container spacing={2}>
             {user?.tutor_profiles
               ?.find(() => true)
               ?.tutor_experiences?.map((x) => (
@@ -336,11 +392,62 @@ function ProfileTutor() {
                       </Typography>
                     </Box>
                   </Box>
-
                   <Divider sx={{ margin: 4 }} />
                 </Box>
               ))}
-          </Stack>
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="organization"
+                label="Công ty đang làm việc"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="position"
+                label="Vị trí"
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <ControlTextField
+                control={control}
+                name="start_time"
+                label="Thời gian bắt đầu"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <ControlTextField
+                control={control}
+                name="end_time"
+                label="Thời gian kết thúc"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="description_tutor_experiences"
+                label="Mô tả công việc"
+              />
+            </Grid>
+          </Grid>
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSubmit(handleSaveExperience)}
+            >
+              Lưu
+            </Button>
+          </Box>
         </Card>
 
         <Card
@@ -353,7 +460,7 @@ function ProfileTutor() {
           }}
         >
           <h3>Thông tin học vấn</h3>
-          <Stack>
+          <Grid container spacing={2}>
             {user?.tutor_profiles
               ?.find(() => true)
               ?.tutor_educations?.map((x) => (
@@ -384,7 +491,60 @@ function ProfileTutor() {
                   <Divider sx={{ margin: 4 }} />
                 </Box>
               ))}
-          </Stack>
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="school_name"
+                label="Trường học"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="score_url"
+                label="Bằng tốt nghiệp"
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <ControlTextField
+                control={control}
+                name="from_year"
+                label="Năm bắt đầu"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <ControlTextField
+                control={control}
+                name="to_year"
+                label="Năm kết thúc"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="favorite_subject"
+                label="Môn học yêu thích"
+              />
+            </Grid>
+          </Grid>
+          <Box
+            sx={{
+              mt: 3,
+              display: 'flex',
+              justifyContent: 'end'
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleSubmit(handleSaveExperience)}
+            >
+              Lưu
+            </Button>
+          </Box>
         </Card>
 
         <Card
@@ -397,7 +557,7 @@ function ProfileTutor() {
           }}
         >
           <h3>Thông tin chứng chỉ</h3>
-          <Stack>
+          <Grid container spacing={2}>
             {user?.tutor_profiles
               ?.find(() => true)
               ?.tutor_certifications?.map((x) => (
@@ -423,12 +583,35 @@ function ProfileTutor() {
                   <Divider sx={{ margin: 4 }} />
                 </Box>
               ))}
-          </Stack>
+
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="certification_name"
+                label="Chứng chỉ"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="organization"
+                label="Năm"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ControlTextField
+                control={control}
+                name="award_url"
+                label="Đường dẫn chứng chỉ"
+              />
+            </Grid>
+          </Grid>
         </Card>
       </CustomTabPanel>
 
       <CustomTabPanel index={3}>
-        <TutorAvailableDate userId={user.user_id}/>
+        <TutorAvailableDate userId={user.user_id} />
       </CustomTabPanel>
     </Box>
   );
