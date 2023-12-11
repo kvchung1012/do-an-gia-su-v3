@@ -102,7 +102,7 @@ function TutorAvailableDate({ userId }) {
                 <Stack direction="row" spacing={1}>
                   {availableDate ? (
                     availableDate.sort(function(a, b) {
-                      return a.start_time.localeCompare(b.start_time);
+                      return a.start_time - b.start_time;
                     })
                       .filter((x) => x.date == datePick)
                       ?.map((item, i) => (
