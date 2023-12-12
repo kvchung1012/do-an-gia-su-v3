@@ -12,14 +12,6 @@ class tutoring_feedback extends Sequelize.Model {
           allowNull: false,
           primaryKey: true,
         },
-        course_id: {
-          type: DataTypes.STRING(50),
-          allowNull: true,
-          references: {
-            model: "course",
-            key: "course_id",
-          },
-        },
         message: {
           type: DataTypes.STRING(50),
           allowNull: true,
@@ -39,11 +31,6 @@ class tutoring_feedback extends Sequelize.Model {
             unique: true,
             using: "BTREE",
             fields: [{ name: "tutoring_feedback_id" }],
-          },
-          {
-            name: "schedule_id",
-            using: "BTREE",
-            fields: [{ name: "schedule_id" }],
           },
         ],
       }
