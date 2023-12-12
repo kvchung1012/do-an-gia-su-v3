@@ -216,8 +216,6 @@ const DetailTutor = () => {
 
       <Divider sx={{ mt: 2 }} />
       <Typography variant="h3">Khóa học</Typography>
-                
-
 
       <Stack>
         <h3>Thông tin kinh nghiệm</h3>

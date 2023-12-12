@@ -320,6 +320,22 @@ function SidebarMenu() {
               </ListItem>
 
               <ListItem component="div">
+                <NextLink href="/management/school" passHref>
+                  <Button
+                    className={
+                      currentRoute === '/management/school' ? 'active' : ''
+                    }
+                    disableRipple
+                    component="a"
+                    onClick={closeSidebar}
+                    startIcon={<TableChartTwoToneIcon />}
+                  >
+                    Trường học
+                  </Button>
+                </NextLink>
+              </ListItem>
+
+              <ListItem component="div">
                 <NextLink href="/management/feedback" passHref>
                   <Button
                     className={
