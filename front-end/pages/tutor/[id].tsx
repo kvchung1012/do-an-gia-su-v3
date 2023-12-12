@@ -186,15 +186,17 @@ const DetailTutor = () => {
             </Typography>
             <Stack direction="row" spacing={1}>
               {timeAvaiLableDay?.length ? (
-                timeAvaiLableDay.sort(function(a, b) {
-                  return a.start_time.localeCompare(b.start_time);
-                })?.map((item, i) => (
-                  <Chip
-                    key={i}
-                    label={`${item.start_time} : ${item.end_time}`}
-                    onClick={handleClickChip}
-                  />
-                ))
+                timeAvaiLableDay
+                  .sort(function (a, b) {
+                    return a.start_time.localeCompare(b.start_time);
+                  })
+                  ?.map((item, i) => (
+                    <Chip
+                      key={i}
+                      label={`${item.start_time} : ${item.end_time}`}
+                      onClick={handleClickChip}
+                    />
+                  ))
               ) : (
                 <Typography>Không có thời gian rảnh trong ngày này!</Typography>
               )}
@@ -213,7 +215,6 @@ const DetailTutor = () => {
       </Stack>
 
       <Divider sx={{ mt: 2 }} />
-
 
       <Stack>
         <h3>Thông tin kinh nghiệm</h3>
@@ -256,7 +257,7 @@ const DetailTutor = () => {
                 </Typography>
                 <Box marginLeft={3}>
                   <Typography variant="h4">
-                    {x?.school?.name || 'THPT Duy Tân'}
+                    {x?.school_name || 'THPT Duy Tân'}
                   </Typography>
 
                   <Typography variant="subtitle2">{x?.score_url}</Typography>
@@ -272,7 +273,6 @@ const DetailTutor = () => {
           ))}
         </Stack>
       </Stack>
-
 
       <Divider sx={{ mt: 2 }} />
 

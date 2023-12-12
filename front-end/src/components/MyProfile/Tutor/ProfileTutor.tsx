@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import TutorAvailableDate from './TutorAvailableDate';
+import ControlSelect from '@/components/ControlSelect';
 
 type FormData = {
   last_name: string;
@@ -91,12 +92,13 @@ function ProfileTutor() {
   const [verified, setVerified] = useState(false);
   const router = useRouter();
 
-  const [tab, setTab] = useState(2);
+  const [tab, setTab] = useState(0);
   const userId = router.query.id;
 
   const [tutorEdu, setTutorEdu] = useState<any>([]);
   const [tutorExp, setTutorExp] = useState<any>([]);
   const [tutorCer, setTutorCer] = useState<any>([]);
+  const [school, setSchool] = useState<any>([]);
   const [user, setUser] = useState<any>({});
   useEffect(() => {
     const getInfoUser = async () => {
@@ -104,11 +106,16 @@ function ProfileTutor() {
       const decoded = jwtDecode<any>(token);
       try {
         const res = await api.get(`/user/get-user-info/${decoded?.user_id}`);
+        const resSchool = await api.get('/school');
+
+        setSchool(
+          resSchool.data.data.map((item) => {
+            return { name: item.name, id: item.school_id };
+          })
+        );
 
         if (res.status === 200) {
           setUser(res.data.data);
-          console.log(res.data.data);
-
           const user = res.data.data;
           const tutor_profile = res.data.data.tutor_profiles[0];
           setValue('first_name', user.first_name);
@@ -233,31 +240,6 @@ function ProfileTutor() {
     }
   };
 
-  const handleSaveStudy = async (data) => {
-    // try {
-    //   const payload = {
-    //     from_year: data.from_year,
-    //     to_year: data.to_year,
-    //     name: data.school_name,
-    //     score_url: data.score_url,
-    //     favorite_subject: data.favorite_subject,
-    //     tutor_profile_id: tutorId
-    //   };
-    //   const res = await api.put(
-    //     `/tutor/update-tutor-educations/${tutorId}`,
-    //     payload
-    //   );
-    //   if (res.status === 200) {
-    //     enqueueSnackbar({
-    //       message: 'Cập nhật học vấn gia sư thành công',
-    //       variant: 'success'
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
   const addCer = (data) => {
     const payload = {
       name: data.certification_name,
@@ -290,16 +272,18 @@ function ProfileTutor() {
 
   const addEdu = (data) => {
     const payload = {
-      name: data.school?.name,
+      school_id: data.school_name,
       from_year: data.from_year,
-      // from_year: data.from_year,
-      award_url: data.award_url,
-      tutor_profile_id: tutorId
+      to_year: data.to_year,
+      score_url: data.score_url,
+      favorite_subject: data.favorite_subject
     };
-    setTutorCer((prev) => [payload, ...prev]);
-    resetField('award_url');
-    resetField('organization_certification');
-    resetField('certification_name');
+    setTutorEdu((prev) => [payload, ...prev]);
+    resetField('school_name');
+    resetField('from_year');
+    resetField('to_year');
+    resetField('score_url');
+    resetField('favorite_subject');
   };
 
   const handleSaveCertificate = async () => {
@@ -521,7 +505,6 @@ function ProfileTutor() {
         </Card>
       </CustomTabPanel>
 
-      {/* kinh nghiệm học vấn*/}
       <CustomTabPanel index={2}>
         <Card
           sx={{
@@ -605,21 +588,24 @@ function ProfileTutor() {
               <Divider sx={{ mt: 2 }} />
             </Box>
           ))}
-          <Box
-            sx={{
-              mt: 3,
-              display: 'flex',
-              justifyContent: 'end'
-            }}
-          >
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleSaveExperience}
+
+          {Boolean(tutorExp.length) && (
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                justifyContent: 'end'
+              }}
             >
-              Lưu
-            </Button>
-          </Box>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSaveExperience}
+              >
+                Lưu
+              </Button>
+            </Box>
+          )}
         </Card>
 
         <Card
@@ -634,10 +620,11 @@ function ProfileTutor() {
           <h3>Thông tin học vấn</h3>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <ControlTextField
+              <ControlSelect
+                label="Quyền truy cập"
                 control={control}
                 name="school_name"
-                label="Trường học"
+                list={school}
               />
             </Grid>
 
@@ -672,7 +659,7 @@ function ProfileTutor() {
               />
             </Grid>
           </Grid>
-          {/* <Box
+          <Box
             sx={{
               mt: 3,
               display: 'flex',
@@ -684,12 +671,12 @@ function ProfileTutor() {
               variant="contained"
               onClick={handleSubmit(addEdu)}
             >
-              Lưu
+              thêm mới
             </Button>
-          </Box> */}
+          </Box>
 
-          {tutorEdu?.map((x) => (
-            <Box key={x.tutor_educations_id}>
+          {tutorEdu?.map((x, i) => (
+            <Box key={i}>
               <Box
                 sx={{
                   display: 'flex'
@@ -714,6 +701,24 @@ function ProfileTutor() {
               <Divider sx={{ margin: 4 }} />
             </Box>
           ))}
+
+          {Boolean(tutorEdu.length) && (
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                justifyContent: 'end'
+              }}
+            >
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSaveEdu}
+              >
+                Lưu
+              </Button>
+            </Box>
+          )}
         </Card>
 
         <Card
@@ -781,21 +786,24 @@ function ProfileTutor() {
               <Divider sx={{ mt: 2 }} />
             </Box>
           ))}
-          <Box
-            sx={{
-              mt: 3,
-              display: 'flex',
-              justifyContent: 'end'
-            }}
-          >
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handleSaveCertificate}
+
+          {Boolean(tutorCer.length) && (
+            <Box
+              sx={{
+                mt: 3,
+                display: 'flex',
+                justifyContent: 'end'
+              }}
             >
-              Lưu
-            </Button>
-          </Box>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleSaveCertificate}
+              >
+                Lưu
+              </Button>
+            </Box>
+          )}
         </Card>
       </CustomTabPanel>
 
