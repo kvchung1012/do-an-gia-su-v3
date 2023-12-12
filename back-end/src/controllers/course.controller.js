@@ -33,6 +33,23 @@ const findAll = async (req, res) => {
   return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
 };
 
+const findAllbyTutor = async (req, res) => {
+  let {id} = req.params;
+  let entities = await models.course.findAll({
+    where :{
+      tutor_profile_id: id
+    },
+    include: [
+      {
+        model: models.category,
+        as: "category",
+      },
+    ],
+  });
+  return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");
+};
+
+
 const findById = async (req, res) => {
   let { id } = req.params;
   let entity = await models.course.findOne({
@@ -137,4 +154,5 @@ module.exports = {
   update,
   deleteById,
   getListCourseHome,
+  findAllbyTutor,
 };
