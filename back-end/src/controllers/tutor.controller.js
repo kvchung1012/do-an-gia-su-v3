@@ -3,7 +3,7 @@ const sequelize = require("../models/index");
 const initModel = require("../models/init-models");
 const { succesCode, errorCode, failCode } = require("../responses/response");
 const models = initModel(sequelize);
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
 
@@ -30,10 +30,9 @@ const findById = async (req, res) => {
       tutor_profile_id: id,
     },
     include: [
-      "tutor_educations",
-      "tutor_certifications",
-      "tutor_experiences",
-      "user",
+        { model: models.tutor_education, as: "tutor_educations", include:"school" },
+        { model: models.tutor_certification, as: "tutor_certifications" },
+        { model: models.tutor_experience, as: "tutor_experiences" },
     ],
   });
 
