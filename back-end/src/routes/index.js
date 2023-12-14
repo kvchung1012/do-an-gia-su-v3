@@ -25,7 +25,7 @@ routes.use("/student", studentRoutes);
 routes.use("/auth", authRoutes);
 routes.use("/role", roleRoutes);
 routes.use("/school", schoolRoutes);
-routes.use("/category-program", courseProgramRoutes);
+routes.use("/course-program", courseProgramRoutes);
 routes.use("/booked-session", bookedSessionRoutes);
 routes.use("/tutoring-contract", tutoringContractRoutes);
 routes.use("/tutoring-feedback", tutoringFeedbackRoutes);
@@ -33,6 +33,6 @@ routes.use("/tutor-available-date", tutorAvailableRoutes);
 routes.use("/schedule", scheduleRoutes);
 routes.use("/user", userRoutes);
 routes.use("/upload", uploadRoutes);
-routes.use("/payment",paymentRoutes);
+routes.use("/payment", paymentRoutes);
 
 module.exports = routes;

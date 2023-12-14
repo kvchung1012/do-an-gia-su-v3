@@ -12,7 +12,7 @@ const courseRoutes = express.Router();
 
 courseRoutes.get("/", findAll);
 courseRoutes.get("/:id", findById);
-courseRoutes.post("/:id", create);
+courseRoutes.post("/", create);
 courseRoutes.put("/:id", update);
 courseRoutes.delete("/:id", deleteById);
 courseRoutes.get("/getlistcourselimit", getListCourseHome);
