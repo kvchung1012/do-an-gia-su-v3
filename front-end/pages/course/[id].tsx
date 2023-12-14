@@ -1,10 +1,12 @@
 import api from '@/api';
 import CustomizedAccordions from '@/components/AppAcordion';
 import AppRating from '@/components/AppRating';
+import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseCard from '@/components/card/CourseCard';
 import { RemoteIcon } from '@/components/icons';
 import AoTrinhIcon from '@/components/icons/AoTrinhIcon';
 import SpentTimeIcon from '@/components/icons/SpentTimeIcon';
+import CourseProgramFormAdd from '@/components/management/course/CourseProgramFormAdd';
 import BaseLayout from '@/layouts/BaseLayout';
 import {
   Box,
@@ -23,6 +25,29 @@ const CourseDetail = () => {
   const router = useRouter();
   const course_id = router.query.id;
   const [course, setCourse] = useState(null);
+
+  const [showFormDetail, setShowFormDetail] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [dataSelected, setDataSelected] = useState<any>();
+
+  const handleSaveData = (body) => {
+    const request = !body?.course_program_id
+      ? api.post('course-program', { course_id: course_id, ...body })
+      : api.put(`course-program/${body.course_program_id}`, body);
+    request
+      .then((res) => {
+        setShowFormDetail(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleDelete = () => {
+    const { course_program_id } = dataSelected;
+    api.delete(`course-program/${course_program_id}`).then(() => {
+      setShowConfirmDelete(false);
+    });
+  };
   useEffect(() => {
     if (course_id) {
       const getCourse = async () => {
@@ -37,19 +62,19 @@ const CourseDetail = () => {
       };
       getCourse();
     }
-  }, [course_id]);
+  }, [course_id, showConfirmDelete, showFormDetail]);
 
-  const token = localStorage.getItem('access_token');
-  const decoded = jwtDecode<any>(token);
+  // const token = localStorage.getItem('access_token');
+  // const decoded = jwtDecode<any>(token);
 
-  const checkOut = ()=>{
-    const body = {
-      course_id,
-      student_id: decoded.user_id
-    }
+  // const checkOut = ()=>{
+  //   const body = {
+  //     course_id,
+  //     student_id: decoded.user_id
+  //   }
 
-    console.log(body);
-  }
+  //   console.log(body);
+  // }
   return (
     <Container sx={{ minHeight: '100vh' }}>
       <Grid mt={5} container>
@@ -92,13 +117,16 @@ const CourseDetail = () => {
                   keyExpand={course.course_program_id}
                   title={course.tittle}
                   childTitle={course.course_program_phases}
+                  data={course}
+                  setDataSelected={setDataSelected}
+                  setShowForm={setShowFormDetail}
+                  setShowConfirmDelete={setShowConfirmDelete}
                 />
               );
             })}
           </Stack>
         </Grid>
         <Grid
-          
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -116,8 +144,8 @@ const CourseDetail = () => {
             <Box
               sx={{
                 display: 'flex',
-                justifyContent:'space-between',
-                width:'100%',
+                justifyContent: 'space-between',
+                width: '100%',
                 gap: '12px'
               }}
             >
@@ -148,15 +176,42 @@ const CourseDetail = () => {
               </Typography>
             </Box>
 
-            <Button 
-                sx={{ border: '2px solid #121117' }} 
-                variant="contained"
-                onClick={checkOut}>
+            <Button
+              sx={{ border: '2px solid #121117' }}
+              variant="contained"
+              // onClick={checkOut}
+            >
               Đăng ký khóa học
+            </Button>
+            <Button
+              sx={{ border: '2px solid #121117' }}
+              variant="contained"
+              onClick={() => {
+                setDataSelected({});
+                setShowFormDetail(true);
+              }}
+            >
+              Thêm khóa học
             </Button>
           </Stack>
         </Grid>
       </Grid>
+      {showFormDetail && (
+        <CourseProgramFormAdd
+          data={dataSelected}
+          isOpen={showFormDetail}
+          onSave={handleSaveData}
+          onClose={() => setShowFormDetail(false)}
+          key={''}
+        />
+      )}
+      {showConfirmDelete && (
+        <ConfirmDeleteModal
+          open={showConfirmDelete}
+          onClose={() => setShowConfirmDelete(false)}
+          onConfirm={handleDelete}
+        />
+      )}
     </Container>
   );
 };
