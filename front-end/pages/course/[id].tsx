@@ -2,7 +2,7 @@ import api from '@/api';
 import CustomizedAccordions from '@/components/AppAcordion';
 import AppRating from '@/components/AppRating';
 import CourseCard from '@/components/card/CourseCard';
-import { RemoteIcon } from '@/components/icons';
+import { RemoteIcon, VerifyIcon } from '@/components/icons';
 import AoTrinhIcon from '@/components/icons/AoTrinhIcon';
 import SpentTimeIcon from '@/components/icons/SpentTimeIcon';
 import BaseLayout from '@/layouts/BaseLayout';
@@ -104,12 +104,22 @@ const CourseDetail = () => {
       tutor_available_date: prev.tutor_available_date.concat(id)
     }));
   };
+  const handleMua = async () => {
+    try {
+      const res = await api.post('/payment/get-payment-url', payload);
+      if (res.status === 200) {
+        router.push(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Container sx={{ minHeight: '100vh' }}>
       <Grid mt={5} container>
         <Grid item xs={8}>
-          <Typography variant="h1">{course?.name}</Typography>
+          <Typography variant="h2">{course?.name}</Typography>
           <Typography mt={2} color="secondary" variant="h4">
             {course?.description}
           </Typography>
@@ -213,59 +223,73 @@ const CourseDetail = () => {
         </Grid>
       </Grid>
 
-      <Dialog onClose={() => setOpen(false)} open={open}>
+      <Dialog
+        sx={{
+          maxWidth: 'unset'
+        }}
+        onClose={() => setOpen(false)}
+        open={open}
+      >
         <DialogTitle>
           <Typography variant="h1">Chọn lịch học</Typography>
         </DialogTitle>
         <Divider />
         <Stack p={3} width="100%" gap="8px">
           <Typography variant="h3">Thời gian rảnh trong tuần</Typography>
-          <Stack direction="row" spacing={6}>
-            <DateCalendarValue
-              highlightedDays={highlightedDays}
-              handleMonthChange={handleMonthChange}
-              onChangeDay={handleChangeDay}
-            />
-            <Stack pt={2} spacing={2}>
-              <Typography variant="h4">
-                Thời gian có thể dạy trong ngày
-              </Typography>
-              <Stack direction="row" spacing={1}>
-                {timeAvaiLableDay?.length ? (
-                  timeAvaiLableDay
-                    .sort(function (a, b) {
-                      return a.start_time.localeCompare(b.start_time);
-                    })
-                    ?.map((item, i) => (
-                      <Chip
-                        key={i}
-                        label={`${item.start_time} : ${item.end_time}`}
-                        onClick={() => handleClickChip(item.id)}
-                      />
-                    ))
-                ) : (
-                  <Typography>
-                    Không có thời gian rảnh trong ngày này!
-                  </Typography>
-                )}
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <DateCalendarValue
+                highlightedDays={highlightedDays}
+                handleMonthChange={handleMonthChange}
+                onChangeDay={handleChangeDay}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Stack pt={2} spacing={2}>
+                <Typography variant="h4">
+                  Thời gian có thể dạy trong ngày
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  {timeAvaiLableDay?.length ? (
+                    timeAvaiLableDay
+                      .sort(function (a, b) {
+                        return a.start_time.localeCompare(b.start_time);
+                      })
+                      ?.map((item, i) => (
+                        <Chip
+                          key={i}
+                          label={`${item.start_time} : ${item.end_time}`}
+                          onClick={() => handleClickChip(item.id)}
+                        />
+                      ))
+                  ) : (
+                    <Typography>
+                      Không có thời gian rảnh trong ngày này!
+                    </Typography>
+                  )}
+                </Stack>
               </Stack>
-            </Stack>
-          </Stack>
+            </Grid>
+          </Grid>
           <Stack
             direction="row"
             spacing={2}
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="h5" color="secondary">
-              Đã học {payload?.tutor_available_date?.length} buổi
-            </Typography>
-            <Button
-              onClick={() => {
-                console.log(payload);
-              }}
-              variant="contained"
-            >
+            {Boolean(payload?.tutor_available_date?.length) && (
+              <Typography variant="h3" color="secondary">
+                Đã học {payload?.tutor_available_date?.length} buổi{' '}
+                {payload?.tutor_available_date?.length && (
+                  <VerifyIcon
+                    sx={{
+                      color: 'green'
+                    }}
+                  />
+                )}
+              </Typography>
+            )}
+            <Button onClick={handleMua} variant="contained">
               Mua
             </Button>
           </Stack>

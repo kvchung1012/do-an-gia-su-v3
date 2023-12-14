@@ -44,8 +44,13 @@ const DetailTutor = () => {
       const getDetailTutor = async () => {
         try {
           const tutorProfile = await api.get(`/tutor/${id}`);
+          debugger;
           if (tutorProfile.status === 200) {
             setTutor(tutorProfile.data.data);
+
+            const course = await api.get(`/course/get-by-tutor-id/${id}`);
+            setCourse(course.data.data);
+
             const availableTime = await api.get(
               `/tutor-available-date/find-by-userid/${tutorProfile.data.data.user_id}`
             );
@@ -57,11 +62,6 @@ const DetailTutor = () => {
                 availableTime.data.data
               )
             );
-
-            const course = await api.get(`/course/get-by-tutor-id/${id}`);
-            console.log(course);
-
-            setCourse(course.data.data);
           }
         } catch (error) {
           console.log(error);
@@ -87,7 +87,7 @@ const DetailTutor = () => {
   };
 
   const handleClickChip = () => {
-    console.log('haha');
+    // console.log('haha');
   };
 
   return (
