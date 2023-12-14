@@ -8,10 +8,15 @@ const Payment = () => {
   const router = useRouter();
   const params = router.query;
 
+  const paramstr = Object.keys(params)
+    .map((key) => key + '=' + params[key])
+    .join('&');
   useEffect(() => {
     if (params) {
+      console.log(params);
+
       const haha = async () => {
-        const res = await api.post('/payment/checksum-payment', null, params);
+        const res = await api.post('/payment/checksum-payment?' + paramstr);
         console.log(res);
       };
       haha();
