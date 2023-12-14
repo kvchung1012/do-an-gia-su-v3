@@ -14,6 +14,7 @@ const tutorAvailableRoutes = require("./tutoring-available-date.routes");
 const scheduleRoutes = require("./schedule.routes");
 const userRoutes = require("./user.routes");
 const uploadRoutes = require("./upload.routes");
+const paymentRoutes = require("./payment.routes");
 
 const routes = express.Router();
 
@@ -32,5 +33,6 @@ routes.use("/tutor-available-date", tutorAvailableRoutes);
 routes.use("/schedule", scheduleRoutes);
 routes.use("/user", userRoutes);
 routes.use("/upload", uploadRoutes);
+routes.use("/payment",paymentRoutes);
 
 module.exports = routes;
