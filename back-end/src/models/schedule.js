@@ -26,7 +26,19 @@ class schedule extends Sequelize.Model {
         model: 'users',
         key: 'user_id'
       }
-    }
+    },
+    booked_session_id: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+      references: {
+        model: 'booked_session',
+        key: 'booked_session_id'
+      }
+    },
+    status: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
   }, {
     sequelize,
     tableName: 'schedule',

@@ -205,7 +205,7 @@ const CourseDetail = () => {
             <Button
               sx={{ border: '2px solid #121117' }}
               variant="contained"
-              onClick={() => setOpen(true)}
+              onClick={checkOut}
             >
               Đăng ký khóa học
             </Button>
