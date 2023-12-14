@@ -425,7 +425,7 @@ export default DetailTutor;
 
 DetailTutor.getLayout = (page) => <BaseLayout>{page}</BaseLayout>;
 
-function findDayHightLight(arr) {
+export function findDayHightLight(arr) {
   const dates = arr.map((item) => {
     const day = item.date.split('/')[0];
     return parseInt(day);
@@ -433,10 +433,10 @@ function findDayHightLight(arr) {
   return dates;
 }
 
-const chooseAllTimeAvailable = (day, arr) => {
+export const chooseAllTimeAvailable = (day, arr) => {
   const dateNow = arr?.filter((item) => item.date === day);
-
   return dateNow?.map((item) => ({
+    id: item.tutor_available_date_id,
     start_time: item.start_time,
     end_time: item.end_time
   }));
