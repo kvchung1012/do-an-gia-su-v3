@@ -147,9 +147,8 @@ const checkSumPayment = async (req, res) => {
   delete vnp_Params["vnp_SecureHashType"];
   vnp_Params = sortObject(vnp_Params);
 
-  let config = require("config");
-  let tmnCode = config.get("vnp_TmnCode");
-  let secretKey = config.get("vnp_HashSecret");
+  var tmnCode = config.vnp_TmnCode;
+  var secretKey = config.vnp_HashSecret;
 
   let querystring = require("qs");
   let signData = querystring.stringify(vnp_Params, { encode: false });
