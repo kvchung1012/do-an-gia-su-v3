@@ -6,30 +6,65 @@ import { RemoteIcon } from '@/components/icons';
 import AoTrinhIcon from '@/components/icons/AoTrinhIcon';
 import SpentTimeIcon from '@/components/icons/SpentTimeIcon';
 import BaseLayout from '@/layouts/BaseLayout';
+import DateCalendarValue from '@/components/Calendar';
 import {
   Box,
   Button,
+  Chip,
   Container,
+  Dialog,
+  DialogTitle,
   Divider,
   Grid,
   Stack,
   Typography
 } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { chooseAllTimeAvailable, findDayHightLight } from 'pages/tutor/[id]';
+import { useEffect, useRef, useState } from 'react';
 
 const CourseDetail = () => {
   const router = useRouter();
   const course_id = router.query.id;
   const [course, setCourse] = useState(null);
+  const ref = useRef<AbortController | null>(null);
+
+  const [availableDay, setAvailableDay] = useState(null);
+  const [highlightedDays, setHighlightedDays] = useState([]);
+  const [timeAvaiLableDay, setTimeAvailableDay] = useState([]);
+  const [payload, setPayload] = useState<any>({ tutor_available_date: [] });
+
   useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    const decoded = jwtDecode<any>(token);
+
     if (course_id) {
       const getCourse = async () => {
         try {
           const res = await api.get(`/course/${course_id}`);
           if (res.status === 200) {
             setCourse(res.data.data);
+            const availableTime = await api.get(
+              `/tutor-available-date/find-by-userid/${res.data.data.tutor_profile.user_id}`
+            );
+            setPayload((prev) => {
+              return {
+                ...prev,
+                tutor_id: res.data.data.tutor_profile.user_id,
+                student_id: decoded.user_id,
+                course_id: res.data.data.course_id
+              };
+            });
+            setAvailableDay(availableTime.data.data);
+            setHighlightedDays(findDayHightLight(availableTime.data.data));
+            setTimeAvailableDay(
+              chooseAllTimeAvailable(
+                dayjs().format('DD'),
+                availableTime.data.data
+              )
+            );
           }
         } catch (error) {
           console.log(error);
@@ -38,18 +73,38 @@ const CourseDetail = () => {
       getCourse();
     }
   }, [course_id]);
+  const [open, setOpen] = useState(false);
 
-  const checkOut = () => {
-    const token = localStorage.getItem('access_token');
-    const decoded = jwtDecode<any>(token);
+  // const () => = () => {
+  //   // const body = {
+  //   //   course_id,
+  //   //   student_id: decoded.user_id
+  //   // }
 
-    const body = {
-      course_id,
-      student_id: decoded.user_id
-    };
+  //   // console.log(body);
+  //   setOpen(true);
+  // };
 
-    console.log(body);
+  const handleMonthChange = (date: Dayjs) => {
+    if (ref.current) {
+      ref.current.abort();
+    }
+    // setHighlightedDays([]);
+    // fetchHighlightedDays(date);
   };
+
+  const handleChangeDay = (value) => {
+    const day = value.format('DD/MM/YYYY');
+    setTimeAvailableDay(chooseAllTimeAvailable(day, availableDay));
+  };
+
+  const handleClickChip = (id) => {
+    setPayload((prev) => ({
+      ...prev,
+      tutor_available_date: prev.tutor_available_date.concat(id)
+    }));
+  };
+
   return (
     <Container sx={{ minHeight: '100vh' }}>
       <Grid mt={5} container>
@@ -157,6 +212,65 @@ const CourseDetail = () => {
           </Stack>
         </Grid>
       </Grid>
+
+      <Dialog onClose={() => setOpen(false)} open={open}>
+        <DialogTitle>
+          <Typography variant="h1">Chọn lịch học</Typography>
+        </DialogTitle>
+        <Divider />
+        <Stack p={3} width="100%" gap="8px">
+          <Typography variant="h3">Thời gian rảnh trong tuần</Typography>
+          <Stack direction="row" spacing={6}>
+            <DateCalendarValue
+              highlightedDays={highlightedDays}
+              handleMonthChange={handleMonthChange}
+              onChangeDay={handleChangeDay}
+            />
+            <Stack pt={2} spacing={2}>
+              <Typography variant="h4">
+                Thời gian có thể dạy trong ngày
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                {timeAvaiLableDay?.length ? (
+                  timeAvaiLableDay
+                    .sort(function (a, b) {
+                      return a.start_time.localeCompare(b.start_time);
+                    })
+                    ?.map((item, i) => (
+                      <Chip
+                        key={i}
+                        label={`${item.start_time} : ${item.end_time}`}
+                        onClick={() => handleClickChip(item.id)}
+                      />
+                    ))
+                ) : (
+                  <Typography>
+                    Không có thời gian rảnh trong ngày này!
+                  </Typography>
+                )}
+              </Stack>
+            </Stack>
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h5" color="secondary">
+              Đã học {payload?.tutor_available_date?.length} buổi
+            </Typography>
+            <Button
+              onClick={() => {
+                console.log(payload);
+              }}
+              variant="contained"
+            >
+              Mua
+            </Button>
+          </Stack>
+        </Stack>
+      </Dialog>
     </Container>
   );
 };
