@@ -676,29 +676,27 @@ function ProfileTutor() {
           </Box>
 
           {tutorEdu?.map((x, i) => (
-            <Box key={i}>
-              <Box
-                sx={{
-                  display: 'flex'
-                }}
-              >
-                <Typography variant="h6">
-                  {x?.from_year} - {x?.to_year || 'Hiện tại'}
-                </Typography>
-                <Box marginLeft={3}>
-                  <Typography variant="h4">
-                    {x?.school?.name || 'THPT Duy Tân'}
+            <Box mt={2} key={i}>
+              <Stack direction="row" justifyContent="space-between" spacing={2}>
+                <Box>
+                  <Typography variant="h6">
+                    {x?.from_year} - {x?.to_year || 'Hiện tại'}
                   </Typography>
+                  <Box marginLeft={3}>
+                    <Typography variant="h4">
+                      {x?.school?.name || 'THPT Duy Tân'}
+                    </Typography>
 
-                  <Typography variant="subtitle2">{x?.score_url}</Typography>
+                    <Typography variant="subtitle2">{x?.score_url}</Typography>
 
-                  <Typography variant="subtitle2">
-                    {x?.favorite_subject}
-                  </Typography>
+                    <Typography variant="subtitle2">
+                      {x?.favorite_subject}
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-
-              <Divider sx={{ margin: 4 }} />
+                <Button onClick={() => deleteEdu(i)}>Xoá</Button>
+              </Stack>
+              <Divider sx={{ mt: 2 }} />
             </Box>
           ))}
 

@@ -6,9 +6,7 @@ const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 
 const findAll = async (req, res) => {
-  let entities = await models.tutoring_feedback.findAll({
-    include: ["schedule"],
-  });
+  let entities = await models.tutoring_feedback.findAll();
   return succesCode(res, entities, "Lấy danh sách thành công!!!");
 };
 

@@ -3,8 +3,8 @@ import AppLinearProgress from '@/components/AppLinearProgress';
 import AppRating from '@/components/AppRating';
 import DateCalendarValue from '@/components/Calendar';
 import UserCommentSection from '@/components/UserCommentSection';
+import CourseCard from '@/components/card/CourseCard';
 import {
-  ArrowIcon,
   HeartIcon,
   LangueTeachIcon,
   PersonIcon,
@@ -20,6 +20,7 @@ import {
   Chip,
   Container,
   Divider,
+  Grid,
   Stack,
   Typography
 } from '@mui/material';
@@ -33,6 +34,7 @@ const DetailTutor = () => {
   const router = useRouter();
   const id = router.query.id;
   const [tutor, setTutor] = useState(null);
+  const [course, setCourse] = useState([]);
   const [availableDay, setAvailableDay] = useState(null);
   const [highlightedDays, setHighlightedDays] = useState([]);
   const [timeAvaiLableDay, setTimeAvailableDay] = useState([]);
@@ -55,6 +57,11 @@ const DetailTutor = () => {
                 availableTime.data.data
               )
             );
+
+            const course = await api.get(`/course/get-by-tutor-id/${id}`);
+            console.log(course);
+
+            setCourse(course.data.data);
           }
         } catch (error) {
           console.log(error);
@@ -215,6 +222,20 @@ const DetailTutor = () => {
       </Stack>
 
       <Divider sx={{ mt: 2 }} />
+      <Typography mt={2} variant="h3">
+        Khóa học
+      </Typography>
+      <Grid mt={2} container spacing={2}>
+        {course.map((item) => (
+          <Grid key={item.course_id} item xs={4}>
+            <CourseCard
+              src={item.image_url}
+              title={item.name}
+              course_id={item.course_id}
+            />
+          </Grid>
+        ))}
+      </Grid>
 
       <Stack>
         <h3>Thông tin kinh nghiệm</h3>
