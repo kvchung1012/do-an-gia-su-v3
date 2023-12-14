@@ -6,6 +6,6 @@ const {
 const paymentRoutes = express.Router();
 
 paymentRoutes.post("/get-payment-url", getPaymentUrl);
-paymentRoutes.post("/checksum-payment", checkSumPayment);
+paymentRoutes.get("/checksum-payment", checkSumPayment);
 
 module.exports = paymentRoutes;

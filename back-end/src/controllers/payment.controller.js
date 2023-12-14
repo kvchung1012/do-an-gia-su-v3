@@ -141,6 +141,7 @@ const getPaymentUrl = async (req, res) => {
 const checkSumPayment = async (req, res) => {
   let vnp_Params = req.query;
 
+  console.log(vnp_Params)
   let secureHash = vnp_Params["vnp_SecureHash"];
 
   delete vnp_Params["vnp_SecureHash"];
@@ -154,14 +155,15 @@ const checkSumPayment = async (req, res) => {
   let signData = querystring.stringify(vnp_Params, { encode: false });
   let crypto = require("crypto");
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  let signed = hmac.update(new Buffer(signData, 'utf8')).digest("hex");
 
+  console.log(signed)
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
 
-    res.render("success", { code: vnp_Params["vnp_ResponseCode"] });
+    return succesCode(res, { code: vnp_Params["vnp_ResponseCode"] });
   } else {
-    res.render("success", { code: "97" });
+    return succesCode(res, { code: "97" });
   }
 };
 
