@@ -8,20 +8,27 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 
-const CourseCard = ({ src, title, course_id }) => {
+const CourseCard = ({ src, title, course_id, noPush }: CourseCardProps) => {
   const router = useRouter();
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: '100%', maxWidth: 345 }}>
       <CardActionArea
-        onClick={() =>
-          router.push({
-            pathname: COURSE_DETAIL_PATH,
-            query: { id: course_id }
-          })
+        onClick={
+          noPush
+            ? () => {}
+            : () =>
+                router.push({
+                  pathname: COURSE_DETAIL_PATH,
+                  query: { id: course_id }
+                })
         }
       >
-        <CardMedia sx={{ height: 240 }} image={src || ''} title="haha" />
+        <CardMedia
+          sx={{ height: 240 }}
+          image={src || 'https://i.imgur.com/rDVsZaY.png'}
+          title="haha"
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {title}
@@ -33,3 +40,10 @@ const CourseCard = ({ src, title, course_id }) => {
 };
 
 export default CourseCard;
+
+type CourseCardProps = {
+  src?: string;
+  title?: string;
+  course_id?: number;
+  noPush?: boolean;
+};

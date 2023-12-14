@@ -5,7 +5,6 @@ import DateCalendarValue from '@/components/Calendar';
 import UserCommentSection from '@/components/UserCommentSection';
 import CourseCard from '@/components/card/CourseCard';
 import {
-  ArrowIcon,
   HeartIcon,
   LangueTeachIcon,
   PersonIcon,
