@@ -39,17 +39,17 @@ const CourseDetail = () => {
     }
   }, [course_id]);
 
-  const token = localStorage.getItem('access_token');
-  const decoded = jwtDecode<any>(token);
+  const checkOut = () => {
+    const token = localStorage.getItem('access_token');
+    const decoded = jwtDecode<any>(token);
 
-  const checkOut = ()=>{
     const body = {
       course_id,
       student_id: decoded.user_id
-    }
+    };
 
     console.log(body);
-  }
+  };
   return (
     <Container sx={{ minHeight: '100vh' }}>
       <Grid mt={5} container>
@@ -98,7 +98,6 @@ const CourseDetail = () => {
           </Stack>
         </Grid>
         <Grid
-          
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -116,8 +115,8 @@ const CourseDetail = () => {
             <Box
               sx={{
                 display: 'flex',
-                justifyContent:'space-between',
-                width:'100%',
+                justifyContent: 'space-between',
+                width: '100%',
                 gap: '12px'
               }}
             >
@@ -148,10 +147,11 @@ const CourseDetail = () => {
               </Typography>
             </Box>
 
-            <Button 
-                sx={{ border: '2px solid #121117' }} 
-                variant="contained"
-                onClick={checkOut}>
+            <Button
+              sx={{ border: '2px solid #121117' }}
+              variant="contained"
+              onClick={checkOut}
+            >
               Đăng ký khóa học
             </Button>
           </Stack>

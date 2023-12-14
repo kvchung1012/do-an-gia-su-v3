@@ -6,7 +6,23 @@ const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 
 const findAll = async (req, res) => {
-  let entities = await models.tutoring_feedback.findAll();
+  let entities = await models.tutoring_feedback.findAll({
+    include:[
+      {
+        model: models.schedule,
+        as: 'schedule',
+        include:[{
+          model: models.booked_session,
+          as: 'booked_session',
+          include:['course']
+        },
+      {
+        model: models.tutor_available_date,
+        as:'tutor_available_date'
+      }]
+      }
+    ]
+  });
   return succesCode(res, entities, "Lấy danh sách thành công!!!");
 };
 

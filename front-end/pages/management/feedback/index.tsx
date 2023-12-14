@@ -103,8 +103,6 @@ function RatingPage() {
       )
     }
   ];
-  console.log(dataSelected);
-
   const fetchData = () => {
     api.get('tutoring-feedback').then((res) => {
       setData([...res?.data?.data]);

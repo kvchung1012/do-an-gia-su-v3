@@ -48,6 +48,44 @@ function sortObject(obj) {
 }
 
 const getPaymentUrl = async (req, res) => {
+  const body = {
+    course_id: req.body.course_id,
+    student_id: req.body.student_id,
+    tutor_id: req.body.tutor_id,
+    schedule: req.body.tutor_available_date,
+  };
+
+  // tạo booked_session
+  var course = await models.course.findByPk(body.course_id);
+  var booked_session = await models.booked_session.create({
+    booked_session_id: uuidv4(),
+    student_id: body.student_id,
+    tutor_id: body.tutor_id,
+    course_id: course.dataValues.course_id,
+    price: course.dataValues.price,
+    checkout_session_id: null,
+    status: "PENDING",
+  });
+
+  var tutoring_contract = await models.tutoring_contract.create({
+    tutoring_contract_id: uuidv4(),
+    booked_session_id: booked_session.dataValues.booked_session_id,
+    tutor_id: body.tutor_id,
+  });
+
+  var schedules = await models.schedule.bulkCreate(
+    body.schedule.map((x) => {
+      return {
+        schedule_id: uuidv4(),
+        student_id: body.student_id,
+        tutor_available_date_id: x,
+        status: "PENDING",
+      };
+    })
+  );
+  // tạo tutoring contraction
+
+  // tạo link thanh toán
   var tmnCode = config.vnp_TmnCode;
   var secretKey = config.vnp_HashSecret;
   var vnpUrl = config.vnp_Url;
@@ -62,12 +100,10 @@ const getPaymentUrl = async (req, res) => {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 
-  var orderId = uuidv4();
-  var amount = req.body.amount;
-  var bankCode = req.body.bankCode;
+  var orderId = booked_session.dataValues.booked_session_id;
+  var amount = parseInt(course.dataValues.price);
+  var bankCode = '';
 
-  var orderInfo = req.body.orderDescription;
-  var orderType = "other";
   var locale = req.body.language;
   locale = "vn";
   var currCode = "VND";
@@ -111,7 +147,7 @@ const checkSumPayment = async (req, res) => {
   delete vnp_Params["vnp_SecureHashType"];
   vnp_Params = sortObject(vnp_Params);
 
-  let config = require("config"); 
+  let config = require("config");
   let tmnCode = config.get("vnp_TmnCode");
   let secretKey = config.get("vnp_HashSecret");
 
