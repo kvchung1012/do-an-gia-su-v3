@@ -37,9 +37,9 @@ const UserComment = ({ data, onCommentReply, commentRely }) => {
             <Typography variant="h5" fontWeight={500} color="secondary">
               đã đánh giá
             </Typography>
-            <AppRating readOnly value={5} />
+            <AppRating readOnly value={data.rating} />
           </Stack>
-          <Typography variant="h3" fontWeight={400} mt={2}>
+          <Typography variant="h5" fontWeight={400} mt={2}>
             {data?.comment || 'Gia sư đẳng cấp quốc tế'}
           </Typography>
         </Stack>

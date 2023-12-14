@@ -1,4 +1,4 @@
-import { Avatar, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import SendCommentTextFiled from './SendCommentTextFiled';
@@ -68,25 +68,50 @@ const UserCommentSection = () => {
         />
       </Grid>
 
-      <Grid
-        item
-        xs={12}
-        display="flex"
-        flexDirection="row"
-        gap="64px"
-        border="1px solid"
-        borderColor="grey.300"
-        borderRadius="12px"
-        mb={2.8}
-      >
-        <UserComment
-          data={{}}
-          commentRely={commentRely}
-          onCommentReply={handleCommentReply}
-        />
-      </Grid>
+      {dataList.map((item) => (
+        <Grid
+          item
+          xs={12}
+          display="flex"
+          flexDirection="row"
+          gap="64px"
+          border="1px solid"
+          borderColor="grey.300"
+          borderRadius="12px"
+          mb={2.8}
+          key={item.id}
+        >
+          <UserComment
+            data={item}
+            commentRely={commentRely}
+            onCommentReply={handleCommentReply}
+          />
+        </Grid>
+      ))}
     </Grid>
   );
 };
 
 export default UserCommentSection;
+
+const dataList = [
+  {
+    id: 1,
+    createdByName: 'Học sinh giỏi toán',
+    comment: 'Gia sư dạy rất có tâm',
+    rating: 3
+  },
+  {
+    id: 2,
+    createdByName: 'Khuất Chung',
+    comment: 'Gia sư dạy làm tôi giỏi code luôn',
+    rating: 5
+  },
+  {
+    id: 2,
+    createdByName: 'Khuất Việt',
+    comment:
+      'Nhờ Khuất Chung mà tôi biết tới gia sư này nhưng mà không như tưởng tượng',
+    rating: 2
+  }
+];
