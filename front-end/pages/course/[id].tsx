@@ -37,16 +37,16 @@ const CourseDetail = () => {
   const [dataSelected, setDataSelected] = useState<any>();
 
   const handleSaveData = (body) => {
-    const request = !body?.course_program_id
-      ? api.post('course-program', { course_id: course_id, ...body })
-      : api.put(`course-program/${body.course_program_id}`, body);
-    request
-      .then((res) => {
-        setShowFormDetail(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // const request = !body?.course_program_id
+    //   ? api.post('course-program', { course_id: course_id, ...body })
+    //   : api.put(`course-program/${body.course_program_id}`, body);
+    // request
+    //   .then((res) => {
+    //     setShowFormDetail(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
   const handleDelete = () => {
     const { course_program_id } = dataSelected;
@@ -148,7 +148,6 @@ const CourseDetail = () => {
           <Typography mt={2} color="secondary" variant="h4">
             {course?.description}
           </Typography>
-
           <Divider sx={{ mt: 2 }} />
           <Typography mt={2} variant="h3">
             Thông tin khóa học
@@ -162,18 +161,15 @@ const CourseDetail = () => {
           <Typography mt={2} variant="h5" color="secondary">
             Tổng thời lượng của khóa học : {course?.spend_time}
           </Typography>
-
           <Divider sx={{ mt: 2 }} />
           <Typography mt={2} variant="h3">
             Nội dung khóa học
           </Typography>
-
           <Typography my={2} variant="h5" color="secondary">
             {course?.course_programs?.length} chương •{' '}
             {course?.course_program_phases?.length} bài học • thời lượng{' '}
             {course?.spend_time}
           </Typography>
-
           <Stack spacing={1}>
             {course?.course_programs?.map((course) => {
               return (
@@ -248,20 +244,10 @@ const CourseDetail = () => {
             >
               Đăng ký khóa học
             </Button>
-            <Button
-              sx={{ border: '2px solid #121117' }}
-              variant="contained"
-              onClick={() => {
-                setDataSelected({});
-                setShowFormDetail(true);
-              }}
-            >
-              Thêm khóa học
-            </Button>
           </Stack>
         </Grid>
       </Grid>
-      {showFormDetail && (
+      {/* {showFormDetail && (
         <CourseProgramFormAdd
           data={dataSelected}
           isOpen={showFormDetail}
@@ -269,14 +255,14 @@ const CourseDetail = () => {
           onClose={() => setShowFormDetail(false)}
           key={''}
         />
-      )}
-      {showConfirmDelete && (
+      )} */}
+      {/* {showConfirmDelete && (
         <ConfirmDeleteModal
           open={showConfirmDelete}
           onClose={() => setShowConfirmDelete(false)}
           onConfirm={handleDelete}
         />
-      )}
+      )} */}
 
       <Dialog
         sx={{

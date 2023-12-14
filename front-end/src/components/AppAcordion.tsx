@@ -50,7 +50,7 @@ interface ICustomizedAccordionsProps {
   title: string;
   childTitle: any[];
   setDataSelected: any;
-  setShowForm: any;
+  setShowForm?: any;
   setShowConfirmDelete: any;
   data: any;
 }
@@ -84,7 +84,7 @@ export default function CustomizedAccordions({
           <Typography variant="h4">{title}</Typography>
         </AccordionSummary>
         <Stack spacing={1}>
-          <Button
+          {/* <Button
             sx={{ border: '2px solid #121117' }}
             variant="contained"
             onClick={() => {
@@ -102,7 +102,7 @@ export default function CustomizedAccordions({
             }}
           >
             Xóa bài học học
-          </Button>
+          </Button> */}
         </Stack>
         {childTitle?.map((child, index) => {
           return (
