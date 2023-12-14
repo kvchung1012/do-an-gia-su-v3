@@ -16,7 +16,7 @@ const Payment = () => {
       console.log(params);
 
       const haha = async () => {
-        const res = await api.post('/payment/checksum-payment?' + paramstr);
+        const res = await api.get('/payment/checksum-payment?' + paramstr);
         console.log(res);
       };
       haha();
