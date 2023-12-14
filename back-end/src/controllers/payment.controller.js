@@ -48,6 +48,44 @@ function sortObject(obj) {
 }
 
 const getPaymentUrl = async (req, res) => {
+  const body = {
+    course_id: req.body.course_id,
+    student_id: req.body.student_id,
+    tutor_id: req.body.tutor_id,
+    schedule: req.body.tutor_available_date,
+  };
+
+  // tạo booked_session
+  var course = await models.course.findByPk(body.course_id);
+  var booked_session = await models.booked_session.create({
+    booked_session_id: uuidv4(),
+    student_id: body.student_id,
+    tutor_id: body.tutor_id,
+    course_id: course.dataValues.course_id,
+    price: course.dataValues.price,
+    checkout_session_id: null,
+    status: "PENDING",
+  });
+
+  var tutoring_contract = await models.tutoring_contract.create({
+    tutoring_contract_id: uuidv4(),
+    booked_session_id: booked_session.dataValues.booked_session_id,
+    tutor_id: body.tutor_id,
+  });
+
+  var schedules = await models.schedule.bulkCreate(
+    body.schedule.map((x) => {
+      return {
+        schedule_id: uuidv4(),
+        student_id: body.student_id,
+        tutor_available_date_id: x,
+        status: "PENDING",
+      };
+    })
+  );
+  // tạo tutoring contraction
+
+  // tạo link thanh toán
   var tmnCode = config.vnp_TmnCode;
   var secretKey = config.vnp_HashSecret;
   var vnpUrl = config.vnp_Url;
@@ -62,12 +100,10 @@ const getPaymentUrl = async (req, res) => {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 
-  var orderId = uuidv4();
-  var amount = req.body.amount;
-  var bankCode = req.body.bankCode;
+  var orderId = booked_session.dataValues.booked_session_id;
+  var amount = parseInt(course.dataValues.price);
+  var bankCode = '';
 
-  var orderInfo = req.body.orderDescription;
-  var orderType = "other";
   var locale = req.body.language;
   locale = "vn";
   var currCode = "VND";
@@ -105,28 +141,29 @@ const getPaymentUrl = async (req, res) => {
 const checkSumPayment = async (req, res) => {
   let vnp_Params = req.query;
 
+  console.log(vnp_Params)
   let secureHash = vnp_Params["vnp_SecureHash"];
 
   delete vnp_Params["vnp_SecureHash"];
   delete vnp_Params["vnp_SecureHashType"];
   vnp_Params = sortObject(vnp_Params);
 
-  let config = require("config"); 
-  let tmnCode = config.get("vnp_TmnCode");
-  let secretKey = config.get("vnp_HashSecret");
+  var tmnCode = config.vnp_TmnCode;
+  var secretKey = config.vnp_HashSecret;
 
   let querystring = require("qs");
   let signData = querystring.stringify(vnp_Params, { encode: false });
   let crypto = require("crypto");
   let hmac = crypto.createHmac("sha512", secretKey);
-  let signed = hmac.update(new Buffer(signData, "utf-8")).digest("hex");
+  let signed = hmac.update(new Buffer(signData, 'utf8')).digest("hex");
 
+  console.log(signed)
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
 
-    res.render("success", { code: vnp_Params["vnp_ResponseCode"] });
+    return succesCode(res, { code: vnp_Params["vnp_ResponseCode"] });
   } else {
-    res.render("success", { code: "97" });
+    return succesCode(res, { code: "97" });
   }
 };
 

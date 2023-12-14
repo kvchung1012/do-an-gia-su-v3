@@ -23,23 +23,6 @@ function RatingPage() {
 
   const columns: ProColumns<any>[] = [
     {
-      width: 15,
-      fixed: 'left',
-      align: 'center',
-      render: (_, row) => (
-        <IconButton
-          color="secondary"
-          size="small"
-          onClick={() => {
-            setDataSelected(row);
-            setShowFormDetail(true);
-          }}
-        >
-          <RemoveRedEyeIcon fontSize="small" />
-        </IconButton>
-      )
-    },
-    {
       title: 'Tên người học',
       width: 150,
       fixed: 'left',
@@ -51,7 +34,7 @@ function RatingPage() {
     },
     {
       width: 100,
-      title: 'Ảnh đại diện',
+      title: 'Khóa học',
       fixed: 'left',
       render: (_, row) =>
         row.user?.avatar_url ? (
@@ -61,49 +44,18 @@ function RatingPage() {
         )
     },
     {
-      title: 'Trường đang học',
+      title: 'Feedback',
       width: 200,
       fixed: 'left',
-      render: (_, row) => <p>{row.student_educations?.[0]?.school?.name}</p>
+      render: (_, row) => <p>{row.message}</p>
     },
     {
-      title: 'Email',
+      title: 'Rating',
       width: 200,
       fixed: 'left',
-      render: (_, row) => <p>{row.user?.email}</p>
-    },
-    {
-      title: 'Sđt',
-      width: 200,
-      fixed: 'left',
-      render: (_, row) => <p>{row.user?.phone_number}</p>
-    },
-    {
-      width: 60,
-      title: 'Action',
-      align: 'center',
-      dataIndex: 'Action',
-      fixed: 'right',
-      render: (_, row) => (
-        <>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <IconButton
-              aria-label="delete"
-              color="error"
-              size="small"
-              onClick={() => {
-                setDataSelected(row);
-                setShowConfirmDelete(true);
-              }}
-            >
-              <DeleteOutlineIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        </>
-      )
+      render: (_, row) => <p>{row.rate}</p>
     }
   ];
-  console.log(dataSelected);
 
   const fetchData = () => {
     api.get('tutoring-feedback').then((res) => {
