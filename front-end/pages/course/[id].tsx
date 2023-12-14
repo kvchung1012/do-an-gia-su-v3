@@ -15,6 +15,7 @@ import {
   Stack,
   Typography
 } from '@mui/material';
+import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -38,6 +39,17 @@ const CourseDetail = () => {
     }
   }, [course_id]);
 
+  const token = localStorage.getItem('access_token');
+  const decoded = jwtDecode<any>(token);
+
+  const checkOut = ()=>{
+    const body = {
+      course_id,
+      student_id: decoded.user_id
+    }
+
+    console.log(body);
+  }
   return (
     <Container sx={{ minHeight: '100vh' }}>
       <Grid mt={5} container>
@@ -66,7 +78,7 @@ const CourseDetail = () => {
             Nội dung khóa học
           </Typography>
 
-          <Typography mt={2} variant="h5" color="secondary">
+          <Typography my={2} variant="h5" color="secondary">
             {course?.course_programs?.length} chương •{' '}
             {course?.course_program_phases?.length} bài học • thời lượng{' '}
             {course?.spend_time}
@@ -86,11 +98,12 @@ const CourseDetail = () => {
           </Stack>
         </Grid>
         <Grid
+          
           display="flex"
           flexDirection="column"
           alignItems="center"
           item
-          gap="50px"
+          gap="20px"
           xs={4}
         >
           <CourseCard
@@ -100,38 +113,47 @@ const CourseDetail = () => {
             noPush
           />
           <Stack alignItems="center" gap="10px">
-            <Button sx={{ border: '2px solid #121117' }} variant="contained">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent:'space-between',
+                width:'100%',
+                gap: '12px'
+              }}
+            >
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="h6"
+                color="secondary"
+              >
+                <AoTrinhIcon /> Cơ bản
+              </Typography>
+
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="h6"
+                color="secondary"
+              >
+                <RemoteIcon /> Tiện ích
+              </Typography>
+              <Typography
+                display="flex"
+                alignItems="center"
+                variant="h6"
+                color="secondary"
+              >
+                <SpentTimeIcon /> Thời lượng: {course?.spend_time}
+              </Typography>
+            </Box>
+
+            <Button 
+                sx={{ border: '2px solid #121117' }} 
+                variant="contained"
+                onClick={checkOut}>
               Đăng ký khóa học
             </Button>
-
-            <Typography
-              display="flex"
-              alignItems="center"
-              variant="h5"
-              color="secondary"
-              gap="10px"
-            >
-              <AoTrinhIcon /> Trình độ cơ bản
-            </Typography>
-
-            <Typography
-              display="flex"
-              alignItems="center"
-              variant="h5"
-              color="secondary"
-              gap="10px"
-            >
-              <RemoteIcon /> Học mọi lúc, mọi nơi
-            </Typography>
-            <Typography
-              display="flex"
-              alignItems="center"
-              variant="h5"
-              color="secondary"
-              gap="10px"
-            >
-              <SpentTimeIcon /> Thời lượng: {course?.spend_time}
-            </Typography>
           </Stack>
         </Grid>
       </Grid>

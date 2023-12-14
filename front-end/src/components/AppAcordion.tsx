@@ -67,18 +67,23 @@ export default function CustomizedAccordions({
       <Accordion
         expanded={expanded === keyExpand}
         onChange={handleChange(keyExpand)}
+        sx={{
+          borderRadius:'8px'
+        }}
       >
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>{title}</Typography>
+          <Typography variant='h4'>{title}</Typography>
         </AccordionSummary>
         {childTitle?.map((child, index) => {
           return (
             <AccordionDetails key={index}>
-              <Typography>{child.name}</Typography>
-              <Typography fontSize={14} color="#AB889F">
+              <Typography variant='h4' mb={1}>{index+1}. {child.name}</Typography>
+              <Typography fontSize={14} mb={1} color="secondary">
                 {child.content}
               </Typography>
+
               <video controls src={child.overview_url}></video>
+
             </AccordionDetails>
           );
         })}
