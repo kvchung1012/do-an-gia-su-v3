@@ -69,7 +69,7 @@ const register = async (req, res) => {
       }
     })
     if(check){
-      return errorCode(res, 'Email đã tồn tại. Vui lòng đăng nhập hoặc tạo tài khoản mới');
+      return failCode(res, 'Email đã tồn tại. Vui lòng đăng nhập hoặc tạo tài khoản mới');
     }
 
     let user = await models.users.create({
@@ -112,7 +112,7 @@ const register = async (req, res) => {
     return succesCode(res, user);
   } catch (err) {
     console.log(err);
-    errorCode(res, err);
+    return errorCode(res, err);
   }
 };
 
