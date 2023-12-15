@@ -61,7 +61,7 @@ const register = async (req, res) => {
       password,
       tutor_profile: { description, stripe_account_id },
     } = req.body;
-
+    
     const avatar_url = req.file?.path ? req.file.path : "";
     var check = await models.users.findOne({
       where:{
@@ -101,7 +101,7 @@ const register = async (req, res) => {
       });
 
       user.tutor_profile = tutorProfile;
-    } else {
+    } else if(type=="1") {
       let studentProfile = await models.student_profile.create({
         student_profile_id: uuidv4(),
         student_id: user.dataValues.user_id,

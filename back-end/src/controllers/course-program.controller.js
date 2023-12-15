@@ -32,9 +32,15 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   let { id } = req.params;
+  await models.course_program_phase.destroy({
+    where: {
+      course_program_id: id,
+    },
+  });
+
   let result = await models.course_program.destroy({
     where: {
-      course_id: id,
+      course_program_id: id,
     },
   });
 
@@ -68,9 +74,10 @@ const updatePhase = async (req, res) => {
 
 const deletePhaseById = async (req, res) => {
   let { id } = req.params;
+
   let result = await models.course_program_phase.destroy({
     where: {
-      course_id: id,
+      course_program_phase: id,
     },
   });
 

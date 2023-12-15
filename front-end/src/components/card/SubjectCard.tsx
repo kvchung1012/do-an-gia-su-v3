@@ -40,7 +40,7 @@ const SubjectCard = ({ name, src }) => {
           {name}
         </Typography>
       </CardContent>
-      <Stack alignItems="center">
+      {/* <Stack alignItems="center">
         <Button
           sx={{
             minWidth: 150,
@@ -58,7 +58,7 @@ const SubjectCard = ({ name, src }) => {
         >
           Đặt lịch
         </Button>
-      </Stack>
+      </Stack> */}
     </Card>
   );
 };

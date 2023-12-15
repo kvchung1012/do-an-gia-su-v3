@@ -64,9 +64,9 @@ function Payment() {
         return (
           <div>
             <Typography variant="h5" style={{ fontWeight: '500' }}>
-              {dom?.tutor?.first_name + '' + dom?.tutor?.last_name}
+              {dom?.student?.first_name || '' +  ' ' + dom?.student?.last_name||''}
             </Typography>
-            <Typography variant="subtitle1">{dom?.tutor?.email}</Typography>
+            <Typography variant="subtitle1">{dom?.student?.email}</Typography>
           </div>
         );
       }

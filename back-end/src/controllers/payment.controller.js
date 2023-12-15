@@ -157,10 +157,17 @@ const checkSumPayment = async (req, res) => {
   let hmac = crypto.createHmac("sha512", secretKey);
   let signed = hmac.update(new Buffer(signData, 'utf8')).digest("hex");
 
-  console.log(signed)
   if (secureHash === signed) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
+    const booked_session_id = vnp_Params["vnp_TxnRef"]
+    var booked = await models.booked_session.findByPk(booked_session_id);
+    booked.update({
+      booked_session_id,
+      status:"DONE"
+    })
 
+    await booked.save();
+    
     return succesCode(res, { code: vnp_Params["vnp_ResponseCode"] });
   } else {
     return succesCode(res, { code: "97" });
