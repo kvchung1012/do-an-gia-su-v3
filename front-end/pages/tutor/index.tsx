@@ -60,7 +60,7 @@ const Tutor = () => {
         spacing={2}
       >
         <Typography variant="h1">Tất cả gia sư</Typography>
-        <Grid container columnSpacing={2}>
+        <Grid container gap={2}>
           <Grid item xs={4}>
             <ControlTextField
               control={control}
@@ -72,13 +72,6 @@ const Tutor = () => {
                 autoComplete: 'off',
                 margin: 'none'
               }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <FormControlDatePicker
-              label="Thời gian rảnh"
-              name="available_date"
-              control={control}
             />
           </Grid>
           <Grid item xs={4}>
