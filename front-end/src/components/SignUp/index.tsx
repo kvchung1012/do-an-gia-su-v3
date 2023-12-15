@@ -121,6 +121,7 @@ export default function SignUp() {
         data.role_id = ROLE_STUDENT_ID;
         data.type = '1';
         data.avatar_url = '';
+        data.tutor_profile = {};
         const res = await api.post(REGISTER_PATH, data);
         if (res.status === 200) {
           enqueueSnackbar({

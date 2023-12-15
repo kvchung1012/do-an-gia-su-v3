@@ -27,6 +27,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import TutorAvailableDate from './TutorAvailableDate';
 import ControlSelect from '@/components/ControlSelect';
+import CoursePanel from './Course';
 
 type FormData = {
   last_name: string;
@@ -365,6 +366,7 @@ function ProfileTutor() {
           {Boolean(tutorId) === true && <Tab label="Thông tin gia sư" />}
           {Boolean(tutorId) === true && <Tab label="Kinh nghiệm - học vấn" />}
           {Boolean(tutorId) === true && <Tab label="Thời gian dạy" />}
+          {Boolean(tutorId) === true && <Tab label="Khóa học" />}
         </Tabs>
       </Box>
 
@@ -807,6 +809,20 @@ function ProfileTutor() {
 
       <CustomTabPanel index={3}>
         <TutorAvailableDate userId={user.user_id} />
+      </CustomTabPanel>
+
+      <CustomTabPanel index={4}>
+        <Card
+          sx={{
+            background: 'white',
+            py: '1rem',
+            boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+            px: '3rem',
+            mb: 3
+          }}
+        >
+          <CoursePanel />
+        </Card>
       </CustomTabPanel>
     </Box>
   );

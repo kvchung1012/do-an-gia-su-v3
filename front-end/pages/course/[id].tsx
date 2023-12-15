@@ -1,10 +1,12 @@
 import api from '@/api';
 import CustomizedAccordions from '@/components/AppAcordion';
 import AppRating from '@/components/AppRating';
+import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseCard from '@/components/card/CourseCard';
 import { RemoteIcon, VerifyIcon } from '@/components/icons';
 import AoTrinhIcon from '@/components/icons/AoTrinhIcon';
 import SpentTimeIcon from '@/components/icons/SpentTimeIcon';
+import CourseProgramFormAdd from '@/components/management/course/CourseProgramFormAdd';
 import BaseLayout from '@/layouts/BaseLayout';
 import DateCalendarValue from '@/components/Calendar';
 import {
@@ -29,6 +31,29 @@ const CourseDetail = () => {
   const router = useRouter();
   const course_id = router.query.id;
   const [course, setCourse] = useState(null);
+
+  const [showFormDetail, setShowFormDetail] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [dataSelected, setDataSelected] = useState<any>();
+
+  const handleSaveData = (body) => {
+    // const request = !body?.course_program_id
+    //   ? api.post('course-program', { course_id: course_id, ...body })
+    //   : api.put(`course-program/${body.course_program_id}`, body);
+    // request
+    //   .then((res) => {
+    //     setShowFormDetail(false);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+  };
+  const handleDelete = () => {
+    const { course_program_id } = dataSelected;
+    api.delete(`course-program/${course_program_id}`).then(() => {
+      setShowConfirmDelete(false);
+    });
+  };
   const ref = useRef<AbortController | null>(null);
 
   const [availableDay, setAvailableDay] = useState(null);
@@ -123,7 +148,6 @@ const CourseDetail = () => {
           <Typography mt={2} color="secondary" variant="h4">
             {course?.description}
           </Typography>
-
           <Divider sx={{ mt: 2 }} />
           <Typography mt={2} variant="h3">
             Thông tin khóa học
@@ -137,18 +161,15 @@ const CourseDetail = () => {
           <Typography mt={2} variant="h5" color="secondary">
             Tổng thời lượng của khóa học : {course?.spend_time}
           </Typography>
-
           <Divider sx={{ mt: 2 }} />
           <Typography mt={2} variant="h3">
             Nội dung khóa học
           </Typography>
-
           <Typography my={2} variant="h5" color="secondary">
             {course?.course_programs?.length} chương •{' '}
             {course?.course_program_phases?.length} bài học • thời lượng{' '}
             {course?.spend_time}
           </Typography>
-
           <Stack spacing={1}>
             {course?.course_programs?.map((course) => {
               return (
@@ -157,6 +178,10 @@ const CourseDetail = () => {
                   keyExpand={course.course_program_id}
                   title={course.tittle}
                   childTitle={course.course_program_phases}
+                  data={course}
+                  setDataSelected={setDataSelected}
+                  setShowForm={setShowFormDetail}
+                  setShowConfirmDelete={setShowConfirmDelete}
                 />
               );
             })}
@@ -222,6 +247,22 @@ const CourseDetail = () => {
           </Stack>
         </Grid>
       </Grid>
+      {/* {showFormDetail && (
+        <CourseProgramFormAdd
+          data={dataSelected}
+          isOpen={showFormDetail}
+          onSave={handleSaveData}
+          onClose={() => setShowFormDetail(false)}
+          key={''}
+        />
+      )} */}
+      {/* {showConfirmDelete && (
+        <ConfirmDeleteModal
+          open={showConfirmDelete}
+          onClose={() => setShowConfirmDelete(false)}
+          onConfirm={handleDelete}
+        />
+      )} */}
 
       <Dialog
         sx={{

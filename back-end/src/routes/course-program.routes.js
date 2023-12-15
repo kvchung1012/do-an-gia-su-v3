@@ -9,11 +9,11 @@ const {
 } = require("../controllers/course-program.controller");
 const courseProgramRoutes = express.Router();
 
-courseProgramRoutes.post("/:id", create);
+courseProgramRoutes.post("/", create);
 courseProgramRoutes.put("/:id", update);
 courseProgramRoutes.delete("/:id", deleteById);
 
-courseProgramRoutes.post("/phase/:id", create);
+courseProgramRoutes.post("/phase/", create);
 courseProgramRoutes.put("/phase/:id", update);
 courseProgramRoutes.delete("/phase/:id", deleteById);
 
