@@ -129,6 +129,11 @@ export default function SignUp() {
             variant: 'success'
           });
           router.push(LOGIN_PATH);
+        } else {
+          enqueueSnackbar({
+            message: 'Đăng ký thất bại!',
+            variant: 'error'
+          });
         }
       } else if (router.asPath === TEACHER_REGISTER_PATH) {
         const payload = {
@@ -153,10 +158,18 @@ export default function SignUp() {
             variant: 'success'
           });
           router.push(LOGIN_PATH);
+        } else {
+          enqueueSnackbar({
+            message: 'Đăng ký thất bại!',
+            variant: 'error'
+          });
         }
       }
     } catch (error) {
-      console.log(error);
+      enqueueSnackbar({
+        message: 'Đăng ký thất bại!',
+        variant: 'error'
+      });
     }
   };
 
