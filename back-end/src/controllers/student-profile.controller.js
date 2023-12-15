@@ -7,7 +7,14 @@ const { v4: uuidv4 } = require("uuid");
 
 const findAll = async (req, res) => {
   let entities = await models.student_profile.findAll({
-    include: ["student_educations"],
+    include: [{
+      model: models.student_education,
+      as: "student_educations",
+      include: ["schools"]
+    },{
+      model: models.users,
+      as :"user"
+    }],
   });
   return succesCode(
     res,
@@ -19,10 +26,14 @@ const findAll = async (req, res) => {
 const findById = async (req, res) => {
   let { id } = req.params;
   let entity = await models.student_profile.findOne({
-    where: {
-      student_profile_id: id,
-    },
-    include: ["student_educations"],
+    include: [{
+      model: models.student_education,
+      as: "student_educations",
+      include: ["schools"]
+    },{
+      model: models.users,
+      as :"user"
+    }],
   });
 
   return succesCode(res, entity, "Success");
