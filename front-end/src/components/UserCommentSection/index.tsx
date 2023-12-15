@@ -103,7 +103,7 @@ const dataList = [
   },
   {
     id: 2,
-    createdByName: 'Khuất Chung',
+    createdByName: 'Web tutor',
     comment: 'Gia sư dạy làm tôi giỏi code luôn',
     rating: 5
   },
@@ -111,7 +111,7 @@ const dataList = [
     id: 2,
     createdByName: 'Khuất Việt',
     comment:
-      'Nhờ Khuất Chung mà tôi biết tới gia sư này nhưng mà không như tưởng tượng',
+      'Nhờ gia sư mà tôi đã thi được giải nhất quốc gia',
     rating: 2
   }
 ];
