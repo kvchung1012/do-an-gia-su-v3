@@ -821,7 +821,7 @@ function ProfileTutor() {
             mb: 3
           }}
         >
-          <CoursePanel />
+          <CoursePanel control={control} />
         </Card>
       </CustomTabPanel>
     </Box>

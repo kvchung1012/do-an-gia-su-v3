@@ -8,6 +8,7 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import { Button, Stack } from '@mui/material';
+import CourseProgramFormAdd from './management/course/CourseProgramFormAdd';
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -54,6 +55,7 @@ interface ICustomizedAccordionsProps {
   setShowConfirmDelete: any;
   data: any;
   edit?: boolean;
+  control?: any;
 }
 
 export default function CustomizedAccordions({
@@ -61,10 +63,10 @@ export default function CustomizedAccordions({
   title,
   childTitle,
   setDataSelected,
-  setShowForm,
   setShowConfirmDelete,
   data,
-  edit
+  edit,
+  control
 }: ICustomizedAccordionsProps) {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
@@ -72,6 +74,8 @@ export default function CustomizedAccordions({
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
       setExpanded(newExpanded ? panel : false);
     };
+
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div>
@@ -91,7 +95,7 @@ export default function CustomizedAccordions({
               sx={{ border: '2px solid #121117' }}
               variant="contained"
               onClick={() => {
-                console.log(data);
+                setOpen(true);
               }}
             >
               Sửa bài học học
@@ -122,6 +126,13 @@ export default function CustomizedAccordions({
           );
         })}
       </Accordion>
+      <CourseProgramFormAdd
+        data={data}
+        isOpen={open}
+        //  onSave={handleSaveData}
+        control={control}
+        onClose={() => setOpen(false)}
+      />
     </div>
   );
 }
