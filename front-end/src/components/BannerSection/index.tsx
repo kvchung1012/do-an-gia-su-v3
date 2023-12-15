@@ -5,8 +5,12 @@ import 'swiper/css/pagination';
 import { Pagination, Autoplay } from 'swiper/modules';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { TUTOR_PATH } from '@/const';
 
 const BannerSection = () => {
+  const router = useRouter();
+
   return (
     <>
       <Swiper
@@ -55,6 +59,7 @@ const BannerSection = () => {
               <Button
                 sx={{ width: 150, whiteSpace: 'nowrap' }}
                 variant="contained"
+                onClick={() => router.push(TUTOR_PATH)}
               >
                 Tìm gia sư ngay
               </Button>

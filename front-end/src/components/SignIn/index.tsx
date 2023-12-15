@@ -21,6 +21,7 @@ import {
 } from '@/const';
 import { useRouter } from 'next/router';
 import { Stack } from '@mui/material';
+import { enqueueSnackbar } from 'notistack';
 
 function Copyright(props) {
   return (
@@ -79,9 +80,17 @@ export default function SignIn() {
         } else if (response.data.data.role_id === ROLE_ADMIN_ID) {
           router.push('/management/category');
         }
+      } else {
+        enqueueSnackbar({
+          message: 'Đăng nhập thất bại!',
+          variant: 'error'
+        });
       }
     } catch (error) {
-      console.log(error);
+      enqueueSnackbar({
+        message: 'Đăng nhập thất bại!',
+        variant: 'error'
+      });
     }
   };
 
