@@ -50,7 +50,6 @@ const CoursePanel = () => {
   };
   const handleDelete = () => {
     const { course_id } = dataSelected;
-    console.log(course_id);
 
     api.delete(`course/${course_id}`).then(() => {
       getTutor();
