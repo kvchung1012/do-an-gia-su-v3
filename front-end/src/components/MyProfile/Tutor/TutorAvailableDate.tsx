@@ -61,10 +61,19 @@ function TutorAvailableDate({ userId }) {
       tutor_id: userId
     };
 
-    await api.post('tutor-available-date', body);
+    !body?.tutor_available_date_id? 
+      await api.post('tutor-available-date', body)
+      :await api.put('tutor-available-date/'+ e.tutor_available_date_id, body);
+      
     fetchData(userId);
     setShowForm(false);
   };
+
+  const handleEdit  = async (e) =>{
+    setShowForm(true)
+    setItemSelected(e)
+  }
+
   return (
     <>
       <Card
@@ -81,6 +90,7 @@ function TutorAvailableDate({ userId }) {
             variant="contained"
             onClick={() => {
               setShowForm(true);
+              setItemSelected({})
             }}
           >
             Thêm mới
@@ -109,7 +119,7 @@ function TutorAvailableDate({ userId }) {
                         <Chip
                           key={i}
                           label={`${item.start_time} : ${item.end_time}`}
-                          // onClick={handleClickChip}
+                          onClick={()=>handleEdit(item)}
                         />
                       ))
                   ) : (
@@ -129,7 +139,7 @@ function TutorAvailableDate({ userId }) {
             onClose={() => {
               setShowForm(false);
             }}
-            data={undefined}
+            data={itemSelected}
             onSave={handleSaveDate}
           />
         )}

@@ -25,15 +25,34 @@ const defaultValues = {
 };
 
 const Tutor = () => {
-  const { handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, watch, control } = useForm<FormData>({
     defaultValues
   });
 
+  const searchKey = watch('name');
+  console.log(searchKey)
   const [tutorList, setTutorList] = useState([]);
+  const [tutorListRoot, setTutorListRoot] = useState([]);
 
-  const handleFilter = (data) => {
-    console.log(data);
+  const handleFilter = () => {
+    let lists = [...tutorListRoot];
+    if (searchKey) {
+      lists = lists.filter(
+        (x) =>
+          x?.user?.first_name?.includes(searchKey) ||
+          x?.user?.last_name?.includes(searchKey) ||
+          x?.user?.email?.includes(searchKey)
+      );
+      setTutorList(lists);
+    } else {
+      setTutorList(tutorListRoot);
+    }
   };
+
+  useEffect(() => {
+    console.log(searchKey)
+    handleFilter();
+  }, [searchKey]);
 
   useEffect(() => {
     const getTutor = async () => {
@@ -41,6 +60,7 @@ const Tutor = () => {
         const res = await api.get('/tutor');
         if (res.status === 200) {
           setTutorList(res.data.data);
+          setTutorListRoot(res.data.data);
         }
       } catch (error) {
         console.log(error);
@@ -74,7 +94,7 @@ const Tutor = () => {
               }}
             />
           </Grid>
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <Box>
               <InputLabel
                 sx={{
@@ -95,8 +115,9 @@ const Tutor = () => {
                 )}
               />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
+
         {tutorList.map((item) => (
           <TutorDetailCard key={item.tutor_profile_id} data={item} />
         ))}

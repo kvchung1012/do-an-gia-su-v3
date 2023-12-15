@@ -35,7 +35,7 @@ const getUserInfo = async (req, res) => {
       as: "student_educations",
       include: [{
         model: models.school,
-        as: 'school',
+        as: 'schools',
       }]
     }]
   })
