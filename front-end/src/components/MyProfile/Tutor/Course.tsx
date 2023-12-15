@@ -15,11 +15,7 @@ const defaultValues = {
   name: ''
 };
 
-const CoursePanel = () => {
-  const { handleSubmit, control } = useForm<FormData>({
-    defaultValues
-  });
-
+const CoursePanel = ({ control }) => {
   const [courseList, setCourseList] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -98,6 +94,7 @@ const CoursePanel = () => {
             setDataSelected={setDataSelected}
             setShowForm={setShowForm}
             setShowConfirmDelete={setShowConfirmDelete}
+            control={control}
           />
         ))}
       </Stack>

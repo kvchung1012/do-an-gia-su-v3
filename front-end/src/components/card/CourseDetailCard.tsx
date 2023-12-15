@@ -17,7 +17,8 @@ const CourseDetailCard = ({
   data,
   setDataSelected,
   setShowForm,
-  setShowConfirmDelete
+  setShowConfirmDelete,
+  control
 }) => {
   const router = useRouter();
   const [course, setCourse] = useState(null);
@@ -179,6 +180,7 @@ const CourseDetailCard = ({
             setDataSelected={setDataSelected}
             setShowConfirmDelete={setShowConfirmDelete}
             edit={true}
+            control={control}
           />
         );
       })}
