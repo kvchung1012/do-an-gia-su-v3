@@ -53,6 +53,7 @@ interface ICustomizedAccordionsProps {
   setShowForm?: any;
   setShowConfirmDelete: any;
   data: any;
+  edit?: boolean;
 }
 
 export default function CustomizedAccordions({
@@ -62,7 +63,8 @@ export default function CustomizedAccordions({
   setDataSelected,
   setShowForm,
   setShowConfirmDelete,
-  data
+  data,
+  edit
 }: ICustomizedAccordionsProps) {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
@@ -83,27 +85,28 @@ export default function CustomizedAccordions({
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
           <Typography variant="h4">{title}</Typography>
         </AccordionSummary>
-        <Stack spacing={1}>
-          {/* <Button
-            sx={{ border: '2px solid #121117' }}
-            variant="contained"
-            onClick={() => {
-              setDataSelected(data);
-              setShowForm(true);
-            }}
-          >
-            Sửa bài học học
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => {
-              setDataSelected(data);
-              setShowConfirmDelete(true);
-            }}
-          >
-            Xóa bài học học
-          </Button> */}
-        </Stack>
+        {edit && (
+          <Stack spacing={1}>
+            <Button
+              sx={{ border: '2px solid #121117' }}
+              variant="contained"
+              onClick={() => {
+                console.log(data);
+              }}
+            >
+              Sửa bài học học
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setDataSelected(data);
+                setShowConfirmDelete(true);
+              }}
+            >
+              Xóa bài học học
+            </Button>
+          </Stack>
+        )}
         {childTitle?.map((child, index) => {
           return (
             <AccordionDetails key={index}>

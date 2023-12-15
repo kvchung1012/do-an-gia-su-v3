@@ -177,8 +177,8 @@ const CourseDetailCard = ({
             childTitle={course.course_program_phases}
             data={course}
             setDataSelected={setDataSelected}
-            // setShowForm={setShowFormDetail}
             setShowConfirmDelete={setShowConfirmDelete}
+            edit={true}
           />
         );
       })}
