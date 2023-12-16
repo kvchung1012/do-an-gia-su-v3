@@ -30,7 +30,7 @@ const findById = async (req, res) => {
       tutor_profile_id: id,
     },
     include: [
-        { model: models.tutor_education, as: "tutor_educations", include:"school" },
+        { model: models.tutor_education, as: "tutor_educations", include:"schools" },
         { model: models.tutor_certification, as: "tutor_certifications" },
         { model: models.tutor_experience, as: "tutor_experiences" },
     ],

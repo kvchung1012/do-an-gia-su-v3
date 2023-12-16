@@ -131,7 +131,7 @@ export default function SignUp() {
           router.push(LOGIN_PATH);
         } else {
           enqueueSnackbar({
-            message: 'Đăng ký thất bại!',
+            message: 'Đăng ký thất bại! Email đã tồn tại trong hệ thống',
             variant: 'error'
           });
         }
@@ -160,14 +160,14 @@ export default function SignUp() {
           router.push(LOGIN_PATH);
         } else {
           enqueueSnackbar({
-            message: 'Đăng ký thất bại!',
+            message: 'Đăng ký thất bại! Email đã tồn tại trong hệ thống',
             variant: 'error'
           });
         }
       }
     } catch (error) {
       enqueueSnackbar({
-        message: 'Đăng ký thất bại!',
+        message: 'Đăng ký thất bại! Email đã tồn tại trong hệ thống',
         variant: 'error'
       });
     }

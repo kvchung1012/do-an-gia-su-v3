@@ -62,8 +62,9 @@ function initModels(sequelize) {
   student_education.hasMany(school, { as: "schools", foreignKey: "school_id"});
   school.belongsTo(student_education, { as: "student_education", foreignKey: "school_id"});
 
-  // tutor_education.belongsTo(school, { as: "school", foreignKey: "school_id"});
-  // school.hasMany(tutor_education, { as: "tutor_educations", foreignKey: "school_id"});
+  tutor_education.hasMany(school, { as: "schools", foreignKey: "school_id"});
+  school.belongsTo(tutor_education, { as: "tutor_education", foreignKey: "school_id"});
+
   student_education.belongsTo(student_profile, { as: "student_profile", foreignKey: "student_profile_id"});
   student_profile.hasMany(student_education, { as: "student_educations", foreignKey: "student_profile_id"});
   schedule.hasMany(tutor_available_date, { as: "tutor_available_date", foreignKey: "tutor_available_date_id"});
