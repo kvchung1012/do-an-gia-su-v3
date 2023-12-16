@@ -3,7 +3,14 @@ import ControlTextField from '@/components/ControlTextField';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseDetailCard from '@/components/card/CourseDetailCard';
 import CourseFormAdd from '@/components/management/course/CourseFormAdd';
-import { Button, Container, Grid, Stack, Typography } from '@mui/material';
+import {
+  Button,
+  Container,
+  Grid,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -15,11 +22,12 @@ const defaultValues = {
   name: ''
 };
 
-const CoursePanel = ({ control }) => {
+const CoursePanel = () => {
   const [courseList, setCourseList] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
+  const [count, setCount] = useState<any>(0);
 
   const getTutor = () => {
     api.get('/course').then((res) => {
@@ -29,7 +37,7 @@ const CoursePanel = ({ control }) => {
 
   useEffect(() => {
     getTutor();
-  }, []);
+  }, [count]);
 
   const handleSaveData = (body) => {
     const request = !body?.course_id
@@ -57,25 +65,13 @@ const CoursePanel = ({ control }) => {
     <>
       <Stack height="100%" mt={2} spacing={2}>
         <Typography variant="h1">Tất cả khóa học</Typography>
-        <Grid container columnSpacing={2}>
+        <Grid display="flex" alignItems="center" container columnSpacing={2}>
           <Grid item xs={4}>
-            <ControlTextField
-              control={control}
-              label="Tên Khóa học"
-              name="name"
-              textfieldProps={{
-                size: 'medium',
-                placeholder: 'Tìm kiếm khóa học',
-                autoComplete: 'off',
-                margin: 'none'
-              }}
-            />
+            <TextField label="Tên Khóa học" name="search" />
           </Grid>
           <Button
             sx={{
               border: '2px solid #121117',
-              marginTop: '25px',
-              marginLeft: '8px',
               height: '50px'
             }}
             variant="contained"
@@ -94,7 +90,7 @@ const CoursePanel = ({ control }) => {
             setDataSelected={setDataSelected}
             setShowForm={setShowForm}
             setShowConfirmDelete={setShowConfirmDelete}
-            control={control}
+            setCount={setCount}
           />
         ))}
       </Stack>

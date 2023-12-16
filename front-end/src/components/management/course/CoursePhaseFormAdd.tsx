@@ -11,34 +11,39 @@ import { enqueueSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 
 type FormData = {
-  tittle: string;
-  description: string;
+  name: string;
+  content: string;
+  overview_url: string;
 };
 
 const defaultValues = {
-  tittle: '',
-  description: ''
+  name: '',
+  content: '',
+  overview_url: ''
 };
 
-function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
+function CoursePhaseFormAdd({ isOpen, onClose, data, setCount }) {
   const { control, handleSubmit, resetField } = useForm<FormData>({
     defaultValues
   });
+
   const onSave = async (value) => {
     const payload = {
-      course_id: data.course_id,
+      course_program_id: data.course_program_id,
       ...value
     };
-    const res = await api.post('/course-program/', payload);
+
+    const res = await api.post('/course-program/phase/', payload);
     if (res.status === 200) {
       enqueueSnackbar({
-        message: 'thêm bài thành công',
+        message: 'thêm chương thành công',
         variant: 'success'
       });
       setCount((prev) => prev + 1);
       onClose();
-      resetField('tittle');
-      resetField('description');
+      resetField('name');
+      resetField('content');
+      resetField('overview_url');
     }
   };
 
@@ -62,8 +67,13 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
           width: '572px'
         }}
       >
-        <ControlTextField control={control} name="tittle" label="Tiêu đề" />
-        <ControlTextField control={control} name="description" label="Mô tả" />
+        <ControlTextField control={control} name="name" label="Tiêu đề" />
+        <ControlTextField control={control} name="content" label="Nội dung" />
+        <ControlTextField
+          control={control}
+          name="overview_url"
+          label="Link bài học"
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
@@ -77,4 +87,4 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
   );
 }
 
-export default CourseProgramFormAdd;
+export default CoursePhaseFormAdd;

@@ -8,37 +8,52 @@ import {
   DialogTitle
 } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 type FormData = {
-  tittle: string;
-  description: string;
+  name: string;
+  content: string;
+  overview_url: string;
 };
 
 const defaultValues = {
-  tittle: '',
-  description: ''
+  name: '',
+  content: '',
+  overview_url: ''
 };
 
-function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
-  const { control, handleSubmit, resetField } = useForm<FormData>({
+function CoursePhaseFormEdit({ isOpen, onClose, data, setCount }) {
+  const { control, handleSubmit, setValue } = useForm<FormData>({
     defaultValues
   });
+  console.log(data);
+
+  useEffect(() => {
+    if (data) {
+      setValue('name', data.name);
+      setValue('content', data.content);
+      setValue('overview_url', data.overview_url);
+    }
+  }, [data]);
+
   const onSave = async (value) => {
     const payload = {
-      course_id: data.course_id,
+      course_program_id: data.course_program_id,
       ...value
     };
-    const res = await api.post('/course-program/', payload);
+
+    const res = await api.put(
+      `/course-program/phase/${data.course_program_phase_id}`,
+      payload
+    );
     if (res.status === 200) {
       enqueueSnackbar({
-        message: 'thêm bài thành công',
+        message: 'Sửa chương thành công',
         variant: 'success'
       });
       setCount((prev) => prev + 1);
       onClose();
-      resetField('tittle');
-      resetField('description');
     }
   };
 
@@ -49,21 +64,22 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
       onClose={onClose}
       onSubmit={handleSubmit(onSave)}
       maxWidth={'lg'}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {data?.course_program_id
-          ? 'Chỉnh sửa chương học'
-          : 'Thêm mới chương học'}
+        {data?.course_program_id ? 'Chỉnh sửa bài học' : 'Thêm mới bài học'}
       </DialogTitle>
       <DialogContent
         sx={{
           width: '572px'
         }}
       >
-        <ControlTextField control={control} name="tittle" label="Tiêu đề" />
-        <ControlTextField control={control} name="description" label="Mô tả" />
+        <ControlTextField control={control} name="name" label="Tiêu đề" />
+        <ControlTextField control={control} name="content" label="Nội dung" />
+        <ControlTextField
+          control={control}
+          name="overview_url"
+          label="Link bài học"
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
@@ -77,4 +93,4 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
   );
 }
 
-export default CourseProgramFormAdd;
+export default CoursePhaseFormEdit;

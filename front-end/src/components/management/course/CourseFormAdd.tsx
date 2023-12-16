@@ -24,7 +24,6 @@ function CourseFormAdd({ isOpen, onClose, data, onSave }) {
   const [categoryList, setCategoryList] = useState<any[]>([]);
   const getCategory = () => {
     api.get('/category').then((res) => {
-      console.log(res.data.data.map((item) => item?.category_id));
       setCategoryList(res.data.data);
     });
   };
