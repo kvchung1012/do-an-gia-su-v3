@@ -46,11 +46,6 @@ export const defaultValues = {
 };
 
 function ProfileTutor() {
-  // const { handleSubmit, control, setValue, resetField } = useForm<FormData>({
-  //   values: defaultValues
-  // });
-  const [verified, setVerified] = useState(false);
-
   const [tab, setTab] = useState(0);
 
   const [school, setSchool] = useState<any>([]);
@@ -80,23 +75,6 @@ function ProfileTutor() {
           // tutor
           if (user.role_id === ROLE_TEACHER_ID) {
             setTutorInfo(tutor_profile);
-            // setValue(
-            //   'start_time',
-            //   tutor_profile.tutor_experiences.start_time || ''
-            // );
-            // setValue(
-            //   'end_time',
-            //   tutor_profile.tutor_experiences.end_time || ''
-            // );
-            // setValue(
-            //   'organization',
-            //   tutor_profile.tutor_experiences.organization || ''
-            // );
-            // setValue(
-            //   'position',
-            //   tutor_profile.tutor_experiences.position || ''
-            // );
-            // setTutorEdu(tutor_profile?.tutor_educations);
           }
         }
       } catch (error) {

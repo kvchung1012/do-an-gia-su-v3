@@ -4,7 +4,7 @@ import CoursePhaseFormEdit from './CoursePhaseFormEdit';
 import api from '@/api';
 import { enqueueSnackbar } from 'notistack';
 
-const PhaseCourse = ({ child, setCount, number }) => {
+const PhaseCourse = ({ child, setCount, number, add }) => {
   const [openPhaseEdit, setOpenPhaseEdit] = useState(false);
 
   const handleDelete = async () => {
@@ -26,12 +26,14 @@ const PhaseCourse = ({ child, setCount, number }) => {
         <Typography variant="h4" mb={1}>
           {number}. {child.name}
         </Typography>
-        <Box>
-          <Button onClick={() => setOpenPhaseEdit(true)}>Sửa Chương</Button>
-          <Button variant="contained" onClick={handleDelete}>
-            Xoá Chương
-          </Button>
-        </Box>
+        {add && (
+          <Box>
+            <Button onClick={() => setOpenPhaseEdit(true)}>Sửa Chương</Button>
+            <Button variant="contained" onClick={handleDelete}>
+              Xoá Chương
+            </Button>
+          </Box>
+        )}
       </Stack>
       <Typography fontSize={14} mb={1} color="secondary">
         {child.content}

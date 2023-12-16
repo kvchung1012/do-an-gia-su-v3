@@ -44,7 +44,6 @@ const DetailTutor = () => {
       const getDetailTutor = async () => {
         try {
           const tutorProfile = await api.get(`/tutor/${id}`);
-          debugger;
           if (tutorProfile.status === 200) {
             setTutor(tutorProfile.data.data);
 
@@ -116,7 +115,9 @@ const DetailTutor = () => {
               alignItems="center"
               gap="8px"
             >
-              {(tutor?.user?.first_name || '')+ ' ' + (tutor?.user?.last_name || '')}
+              {(tutor?.user?.first_name || '') +
+                ' ' +
+                (tutor?.user?.last_name || '')}
               <VerifyIcon sx={{ fontSize: 18, color: '#4caf50' }} />
             </Typography>
             <Typography variant="h5" color="secondary">

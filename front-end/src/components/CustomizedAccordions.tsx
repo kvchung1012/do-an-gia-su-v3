@@ -116,7 +116,7 @@ function CustomizedAccordions({
                     minHeight: '100%'
                   }}
                   onClick={() => {
-                    setOpenEdit(true);
+                    setOpenPhase(true);
                   }}
                 >
                   Thêm Chương
@@ -144,21 +144,11 @@ function CustomizedAccordions({
             )}
           </Stack>
         </AccordionSummary>
-        {/* {add && (
-          <Button
-            sx={{ border: '2px solid #121117', m: 1, position: 'absolute' }}
-            onClick={() => {
-              setOpenPhase(true);
-            }}
-            variant="contained"
-          >
-            Thêm chương học
-          </Button>
-        )} */}
         {childTitle?.map((child, index) => {
           return (
             <AccordionDetails key={index}>
               <PhaseCourse
+                add={add}
                 child={child}
                 number={index + 1}
                 setCount={setCount}

@@ -1,5 +1,15 @@
 import api from '@/api';
-import { Box, Button, Divider, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Divider,
+  Stack,
+  Typography
+} from '@mui/material';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import CustomizedAccordions from '../CustomizedAccordions';
@@ -10,7 +20,6 @@ import {
   SpeakLangueIcon
 } from '../icons';
 import CourseProgramFormAdd from '../management/course/CourseProgramFormAdd';
-import CourseProgramFormEdit from '../management/course/CourseProgramFormEdit';
 
 const CourseDetailCard = ({
   data,
@@ -21,6 +30,7 @@ const CourseDetailCard = ({
 }) => {
   const [course, setCourse] = useState(null);
   const [open, setOpen] = useState(false);
+  console.log(data);
 
   useEffect(() => {
     const getCourse = async () => {
@@ -47,11 +57,15 @@ const CourseDetailCard = ({
               position: 'relative'
             }}
           >
-            <Image
-              src={data?.image_url || '/static/images/avatars/3.jpg'}
-              layout="fill"
-              style={{ borderRadius: '4px' }}
-            />
+            <Card sx={{ width: '100%' }}>
+              <CardActionArea>
+                <CardMedia
+                  sx={{ height: 240 }}
+                  image={data.image_url}
+                  title="haha"
+                />
+              </CardActionArea>
+            </Card>
           </Box>
 
           <Stack width="100%" spacing={2}>
