@@ -1,8 +1,6 @@
 import api from '@/api';
 import ControlTextField from '@/components/ControlTextField';
-import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseDetailCard from '@/components/card/CourseDetailCard';
-import CourseFormAdd from '@/components/management/course/CourseFormAdd';
 import BaseLayout from '@/layouts/BaseLayout';
 import { Button, Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -17,48 +15,43 @@ const defaultValues = {
 };
 
 const Course = () => {
-  const { handleSubmit, control } = useForm<FormData>({
+  const { handleSubmit, control, watch } = useForm<FormData>({
     defaultValues
   });
 
   const [courseList, setCourseList] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [dataSelected, setDataSelected] = useState<any>();
+  const [courseListRoot, setCourseListRoot] = useState([]);
+  console.log(courseList);
 
-  const handleFilter = () => {
-    console.log('');
-  };
-
-  const getTutor = () => {
-    api.get('/course').then((res) => {
-      setCourseList(res.data.data);
-    });
-  };
+  const searchKey = watch('name');
 
   useEffect(() => {
+    const getTutor = async () => {
+      try {
+        api.get('/course').then((res) => {
+          setCourseList(res.data.data);
+          setCourseListRoot(res.data.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getTutor();
   }, []);
 
-  const handleSaveData = (body) => {
-    const request = !body?.course_id
-      ? api.post('course', body)
-      : api.put(`course/${body.course_id}`, body);
-    request
-      .then((res) => {
-        getTutor();
-        setShowForm(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const handleDelete = () => {
-    const { course_id } = dataSelected;
-    api.delete(`course/${course_id}`).then(() => {
-      getTutor();
-      setShowConfirmDelete(false);
-    });
+  useEffect(() => {
+    handleFilter();
+  }, [searchKey]);
+
+  const handleFilter = () => {
+    let lists = [...courseListRoot];
+    if (searchKey) {
+      lists = lists.filter((x) => x?.name?.includes(searchKey));
+      setCourseList(lists);
+    } else {
+      setCourseList(courseListRoot);
+    }
   };
 
   return (
@@ -85,48 +78,11 @@ const Course = () => {
               }}
             />
           </Grid>
-          <Button
-            sx={{
-              border: '2px solid #121117',
-              marginTop: '25px',
-              marginLeft: '8px',
-              height: '50px'
-            }}
-            variant="contained"
-            onClick={() => {
-              setDataSelected({});
-              setShowForm(true);
-            }}
-          >
-            Thêm khóa học
-          </Button>
         </Grid>
-        {courseList.map((item) => (
-          <CourseDetailCard
-            key={item.tutor_profile_id}
-            data={item}
-            setDataSelected={setDataSelected}
-            setShowForm={setShowForm}
-            setShowConfirmDelete={setShowConfirmDelete}
-          />
+        {courseList.map((item, i) => (
+          <CourseDetailCard key={i} data={item} />
         ))}
       </Stack>
-      {showForm && (
-        <CourseFormAdd
-          data={dataSelected}
-          isOpen={showForm}
-          onSave={handleSaveData}
-          onClose={() => setShowForm(false)}
-          key={''}
-        />
-      )}
-      {showConfirmDelete && (
-        <ConfirmDeleteModal
-          open={showConfirmDelete}
-          onClose={() => setShowConfirmDelete(false)}
-          onConfirm={handleDelete}
-        />
-      )}
     </Container>
   );
 };

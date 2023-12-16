@@ -1,18 +1,9 @@
 import api from '@/api';
-import ControlTextField from '@/components/ControlTextField';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseDetailCard from '@/components/card/CourseDetailCard';
 import CourseFormAdd from '@/components/management/course/CourseFormAdd';
-import {
-  Button,
-  Container,
-  Grid,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Button, Grid, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 interface FormData {
   name: string;
@@ -100,7 +91,6 @@ const CoursePanel = ({tutor}) => {
           isOpen={showForm}
           onSave={handleSaveData}
           onClose={() => setShowForm(false)}
-          key={''}
         />
       )}
       {showConfirmDelete && (

@@ -27,7 +27,6 @@ function CoursePhaseFormEdit({ isOpen, onClose, data, setCount }) {
   const { control, handleSubmit, setValue } = useForm<FormData>({
     defaultValues
   });
-  console.log(data);
 
   useEffect(() => {
     if (data) {
