@@ -176,7 +176,7 @@ const CourseDetailCard = ({
                 Sửa khóa học
               </Button>
               <Button
-                color='error'
+                color="error"
                 variant="outlined"
                 onClick={() => {
                   setDataSelected(data);
