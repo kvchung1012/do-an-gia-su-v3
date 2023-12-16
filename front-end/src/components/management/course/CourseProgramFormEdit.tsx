@@ -8,6 +8,7 @@ import {
   DialogTitle
 } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 type FormData = {
@@ -20,25 +21,34 @@ const defaultValues = {
   description: ''
 };
 
-function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
-  const { control, handleSubmit, resetField } = useForm<FormData>({
+function CourseProgramFormEdit({ isOpen, onClose, data, setCount }) {
+  const { control, handleSubmit, setValue } = useForm<FormData>({
     defaultValues
   });
+
+  useEffect(() => {
+    if (data) {
+      setValue('tittle', data.tittle);
+      setValue('description', data.description);
+    }
+  }, [data]);
+
   const onSave = async (value) => {
     const payload = {
       course_id: data.course_id,
       ...value
     };
-    const res = await api.post('/course-program/', payload);
+    const res = await api.put(
+      `/course-program/${data.course_program_id}`,
+      payload
+    );
     if (res.status === 200) {
       enqueueSnackbar({
-        message: 'thêm bài thành công',
+        message: 'Sửa bài thành công',
         variant: 'success'
       });
       setCount((prev) => prev + 1);
       onClose();
-      resetField('tittle');
-      resetField('description');
     }
   };
 
@@ -49,13 +59,9 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
       onClose={onClose}
       onSubmit={handleSubmit(onSave)}
       maxWidth={'lg'}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {data?.course_program_id
-          ? 'Chỉnh sửa chương học'
-          : 'Thêm mới chương học'}
+        {data?.course_program_id ? 'Chỉnh sửa bài học' : 'Thêm mới bài học'}
       </DialogTitle>
       <DialogContent
         sx={{
@@ -77,4 +83,4 @@ function CourseProgramFormAdd({ isOpen, onClose, data, setCount }) {
   );
 }
 
-export default CourseProgramFormAdd;
+export default CourseProgramFormEdit;

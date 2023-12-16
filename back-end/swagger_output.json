@@ -20,28 +20,18 @@
             "description": ""
           }
         }
-      }
-    },
-    "/course/{id}": {
-      "get": {
+      },
+      "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
           }
         }
-      },
-      "post": {
+      }
+    },
+    "/course/{id}": {
+      "get": {
         "description": "",
         "parameters": [
           {
@@ -733,25 +723,17 @@
         }
       }
     },
-    "/category-program/{id}": {
+    "/course-program/": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
           }
         }
-      },
+      }
+    },
+    "/course-program/{id}": {
       "put": {
         "description": "",
         "parameters": [
@@ -789,25 +771,17 @@
         }
       }
     },
-    "/category-program/phase/{id}": {
+    "/course-program/phase/": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "default": {
             "description": ""
           }
         }
-      },
+      }
+    },
+    "/course-program/phase/{id}": {
       "put": {
         "description": "",
         "parameters": [
@@ -1332,13 +1306,16 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "amount": {
+                  "course_id": {
                     "example": "any"
                   },
-                  "bankCode": {
+                  "student_id": {
                     "example": "any"
                   },
-                  "orderDescription": {
+                  "tutor_id": {
+                    "example": "any"
+                  },
+                  "tutor_available_date": {
                     "example": "any"
                   },
                   "language": {
@@ -1347,6 +1324,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/payment/checksum-payment": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }

@@ -1,34 +1,33 @@
+import api from '@/api';
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import CustomizedAccordions from '../CustomizedAccordions';
 import {
   HeartIcon,
   LangueTeachIcon,
   PersonIcon,
-  SpeakLangueIcon,
-  StarIcon
+  SpeakLangueIcon
 } from '../icons';
-import { useRouter } from 'next/router';
-import { COURSE_DETAIL_PATH } from '@/const';
-import CustomizedAccordions from '../AppAcordion';
-import { useEffect, useState } from 'react';
-import api from '@/api';
+import CourseProgramFormAdd from '../management/course/CourseProgramFormAdd';
+import CourseProgramFormEdit from '../management/course/CourseProgramFormEdit';
 
 const CourseDetailCard = ({
   data,
   setDataSelected,
   setShowForm,
   setShowConfirmDelete,
-  control
+  setCount
 }) => {
-  const router = useRouter();
   const [course, setCourse] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getCourse = async () => {
       try {
         const res = await api.get(`/course/${data.course_id}`);
         if (res.status === 200) {
-          setCourse(res.data.data);
+          setCourse(res?.data?.data);
         }
       } catch (error) {
         console.log(error);
@@ -39,13 +38,7 @@ const CourseDetailCard = ({
 
   return (
     <Stack border="2px solid #121117" borderRadius="4px">
-      <Stack
-        // height={275}
-        p={3}
-        direction="row"
-        spacing={3}
-        justifyContent="space-between"
-      >
+      <Stack p={3} direction="row" spacing={3} justifyContent="space-between">
         <>
           <Box
             sx={{
@@ -131,18 +124,6 @@ const CourseDetailCard = ({
               <HeartIcon />
             </Typography>
           </Stack>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: 'green' }}
-            onClick={() => {
-              router.push({
-                pathname: COURSE_DETAIL_PATH,
-                query: { id: data?.course_id }
-              });
-            }}
-          >
-            Chi tiết khóa học
-          </Button>
 
           <Stack spacing={1}>
             <Button
@@ -164,26 +145,41 @@ const CourseDetailCard = ({
             >
               Xóa khóa học
             </Button>
+            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+              variant="contained"
+            >
+              Thêm bài học
+            </Button>
           </Stack>
         </Stack>
       </Stack>
       <Divider />
 
-      {course?.course_programs?.map((course) => {
+      {course?.course_programs?.map((item) => {
         return (
           <CustomizedAccordions
-            key={course.course_program_id}
-            keyExpand={course.course_program_id}
-            title={course.tittle}
-            childTitle={course.course_program_phases}
-            data={course}
+            key={item.course_program_id}
+            keyExpand={item.course_program_id}
+            title={item.tittle}
+            childTitle={item.course_program_phases}
+            data={item}
             setDataSelected={setDataSelected}
             setShowConfirmDelete={setShowConfirmDelete}
-            edit={true}
-            control={control}
+            add={true}
+            setCount={setCount}
           />
         );
       })}
+
+      <CourseProgramFormAdd
+        data={data}
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        setCount={setCount}
+      />
     </Stack>
   );
 };

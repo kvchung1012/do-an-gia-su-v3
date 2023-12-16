@@ -13,8 +13,8 @@ courseProgramRoutes.post("/", create);
 courseProgramRoutes.put("/:id", update);
 courseProgramRoutes.delete("/:id", deleteById);
 
-courseProgramRoutes.post("/phase/", create);
-courseProgramRoutes.put("/phase/:id", update);
-courseProgramRoutes.delete("/phase/:id", deleteById);
+courseProgramRoutes.post("/phase/", createPhase);
+courseProgramRoutes.put("/phase/:id", updatePhase);
+courseProgramRoutes.delete("/phase/:id", deletePhaseById);
 
 module.exports = courseProgramRoutes;

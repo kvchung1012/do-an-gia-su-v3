@@ -1,5 +1,5 @@
 import api from '@/api';
-import CustomizedAccordions from '@/components/AppAcordion';
+import CustomizedAccordions from '@/components/CustomizedAccordions';
 import AppRating from '@/components/AppRating';
 import ConfirmDeleteModal from '@/components/base/modal/ConfirmDeleteModal';
 import CourseCard from '@/components/card/CourseCard';

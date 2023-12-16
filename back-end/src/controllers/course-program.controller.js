@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 const create = async (req, res) => {
   let body = req.body;
   let entity = await models.course_program.create({
-    course_id: uuidv4(),
+    course_program_id: uuidv4(),
     ...body,
   });
 
@@ -49,6 +49,7 @@ const deleteById = async (req, res) => {
 
 const createPhase = async (req, res) => {
   let body = req.body;
+  console.log(body);
   let entity = await models.course_program_phase.create({
     course_program_phase_id: uuidv4(),
     ...body,
@@ -77,7 +78,7 @@ const deletePhaseById = async (req, res) => {
 
   let result = await models.course_program_phase.destroy({
     where: {
-      course_program_phase: id,
+      course_program_phase_id: id,
     },
   });
 
