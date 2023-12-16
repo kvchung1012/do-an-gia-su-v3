@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import {
+  COURSE_PATH,
   LOGIN_PATH,
   LOGOUT_PATH,
   MY_PROFILE_PATH,
@@ -81,6 +82,9 @@ const BaseLayout: FC<BaseLayoutProps> = ({ children }) => {
       case TUTOR_DETAIL_PATH:
       case TUTOR_PATH:
         return TUTOR_PATH;
+
+      case COURSE_PATH:
+        return COURSE_PATH;
 
       case STUDENT_PATH:
         return STUDENT_PATH;
@@ -248,5 +252,6 @@ export default BaseLayout;
 
 const homeCategories = [
   // { name: 'Trang Chủ', value: ROOT_PATH },
-  { name: 'Gia sư', value: TUTOR_PATH }
+  { name: 'Gia sư', value: TUTOR_PATH },
+  { name: 'Khoá học', value: COURSE_PATH }
 ];

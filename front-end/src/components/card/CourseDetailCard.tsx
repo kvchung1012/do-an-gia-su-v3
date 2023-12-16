@@ -1,16 +1,16 @@
 import api from '@/api';
+import { COURSE_DETAIL_PATH } from '@/const';
 import {
   Box,
   Button,
   Card,
   CardActionArea,
-  CardContent,
   CardMedia,
   Divider,
   Stack,
   Typography
 } from '@mui/material';
-import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CustomizedAccordions from '../CustomizedAccordions';
 import {
@@ -26,8 +26,10 @@ const CourseDetailCard = ({
   setDataSelected,
   setShowForm,
   setShowConfirmDelete,
-  setCount
-}) => {
+  setCount,
+  edit
+}: CourseDetailCardProps) => {
+  const router = useRouter();
   const [course, setCourse] = useState(null);
   const [open, setOpen] = useState(false);
   console.log(data);
@@ -60,7 +62,7 @@ const CourseDetailCard = ({
             <Card sx={{ width: '100%' }}>
               <CardActionArea>
                 <CardMedia
-                  sx={{ height: 240 }}
+                  sx={{ height: 200 }}
                   image={data.image_url}
                   title="haha"
                 />
@@ -138,55 +140,71 @@ const CourseDetailCard = ({
               <HeartIcon />
             </Typography>
           </Stack>
-
-          <Stack spacing={1}>
+          {!edit && (
             <Button
               sx={{ border: '2px solid #121117' }}
               variant="contained"
               onClick={() => {
-                setDataSelected(data);
-                setShowForm(true);
+                router.push({
+                  pathname: COURSE_DETAIL_PATH,
+                  query: { id: data?.course_id }
+                });
               }}
             >
-              Sửa khóa học
+              Xem chi tiết
             </Button>
-            <Button
-              variant="outlined"
-              onClick={() => {
-                setDataSelected(data);
-                setShowConfirmDelete(true);
-              }}
-            >
-              Xóa khóa học
-            </Button>
-            <Button
-              onClick={() => {
-                setOpen(true);
-              }}
-              variant="contained"
-            >
-              Thêm bài học
-            </Button>
-          </Stack>
+          )}
+          {edit && (
+            <Stack spacing={1}>
+              <Button
+                sx={{ border: '2px solid #121117' }}
+                variant="contained"
+                onClick={() => {
+                  setDataSelected(data);
+                  setShowForm(true);
+                }}
+              >
+                Sửa khóa học
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setDataSelected(data);
+                  setShowConfirmDelete(true);
+                }}
+              >
+                Xóa khóa học
+              </Button>
+              <Button
+                onClick={() => {
+                  setOpen(true);
+                }}
+                variant="contained"
+              >
+                Thêm bài học
+              </Button>
+            </Stack>
+          )}
         </Stack>
       </Stack>
       <Divider />
 
-      {course?.course_programs?.map((item) => {
-        return (
-          <CustomizedAccordions
-            key={item.course_program_id}
-            keyExpand={item.course_program_id}
-            title={item.tittle}
-            childTitle={item.course_program_phases}
-            data={item}
-            setDataSelected={setDataSelected}
-            setShowConfirmDelete={setShowConfirmDelete}
-            add={true}
-            setCount={setCount}
-          />
-        );
-      })}
+      {edit &&
+        course?.course_programs?.map((item) => {
+          return (
+            <CustomizedAccordions
+              key={item.course_program_id}
+              keyExpand={item.course_program_id}
+              title={item.tittle}
+              childTitle={item.course_program_phases}
+              data={item}
+              setDataSelected={setDataSelected}
+              setShowConfirmDelete={setShowConfirmDelete}
+              add={true}
+              setCount={setCount}
+            />
+          );
+        })}
 
       <CourseProgramFormAdd
         data={data}
@@ -199,3 +217,12 @@ const CourseDetailCard = ({
 };
 
 export default CourseDetailCard;
+
+type CourseDetailCardProps = {
+  data?: any;
+  setDataSelected?: any;
+  setShowForm?: any;
+  setShowConfirmDelete?: any;
+  setCount?: any;
+  edit?: boolean;
+};

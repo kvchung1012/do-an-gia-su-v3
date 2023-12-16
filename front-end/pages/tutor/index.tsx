@@ -1,18 +1,8 @@
 import api from '@/api';
 import ControlTextField from '@/components/ControlTextField';
-import FormControlDatePicker from '@/components/Date-picker/FormControlDatePicker';
 import TutorDetailCard from '@/components/card/TutorDetailCard';
 import BaseLayout from '@/layouts/BaseLayout';
-import {
-  Autocomplete,
-  Box,
-  Container,
-  Grid,
-  InputLabel,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -30,7 +20,6 @@ const Tutor = () => {
   });
 
   const searchKey = watch('name');
-  console.log(searchKey)
   const [tutorList, setTutorList] = useState([]);
   const [tutorListRoot, setTutorListRoot] = useState([]);
 
@@ -50,7 +39,7 @@ const Tutor = () => {
   };
 
   useEffect(() => {
-    console.log(searchKey)
+    console.log(searchKey);
     handleFilter();
   }, [searchKey]);
 
@@ -62,9 +51,7 @@ const Tutor = () => {
           setTutorList(res.data.data);
           setTutorListRoot(res.data.data);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
 
     getTutor();

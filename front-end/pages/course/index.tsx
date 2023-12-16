@@ -22,6 +22,7 @@ const Course = () => {
   });
 
   const [courseList, setCourseList] = useState([]);
+  const [courseListRoot, setCourseListRoot] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [dataSelected, setDataSelected] = useState<any>();
@@ -29,37 +30,20 @@ const Course = () => {
   const handleFilter = () => {
     console.log('');
   };
-
-  const getTutor = () => {
-    api.get('/course').then((res) => {
-      setCourseList(res.data.data);
-    });
-  };
-
   useEffect(() => {
+    const getTutor = async () => {
+      try {
+        api.get('/course').then((res) => {
+          setCourseList(res.data.data);
+          setCourseListRoot(res.data.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getTutor();
   }, []);
-
-  const handleSaveData = (body) => {
-    const request = !body?.course_id
-      ? api.post('course', body)
-      : api.put(`course/${body.course_id}`, body);
-    request
-      .then((res) => {
-        getTutor();
-        setShowForm(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const handleDelete = () => {
-    const { course_id } = dataSelected;
-    api.delete(`course/${course_id}`).then(() => {
-      getTutor();
-      setShowConfirmDelete(false);
-    });
-  };
 
   return (
     <Container sx={{ minHeight: '100vh' }}>
@@ -111,22 +95,6 @@ const Course = () => {
           />
         ))}
       </Stack>
-      {showForm && (
-        <CourseFormAdd
-          data={dataSelected}
-          isOpen={showForm}
-          onSave={handleSaveData}
-          onClose={() => setShowForm(false)}
-          key={''}
-        />
-      )}
-      {showConfirmDelete && (
-        <ConfirmDeleteModal
-          open={showConfirmDelete}
-          onClose={() => setShowConfirmDelete(false)}
-          onConfirm={handleDelete}
-        />
-      )}
     </Container>
   );
 };
