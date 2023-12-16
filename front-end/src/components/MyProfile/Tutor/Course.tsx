@@ -82,6 +82,7 @@ const CoursePanel = ({tutor}) => {
             setShowForm={setShowForm}
             setShowConfirmDelete={setShowConfirmDelete}
             setCount={setCount}
+            edit={true}
           />
         ))}
       </Stack>

@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { Typography } from 'antd';
 import { useFormik } from 'formik';
+import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 
@@ -23,7 +24,7 @@ const validationSchema = yup.object({
 
 function CourseFormAdd({ isOpen, onClose, data, onSave }) {
   const [categoryList, setCategoryList] = useState<any[]>([]);
-  const [fileUrl, setFileUrl] = useState('');
+  const [fileUrl, setFileUrl] = useState(data?.image_url);
   const getCategory = () => {
     api.get('/category').then((res) => {
       setCategoryList(res.data.data);
@@ -43,7 +44,7 @@ function CourseFormAdd({ isOpen, onClose, data, onSave }) {
       if (!formik.isValid) {
         return;
       }
-      onSave({ ...data, ...values });
+      onSave({ ...data, ...values, image_url: fileUrl });
     }
   });
 
@@ -54,6 +55,11 @@ function CourseFormAdd({ isOpen, onClose, data, onSave }) {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
+    });
+
+    enqueueSnackbar({
+      message: 'Tải file thành công!',
+      variant: 'success'
     });
 
     setFileUrl(res.data?.data?.file);
