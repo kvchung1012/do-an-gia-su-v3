@@ -74,6 +74,12 @@ function TutorAvailableDate({ userId }) {
     setItemSelected(e)
   }
 
+  const handleDelete = async(e)=>{
+    console.log(e)
+    await api.delete('tutor-available-date/'+e.tutor_available_date_id)
+    fetchData(userId);
+  }
+
   return (
     <>
       <Card
@@ -120,6 +126,7 @@ function TutorAvailableDate({ userId }) {
                           key={i}
                           label={`${item.start_time} : ${item.end_time}`}
                           onClick={()=>handleEdit(item)}
+                            onDelete={()=>handleDelete(item)}
                         />
                       ))
                   ) : (

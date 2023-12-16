@@ -62,12 +62,6 @@ function StudentProfile() {
         )
     },
     {
-      title: 'Trường đang học',
-      width: 200,
-      fixed: 'left',
-      render: (_, row) => <p>{row.student_educations?.[0]?.school?.name}</p>
-    },
-    {
       title: 'Email',
       width: 200,
       fixed: 'left',
@@ -154,8 +148,8 @@ function StudentProfile() {
         lastName={dataSelected?.user?.last_name}
         avatar={dataSelected?.user?.avatar_url}
         school={dataSelected?.student_educations?.[0]?.school?.name}
-        startSchool={dataSelected?.student_educations?.[0].from_year}
-        endSchool={dataSelected?.student_educations?.[0].to_year}
+        startSchool={dataSelected?.student_educations?.[0]?.from_year}
+        endSchool={dataSelected?.student_educations?.[0]?.to_year}
         gender={dataSelected?.user?.gender}
         phone={dataSelected?.user?.phone_number}
         email={dataSelected?.user?.email}
