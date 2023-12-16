@@ -46,7 +46,7 @@ const TutorCard = ({ data }) => {
           textAlign="center"
           color="text.secondary"
         >
-          {data?.user?.first_name || 'Gia sư ẩn danh'}
+          {(data?.user?.first_name || '')+ ' ' + (data?.user?.last_name || '')}
         </Typography>
 
         <Typography
