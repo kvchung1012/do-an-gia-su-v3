@@ -32,7 +32,6 @@ const CourseDetailCard = ({
   const router = useRouter();
   const [course, setCourse] = useState(null);
   const [open, setOpen] = useState(false);
-  console.log(data);
 
   useEffect(() => {
     const getCourse = async () => {
@@ -190,10 +189,10 @@ const CourseDetailCard = ({
       <Divider />
 
       {edit &&
-        course?.course_programs?.map((item) => {
+        course?.course_programs?.map((item, i) => {
           return (
             <CustomizedAccordions
-              key={item.course_program_id}
+              key={i}
               keyExpand={item.course_program_id}
               title={item.tittle}
               childTitle={item.course_program_phases}

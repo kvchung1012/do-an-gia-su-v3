@@ -26,6 +26,8 @@ const Tutor = () => {
   const handleFilter = () => {
     let lists = [...tutorListRoot];
     if (searchKey) {
+      console.log(searchKey);
+
       lists = lists.filter(
         (x) =>
           x?.user?.first_name?.includes(searchKey) ||
