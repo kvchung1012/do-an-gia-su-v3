@@ -1,5 +1,6 @@
 const handleUploadFile = async (req, res) => {
   const file = req?.file?.path;
+  console.log(file)
   try {
     const response = {};
 

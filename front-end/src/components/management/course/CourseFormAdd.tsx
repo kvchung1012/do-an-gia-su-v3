@@ -8,7 +8,8 @@ import {
   FormGroup,
   TextField,
   Select,
-  MenuItem
+  MenuItem,
+  Box
 } from '@mui/material';
 import { Typography } from 'antd';
 import { useFormik } from 'formik';
@@ -22,6 +23,7 @@ const validationSchema = yup.object({
 
 function CourseFormAdd({ isOpen, onClose, data, onSave }) {
   const [categoryList, setCategoryList] = useState<any[]>([]);
+  const [fileUrl, setFileUrl] = useState('');
   const getCategory = () => {
     api.get('/category').then((res) => {
       setCategoryList(res.data.data);
@@ -33,17 +35,29 @@ function CourseFormAdd({ isOpen, onClose, data, onSave }) {
 
   const formik = useFormik({
     initialValues: {
-      ...data
+      ...data,
+      image_url: fileUrl
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
       if (!formik.isValid) {
         return;
       }
-
       onSave({ ...data, ...values });
     }
   });
+
+  const handleUploadFile = async (e) => {
+    var formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    const res = await api.post('upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    setFileUrl(res.data?.data?.file);
+  };
 
   return (
     <div>
@@ -74,6 +88,10 @@ function CourseFormAdd({ isOpen, onClose, data, onSave }) {
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
               />
+
+              <Box mt={2}>
+                <input type="file" onChange={(e) => handleUploadFile(e)} />
+              </Box>
 
               <TextField
                 id="description"

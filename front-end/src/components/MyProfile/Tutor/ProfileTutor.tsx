@@ -70,11 +70,12 @@ function ProfileTutor() {
           setUser(res.data.data);
           const user = res.data.data;
           const tutor_profile = res.data.data.tutor_profiles[0];
-          console.log(tutor_profile);
+          console.log('tutor_profile',tutor_profile);
 
           // tutor
           if (user.role_id === ROLE_TEACHER_ID) {
             setTutorInfo(tutor_profile);
+            console.log(tutor_profile)
           }
         }
       } catch (error) {
@@ -209,7 +210,7 @@ function ProfileTutor() {
             mb: 3
           }}
         >
-          <CoursePanel />
+          <CoursePanel tutor={tutorInfo} />
         </Card>
       </CustomTabPanel>
     </Box>

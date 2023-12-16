@@ -22,7 +22,7 @@ const defaultValues = {
   name: ''
 };
 
-const CoursePanel = () => {
+const CoursePanel = ({tutor}) => {
   const [courseList, setCourseList] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -40,6 +40,7 @@ const CoursePanel = () => {
   }, [count]);
 
   const handleSaveData = (body) => {
+    body = {...body, tutor_profile_id: tutor.tutor_profile_id}
     const request = !body?.course_id
       ? api.post('course', body)
       : api.put(`course/${body.course_id}`, body);
@@ -63,15 +64,14 @@ const CoursePanel = () => {
 
   return (
     <>
-      <Stack height="100%" mt={2} spacing={2}>
-        <Typography variant="h1">Tất cả khóa học</Typography>
-        <Grid display="flex" alignItems="center" container columnSpacing={2}>
+      <Stack height="100%" mt={2}>
+        <Typography variant="h3">Tất cả khóa học</Typography>
+        <Grid display="flex" alignItems="center" container columnSpacing={2} my={2}>
           <Grid item xs={4}>
             <TextField label="Tên Khóa học" name="search" />
           </Grid>
           <Button
             sx={{
-              border: '2px solid #121117',
               height: '50px'
             }}
             variant="contained"

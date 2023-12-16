@@ -30,7 +30,6 @@ const CourseDetailCard = ({
 }) => {
   const [course, setCourse] = useState(null);
   const [open, setOpen] = useState(false);
-  console.log(data);
 
   useEffect(() => {
     const getCourse = async () => {
@@ -47,23 +46,29 @@ const CourseDetailCard = ({
   }, [data]);
 
   return (
-    <Stack border="2px solid #121117" borderRadius="4px">
-      <Stack p={3} direction="row" spacing={3} justifyContent="space-between">
+    <Stack
+      borderRadius="4px"
+      boxShadow={'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}
+    >
+      <Stack
+        p={3}
+        mb={5}
+        direction="row"
+        spacing={3}
+        justifyContent="space-between"
+      >
         <>
           <Box
             sx={{
               height: 160,
               minWidth: 160,
-              position: 'relative'
+              position: 'relative',
+              mb: 2
             }}
           >
             <Card sx={{ width: '100%' }}>
               <CardActionArea>
-                <CardMedia
-                  sx={{ height: 240 }}
-                  image={data.image_url}
-                  title="haha"
-                />
+                <CardMedia sx={{ height: 240 }} image={data.image_url} />
               </CardActionArea>
             </Card>
           </Box>
@@ -141,8 +146,7 @@ const CourseDetailCard = ({
 
           <Stack spacing={1}>
             <Button
-              sx={{ border: '2px solid #121117' }}
-              variant="contained"
+              variant="outlined"
               onClick={() => {
                 setDataSelected(data);
                 setShowForm(true);
@@ -151,6 +155,7 @@ const CourseDetailCard = ({
               Sửa khóa học
             </Button>
             <Button
+              color="error"
               variant="outlined"
               onClick={() => {
                 setDataSelected(data);
@@ -159,6 +164,7 @@ const CourseDetailCard = ({
             >
               Xóa khóa học
             </Button>
+
             <Button
               onClick={() => {
                 setOpen(true);
