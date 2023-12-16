@@ -116,7 +116,7 @@ const DetailTutor = () => {
               alignItems="center"
               gap="8px"
             >
-              {tutor?.user?.first_name || 'Gia sư ẩn danh'}{' '}
+              {(tutor?.user?.first_name || '')+ ' ' + (tutor?.user?.last_name || '')}
               <VerifyIcon sx={{ fontSize: 18, color: '#4caf50' }} />
             </Typography>
             <Typography variant="h5" color="secondary">

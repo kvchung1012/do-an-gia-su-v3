@@ -40,7 +40,7 @@ const TutorDetailCard = ({ data }: TutorDetailCardProps) => {
 
         <Stack width="100%" spacing={2}>
           <Typography variant="h2">
-            {data?.user?.first_name || 'Gia sư ẩn danh'}
+          {(data?.user?.first_name || '')+ ' ' + (data?.user?.last_name || '')}
           </Typography>
           <Stack spacing={1}>
             <Stack>

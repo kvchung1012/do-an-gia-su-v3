@@ -33,6 +33,7 @@ const findById = async (req, res) => {
         { model: models.tutor_education, as: "tutor_educations", include:"schools" },
         { model: models.tutor_certification, as: "tutor_certifications" },
         { model: models.tutor_experience, as: "tutor_experiences" },
+        { model: models.users, as: "user" },
     ],
   });
 
