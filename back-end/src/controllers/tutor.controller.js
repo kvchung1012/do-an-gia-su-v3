@@ -68,11 +68,26 @@ const update = async (req, res) => {
 const deleteById = async (req, res) => {
   let { id } = req.params;
 
+  const tutor = await models.tutor_profile.findByPk(id);
   let result = await models.tutor_profile.destroy({
     where: {
       tutor_profile_id: id,
     },
   });
+
+  const user = await models.users.findByPk(tutor.user_id)
+  user.update({
+    type: "1"
+  })
+
+  await user.save();
+
+
+  //tao moi profile student
+  await models.student_profile.create({
+    student_profile_id: uuidv4(),
+    student_id: user.user_id
+  })
 
   return result > 0 ? succesCode(res, true) : failCode(res, "Thất bại");
 };

@@ -22,6 +22,9 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { useRouter } from 'next/router';
+
+
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -65,6 +68,9 @@ function HeaderUserbox() {
     jobtitle: 'Project Manager'
   };
 
+const router = useRouter();
+
+
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
 
@@ -76,6 +82,10 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
+  const handleLogout = ()=>{
+    localStorage.setItem('access_token','')
+    router.push('/auth/login')
+  }
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
@@ -137,7 +147,7 @@ function HeaderUserbox() {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button color="primary" fullWidth onClick={handleLogout}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>

@@ -21,7 +21,7 @@ const CoursePanel = ({tutor}) => {
   const [count, setCount] = useState<any>(0);
 
   const getTutor = () => {
-    api.get('/course').then((res) => {
+    api.get('/course/get-by-tutor-id/'+tutor.tutor_profile_id).then((res) => {
       setCourseList(res.data.data);
     });
   };

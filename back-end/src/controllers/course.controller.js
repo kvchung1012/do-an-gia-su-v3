@@ -44,6 +44,20 @@ const findAllbyTutor = async (req, res) => {
         model: models.category,
         as: "category",
       },
+      {
+        model: models.tutor_profile,
+        as: "tutor_profile",
+        include: [
+          { model: models.users, as: "user" },
+          { model: models.tutor_certification, as: "tutor_certifications" },
+          { model: models.tutor_education, as: "tutor_educations" },
+        ], // Include the User model within TutorProfile
+      },
+      {
+        model: models.course_program,
+        as: "course_programs",
+        include: ["course_program_phases"],
+      },
     ],
   });
   return succesCode(res, entities, "Lấy danh sách khóa học thành công!!!");

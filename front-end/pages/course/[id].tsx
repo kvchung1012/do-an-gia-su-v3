@@ -62,9 +62,6 @@ const CourseDetail = () => {
   const [payload, setPayload] = useState<any>({ tutor_available_date: [] });
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const decoded = jwtDecode<any>(token);
-
     if (course_id) {
       const getCourse = async () => {
         try {
@@ -74,14 +71,20 @@ const CourseDetail = () => {
             const availableTime = await api.get(
               `/tutor-available-date/find-by-userid/${res.data.data.tutor_profile.user_id}`
             );
-            setPayload((prev) => {
-              return {
-                ...prev,
-                tutor_id: res.data.data.tutor_profile.user_id,
-                student_id: decoded.user_id,
-                course_id: res.data.data.course_id
-              };
-            });
+
+            const token = localStorage.getItem('access_token');
+            if (token) {
+              const decoded = jwtDecode<any>(token);
+
+              setPayload((prev) => {
+                return {
+                  ...prev,
+                  tutor_id: res.data.data.tutor_profile.user_id,
+                  student_id: decoded?.user_id,
+                  course_id: res.data.data.course_id
+                };
+              });
+            }
             setAvailableDay(availableTime.data.data);
             setHighlightedDays(findDayHightLight(availableTime.data.data));
             setTimeAvailableDay(
@@ -240,7 +243,14 @@ const CourseDetail = () => {
             <Button
               sx={{ border: '2px solid #121117' }}
               variant="contained"
-              onClick={() => setOpen(true)}
+              onClick={() => {
+                if(localStorage.getItem('access_token')){
+                  setOpen(true)
+                }
+                else{
+                  router.push('/auth/login')
+                }
+              }}
             >
               Đăng ký khóa học
             </Button>
