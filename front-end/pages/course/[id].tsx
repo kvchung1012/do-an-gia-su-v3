@@ -244,11 +244,10 @@ const CourseDetail = () => {
               sx={{ border: '2px solid #121117' }}
               variant="contained"
               onClick={() => {
-                if(localStorage.getItem('access_token')){
-                  setOpen(true)
-                }
-                else{
-                  router.push('/auth/login')
+                if (localStorage.getItem('access_token')) {
+                  setOpen(true);
+                } else {
+                  router.push('/auth/login');
                 }
               }}
             >
@@ -306,6 +305,7 @@ const CourseDetail = () => {
                       .sort(function (a, b) {
                         return a.start_time.localeCompare(b.start_time);
                       })
+                      .filter((item) => item.schedule == null)
                       ?.map((item, i) => (
                         <Chip
                           key={i}
