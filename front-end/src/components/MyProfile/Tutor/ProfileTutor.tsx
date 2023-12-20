@@ -51,11 +51,12 @@ function ProfileTutor() {
   const [school, setSchool] = useState<any>([]);
   const [user, setUser] = useState<any>();
   const [tutorInfo, setTutorInfo] = useState(null);
-
+  const [userId, setUserId] = useState(null);
   useEffect(() => {
     const getInfoUser = async () => {
       const token = localStorage.getItem('access_token');
       const decoded = jwtDecode<any>(token);
+      setUserId(decoded?.user_id);
       try {
         const res = await api.get(`/user/get-user-info/${decoded?.user_id}`);
         const resSchool = await api.get('/school');
@@ -70,12 +71,11 @@ function ProfileTutor() {
           setUser(res.data.data);
           const user = res.data.data;
           const tutor_profile = res.data.data.tutor_profiles[0];
-          console.log('tutor_profile',tutor_profile);
 
           // tutor
           if (user.role_id === ROLE_TEACHER_ID) {
             setTutorInfo(tutor_profile);
-            console.log(tutor_profile)
+            console.log(tutor_profile);
           }
         }
       } catch (error) {
@@ -139,7 +139,7 @@ function ProfileTutor() {
             height: '100vh'
           }}
         >
-          <InfoUser data={user} />
+          <InfoUser data={user} id={userId} />
         </Card>
       </CustomTabPanel>
 

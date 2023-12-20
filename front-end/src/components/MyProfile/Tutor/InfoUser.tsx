@@ -14,6 +14,7 @@ import { enqueueSnackbar } from 'notistack';
 import api from '@/api';
 import { useRouter } from 'next/router';
 import { memo, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const defaultValues = {
   last_name: '',
@@ -24,17 +25,14 @@ const defaultValues = {
   gender: 'female'
 };
 
-const InfoUser = ({ data }) => {
-  const router = useRouter();
-  const userId = router.query.id;
-
+const InfoUser = ({ data, id }) => {
   const { handleSubmit, control, setValue } = useForm<FormDataHaha>({
     defaultValues
   });
 
   const handleSaveInfo = async (data) => {
     try {
-      const res = await api.put(`/user/update-user-info/${userId}`, data);
+      const res = await api.put(`/user/update-user-info/${id}`, data);
       if (res.status === 200) {
         enqueueSnackbar({
           message: 'Cập nhật thông tin tài khoản thành công',

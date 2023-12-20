@@ -176,7 +176,7 @@ function CustomizedAccordions({
             )}
           </Stack>
         </AccordionSummary>
-        {childTitle?.map((child, index) => {
+        {childTitle?.reverse().map((child, index) => {
           return (
             <AccordionDetails key={index}>
               <PhaseCourse

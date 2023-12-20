@@ -55,7 +55,7 @@ const updateUserInfo = async (req, res) => {
       user_id: id,
     }
   });
-
+  console.log(req.body);
   entity.update(req.body)
 
   return succesCode(res, entity, "Success");

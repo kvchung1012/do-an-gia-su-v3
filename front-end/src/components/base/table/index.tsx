@@ -65,8 +65,9 @@ function MyTable({
           pageSizeOptions: [10, 20, 50],
           showSizeChanger: true,
           responsive: true,
+          locale: { items_per_page: '' },
           showTotal: (total, range) => (
-            <div>{`Showing ${range[0]}-${range[1]} of ${total} total items`}</div>
+            <div>{`${range[0]}-${range[1]} của ${total} items`}</div>
           )
         }}
       />

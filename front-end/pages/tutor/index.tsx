@@ -41,7 +41,6 @@ const Tutor = () => {
   };
 
   useEffect(() => {
-    console.log(searchKey);
     handleFilter();
   }, [searchKey]);
 
